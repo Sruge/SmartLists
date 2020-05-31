@@ -47,19 +47,15 @@ export default Overview = (props) => {
         const listNames = firestore()
           .collection('Lists')
           .onSnapshot(querySnapshot => {
-            console.log("Query: ", querySnapshot)
 
             const lists = [];
       
             querySnapshot.forEach(documentSnapshot => {
-                console.log("Document: ", documentSnapshot.get('name'))
 
               lists.push({
                 value: documentSnapshot.get('name'),
                 key: documentSnapshot.id,
               });
-              console.log("Data: ", documentSnapshot.get('elements'))
-              console.log(lists)
             });
       
             setLists(lists);
@@ -75,18 +71,21 @@ export default Overview = (props) => {
     }
 
     handleClick = (item) => {
-      console.log("ITEM-VALUE:", {item})
-      navigation.navigate("AddListElement", {listName: item.value})
+      navigation.navigate("AddListElement", {listName: item.key})
+    }
+
+    renderItem = ({ item }) => {
+      return (
+        <TouchableOpacity onPress={() => handleClick(item)} style={styles.listItem}>
+          <Text>{item.value}</Text>
+        </TouchableOpacity>
+      )
     }
 
     return (
         <FlatList
           data={lists}
-          renderItem={({ item }) => (
-            <TouchableOpacity onPress={item => handleClick({item})} style={styles.listItem}>
-              <Text>{item.value}</Text>
-            </TouchableOpacity>
-          )}
+          renderItem={renderItem}
         />
       );
 };
