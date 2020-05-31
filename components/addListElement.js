@@ -7,7 +7,7 @@
  */
 import 'react-native-gesture-handler';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   SafeAreaView,
   StyleSheet,
@@ -16,20 +16,51 @@ import {
   Text,
   StatusBar,
   TextInput,
-  TouchableOpacity
+  TouchableOpacity,
+  FlatList
 } from 'react-native';
 import { useRoute, useNavigation } from '@react-navigation/native';
-import { max } from 'react-native-reanimated';
-import AsyncStorage from '@react-native-community/async-storage';
+import firestore from '@react-native-firebase/firestore';
 
 
 export default AddListElement = (props) => {
     const [listItems, setListItems] = useState({});
     const [textKey, setTextKey] = useState('');
     const [textVal, setTextVal] = useState('');
+    const [lists, setLists] = useState();
+    const [loading, setLoading] = useState();
     const route = useRoute();
     const navigation = useNavigation();
     let inputAvailable = true
+
+
+    useEffect(() => {
+        const listNames = firestore()
+          .collection('Lists')
+          .doc(props.listName)
+          .onSnapshot(documentSnapshot => {
+            console.log("ListName: ", route.params)
+
+            // const lists = [];
+      
+            // querySnapshot.forEach(documentSnapshot => {
+            //     console.log("Document: ", documentSnapshot.get('name'))
+
+            //   lists.push({
+            //     value: documentSnapshot.get('name'),
+            //     key: documentSnapshot.id,
+            //   });
+            //   console.log("Data: ", documentSnapshot.get('elements'))
+            //   console.log(lists)
+            // });
+      
+            // setLists(lists);
+            // setLoading(false);
+          });
+      
+        // Unsubscribe from events when no longer in use
+        return () => listNames();
+      }, []);
 
     handleOk = () => {
         inputAvailable = false;
@@ -41,18 +72,6 @@ export default AddListElement = (props) => {
         inputAvailable = true
     }
 
-    storeData = async () => {
-        try {
-            await AsyncStorage.setItem(route.params.listName, JSON.stringify(listItems))
-            console.log("Setting listNames to: ", route.params.listName)
-            await AsyncStorage.setItem('listNames', JSON.stringify([route.params.listName]))
-        } catch (e) {
-            console.log(e)
-        }
-      }
-
-
-
   return (
     <>
       <StatusBar barStyle="dark-content" />
@@ -62,15 +81,11 @@ export default AddListElement = (props) => {
           <TouchableOpacity title="Ok" onPress={handleOk} style={styles.okButton}>
               <Text style={styles.buttonTitle}>ADD</Text> 
           </TouchableOpacity>
-          <ScrollView style={styles.listView}>
-            {Object.entries(listItems).map(([key, v]) => { 
-              return(
-                <View key={key} style = {styles.listEntries}>
-                    <Text style={styles.listEntry}>{key}</Text>
-                    <Text style={styles.listEntry}>{v}</Text>
-                </View>)}
-            )}
-          </ScrollView>
+          <FlatList
+            data={lists}
+            renderItem={({ item }) => (
+                    <Text style = {styles.listEntry}>{item.value}</Text>
+            )}/>
       </View>
     </>
   );
@@ -103,12 +118,9 @@ const styles = StyleSheet.create({
         marginVertical: 10,
         flex: 1
     },
-    listEntries: {
-          flexDirection: 'row',
-        },
     listEntry: {
-        fontSize: 15,
-        flex: 1,
-        marginHorizontal: 10,
+        fontSize: 20,
+            marginTop: 10,
+        textAlign: 'center'
     },
 });

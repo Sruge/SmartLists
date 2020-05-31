@@ -10,13 +10,9 @@ import React, { Component } from 'react';
 
 import {
   Platform,
-  SafeAreaView,
   StyleSheet,
-  ScrollView,
-  View,
   Text,
   StatusBar,
-  Button,
   TouchableOpacity
 } from 'react-native';
 
@@ -28,7 +24,6 @@ import InsideList from './components/insideList.js';
 import AddList from './components/addList.js';
 import AddListElement from './components/addListElement.js';
 
-import firebase from '@react-native-firebase/app';
 import database from '@react-native-firebase/database';
 
 const Stack = createStackNavigator();
@@ -72,7 +67,7 @@ export default class App extends Component<Props> {
     return (
       <NavigationContainer>
         <StatusBar barStyle="dark-content" />
-        <Stack.Navigator initialRouteName="AddListElement">
+        <Stack.Navigator initialRouteName="Overview">
           <Stack.Screen name="AddList" component={AddList} options={{title: "Add List"}}/>
           <Stack.Screen name="Overview" component={Overview} options={{title: "List Overview", headerRight: () => (
               <TouchableOpacity style={styles.headerButton}
@@ -96,20 +91,11 @@ export default class App extends Component<Props> {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
+  headerButton: {
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#F5FCFF',
-  },
-  welcome: {
-    fontSize: 20,
-    textAlign: 'center',
-    margin: 10,
-  },
-  instructions: {
-    textAlign: 'center',
-    color: '#333333',
-    marginBottom: 5,
-  },
+    padding: 10,
+    marginRight: 10,
+    backgroundColor: 'green'
+   }
 });

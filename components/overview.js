@@ -32,6 +32,7 @@ import AsyncStorage from '@react-native-community/async-storage';
 
 import database from '@react-native-firebase/database';
 import { max } from 'react-native-reanimated';
+import addListElement from './addListElement';
 
 
 
@@ -40,6 +41,7 @@ import { max } from 'react-native-reanimated';
 export default Overview = (props) => {
     const [loading, setLoading] = useState(true); // Set loading to true on component mount
     const [lists, setLists] = useState([]); // Initial empty array of users
+    const navigation = useNavigation();
 
     useEffect(() => {
         const listNames = firestore()
@@ -73,16 +75,16 @@ export default Overview = (props) => {
     }
 
     handleClick = (item) => {
-        console.log(item)
+      console.log("ITEM-VALUE:", {item})
+      navigation.navigate("AddListElement", {listName: item.value})
     }
 
     return (
         <FlatList
           data={lists}
           renderItem={({ item }) => (
-            <TouchableOpacity onPress={(item) => handleClick(item)} style={styles.listItem}>
-              <Text>List ID: {item.key}</Text>
-              <Text>List Name: {item.value}</Text>
+            <TouchableOpacity onPress={item => handleClick({item})} style={styles.listItem}>
+              <Text>{item.value}</Text>
             </TouchableOpacity>
           )}
         />
@@ -92,11 +94,10 @@ export default Overview = (props) => {
 const styles = StyleSheet.create({
   listItem: {
     backgroundColor: 'yellow',
-    height: 50,
-    width: 300,
     flex: 1,
-    margin: 10,
-    padding: 50,
+    marginHorizontal: 10,
+    marginTop: 10,
+    padding: 20,
     justifyContent: 'center',
     alignItems: 'center'
   },
