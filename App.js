@@ -17,6 +17,7 @@ import {
   Text,
   StatusBar,
   Button,
+  TouchableOpacity
 } from 'react-native';
 
 import { NavigationContainer, useNavigation, useRoute} from '@react-navigation/native';
@@ -29,6 +30,8 @@ import AddListElement from './components/addListElement.js';
 
 import firebase from '@react-native-firebase/app';
 import database from '@react-native-firebase/database';
+
+const Stack = createStackNavigator();
 
 database()
   .ref('/users/123')
@@ -67,9 +70,27 @@ type Props = {};
 export default class App extends Component<Props> {
   render() {
     return (
-      <View style={styles.container}>
-        <Overview/>
-      </View>
+      <NavigationContainer>
+        <StatusBar barStyle="dark-content" />
+        <Stack.Navigator initialRouteName="AddListElement">
+          <Stack.Screen name="AddList" component={AddList} options={{title: "Add List"}}/>
+          <Stack.Screen name="Overview" component={Overview} options={{title: "List Overview", headerRight: () => (
+              <TouchableOpacity style={styles.headerButton}
+                onPress={() => console.log("ADD pressed")}>
+                <Text>
+                    ADD
+                </Text>
+              </TouchableOpacity>)}}/>
+          <Stack.Screen name="InsideList" component={InsideList} options={{title: "Inside List"}}/>
+          <Stack.Screen name="AddListElement" component={AddListElement} options={{title: "Add List Element", headerRight: () => (
+              <TouchableOpacity style={styles.headerButton}
+              onPress={() => console.log("Save pressed")}>
+                <Text>
+                    Save
+                </Text>
+            </TouchableOpacity>)}}/>
+        </Stack.Navigator>
+      </NavigationContainer>
     );
   }
 }
