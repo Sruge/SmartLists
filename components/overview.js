@@ -69,7 +69,7 @@ export default Overview = (props) => {
     }
 
     handleClick = (item) => {
-      navigation.navigate("AddListElement", {listName: item.key})
+      navigation.navigate("AddListElement", {listName: item.key, title: "Hans"})
     }
 
     renderItem = ({ item }) => {

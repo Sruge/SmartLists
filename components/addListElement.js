@@ -16,7 +16,7 @@ import {
   Text,
   StatusBar,
   TextInput,
-  TouchableOpacity,
+  ActivityIndicator,
   FlatList
 } from 'react-native';
 import { useRoute, useNavigation } from '@react-navigation/native';
@@ -29,7 +29,7 @@ export default AddListElement = (props) => {
     const [textKey, setTextKey] = useState('');
     const [textVal, setTextVal] = useState('');
     const [entries, setEntries] = useState();
-    const [loading, setLoading] = useState();
+    const [loading, setLoading] = useState(true);
     const route = useRoute();
     const navigation = useNavigation();
     let inputAvailable = true
@@ -40,13 +40,21 @@ export default AddListElement = (props) => {
           .collection('Lists')
           .doc(route.params.listName)
           .onSnapshot(documentSnapshot => {
-            console.log("Document: ", documentSnapshot.get('elements'))
+            console.log("Document Elements: ", documentSnapshot.get('elements'))
 
-            // const entries = [];
+             const entries = [];
       
-            // documentSnapshot.get('elements').forEach(entry => {
-            //     console.log("Entry: ", entry)
+             Object.entries(documentSnapshot.get('elements')).forEach(([key, val]) => {
+               console.log("Key: ", key, "Val: ", val)
+                 entries.push({
+                  value: val,
+                  key: key,
+                });
+              });
 
+              setEntries(entries)
+              setLoading(false)
+                         
         
             //   entries.push({
             //     value: entry.value,
@@ -65,19 +73,22 @@ export default AddListElement = (props) => {
 
     handleAdd = () => {
         inputAvailable = false;
-        setListItems(list => { 
-            list[textKey.toString()] = textVal
-            return list});
-        setTextKey('')
+        setEntries(entries => { 
+            entries = [...entries, {key: "something", value: textVal}]
+            return entries});
         setTextVal('')
         inputAvailable = true
     }
+
+
+  if (loading) {
+      return <ActivityIndicator />;
+  }
 
   return (
     <>
       <StatusBar barStyle="dark-content" />
       <View style={styles.container}>
-          <TextInput editable={inputAvailable} onChangeText={textKey => setTextKey(textKey)} defaultValue={textKey} style={styles.textInput} placeholder="Key of the List Element"/>
           <TextInput editable={inputAvailable} onChangeText={textVal => setTextVal(textVal)} defaultValue={textVal} style={styles.textInput} placeholder="Value of the List Element"/>
           <Button title="ADD" onPress={handleAdd} buttonStyle={styles.okButton}/>
           <FlatList
