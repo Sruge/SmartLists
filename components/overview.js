@@ -18,7 +18,6 @@ import {
   View,
   Text,
   StatusBar,
-  Button,
   ActivityIndicator,
   FlatList,
   TouchableOpacity
@@ -33,8 +32,7 @@ import AsyncStorage from '@react-native-community/async-storage';
 import database from '@react-native-firebase/database';
 import { max } from 'react-native-reanimated';
 import addListElement from './addListElement';
-
-
+import { Button } from 'react-native-elements';
 
 
 
@@ -76,9 +74,7 @@ export default Overview = (props) => {
 
     renderItem = ({ item }) => {
       return (
-        <TouchableOpacity onPress={() => handleClick(item)} style={styles.listItem}>
-          <Text>{item.value}</Text>
-        </TouchableOpacity>
+        <Button title={item.value} onPress={() => handleClick(item)} buttonStyle={styles.listItem}/>
       )
     }
 
@@ -92,12 +88,7 @@ export default Overview = (props) => {
 
 const styles = StyleSheet.create({
   listItem: {
-    backgroundColor: 'yellow',
-    flex: 1,
-    marginHorizontal: 10,
-    //marginTop: 10,
-    padding: 20,
-    justifyContent: 'center',
-    alignItems: 'center'
+    marginHorizontal: 20,
+    marginTop: 20,
   },
 });

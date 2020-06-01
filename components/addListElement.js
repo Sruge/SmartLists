@@ -21,6 +21,7 @@ import {
 } from 'react-native';
 import { useRoute, useNavigation } from '@react-navigation/native';
 import firestore from '@react-native-firebase/firestore';
+import { Button } from 'react-native-elements';
 
 
 export default AddListElement = (props) => {
@@ -78,9 +79,7 @@ export default AddListElement = (props) => {
       <View style={styles.container}>
           <TextInput editable={inputAvailable} onChangeText={textKey => setTextKey(textKey)} defaultValue={textKey} style={styles.textInput} placeholder="Key of the List Element"/>
           <TextInput editable={inputAvailable} onChangeText={textVal => setTextVal(textVal)} defaultValue={textVal} style={styles.textInput} placeholder="Value of the List Element"/>
-          <TouchableOpacity title="Ok" onPress={handleAdd} style={styles.okButton}>
-              <Text style={styles.buttonTitle}>ADD</Text> 
-          </TouchableOpacity>
+          <Button title="ADD" onPress={handleAdd} buttonStyle={styles.okButton}/>
           <FlatList
             data={entries}
             renderItem={({ item }) => (
@@ -103,15 +102,9 @@ const styles = StyleSheet.create({
         alignContent: 'center',
         padding: 10,
     },
-    buttonTitle: {
-        fontSize: 18,
-    },
     okButton: {
-        backgroundColor: '#007788',
-        padding: 10,
         marginHorizontal: 20,
         marginTop: 10,
-        alignItems: 'center'
     },
     listView: {
         marginHorizontal: 20,
