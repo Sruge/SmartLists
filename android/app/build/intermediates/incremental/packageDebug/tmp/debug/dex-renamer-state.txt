@@ -1,4 +1,4 @@
-#Mon Jun 01 09:10:14 CEST 2020
+#Mon Jun 01 09:27:53 CEST 2020
 base.2=/home/gerus/Dev/SmartLists/android/app/build/intermediates/dex/debug/mergeDexDebug/out/classes3.dex
 path.2=classes3.dex
 base.1=/home/gerus/Dev/SmartLists/android/app/build/intermediates/dex/debug/mergeDexDebug/out/classes2.dex

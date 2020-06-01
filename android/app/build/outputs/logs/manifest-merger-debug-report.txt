@@ -15,7 +15,7 @@ MERGED from [:react-native-gesture-handler] /home/gerus/Dev/SmartLists/node_modu
 MERGED from [:react-native-reanimated] /home/gerus/Dev/SmartLists/node_modules/react-native-reanimated/android/build/intermediates/library_manifest/debug/AndroidManifest.xml:2:1-11:12
 MERGED from [:react-native-safe-area-context] /home/gerus/Dev/SmartLists/node_modules/react-native-safe-area-context/android/build/intermediates/library_manifest/debug/AndroidManifest.xml:2:1-9:12
 MERGED from [:react-native-screens] /home/gerus/Dev/SmartLists/node_modules/react-native-screens/android/build/intermediates/library_manifest/debug/AndroidManifest.xml:2:1-11:12
-MERGED from [com.facebook.react:react-native:0.62.2] /home/gerus/.gradle/caches/transforms-2/files-2.1/4953a854a21d1101a3765ebb73392eb5/jetified-react-native-0.62.2/AndroidManifest.xml:2:1-13:12
+MERGED from [com.facebook.react:react-native:0.61.5] /home/gerus/.gradle/caches/transforms-2/files-2.1/4f51aeddcc485f243c7f1e4e18bb9e16/jetified-react-native-0.61.5/AndroidManifest.xml:2:1-13:12
 MERGED from [org.webkit:android-jsc:r245459] /home/gerus/.gradle/caches/transforms-2/files-2.1/ec73ba1c6d2849b4eaaeae9a310820bd/android-jsc-r245459/AndroidManifest.xml:2:1-11:12
 MERGED from [com.google.android.material:material:1.1.0] /home/gerus/.gradle/caches/transforms-2/files-2.1/91cce03d19de29395edb51be931978de/material-1.1.0/AndroidManifest.xml:17:1-24:12
 MERGED from [androidx.appcompat:appcompat:1.1.0] /home/gerus/.gradle/caches/transforms-2/files-2.1/008f243bf6dd08f82e37115d7cd7d56c/appcompat-1.1.0/AndroidManifest.xml:17:1-24:12
@@ -26,7 +26,7 @@ MERGED from [com.facebook.fresco:nativeimagefilters:2.0.0] /home/gerus/.gradle/c
 MERGED from [com.facebook.fresco:imagepipeline:2.0.0] /home/gerus/.gradle/caches/transforms-2/files-2.1/f751f1545ff3f7087db2bf86f9bf09ce/imagepipeline-2.0.0/AndroidManifest.xml:2:1-9:12
 MERGED from [com.facebook.fresco:nativeimagetranscoder:2.0.0] /home/gerus/.gradle/caches/transforms-2/files-2.1/5909facf328bc45ba7063d99ff65d055/nativeimagetranscoder-2.0.0/AndroidManifest.xml:2:1-9:12
 MERGED from [com.facebook.fresco:imagepipeline-base:2.0.0] /home/gerus/.gradle/caches/transforms-2/files-2.1/c151360b196877583f8186fee763893d/imagepipeline-base-2.0.0/AndroidManifest.xml:2:1-9:12
-MERGED from [com.facebook.soloader:soloader:0.8.0] /home/gerus/.gradle/caches/transforms-2/files-2.1/f209b847a4f587873c5ea43edee4213d/soloader-0.8.0/AndroidManifest.xml:2:1-13:12
+MERGED from [com.facebook.soloader:soloader:0.6.0] /home/gerus/.gradle/caches/transforms-2/files-2.1/0882cce5a7f45530a0e4d6e7741b0d58/soloader-0.6.0/AndroidManifest.xml:2:1-13:12
 MERGED from [com.google.firebase:firebase-firestore:21.4.3] /home/gerus/.gradle/caches/transforms-2/files-2.1/07a38dba08e475a37d7a944d3878d28b/jetified-firebase-firestore-21.4.3/AndroidManifest.xml:2:1-26:12
 MERGED from [io.grpc:grpc-android:1.21.0] /home/gerus/.gradle/caches/transforms-2/files-2.1/fdb687b4561d867fe3ef1aa6ca7473cf/grpc-android-1.21.0/AndroidManifest.xml:2:1-13:12
 MERGED from [com.google.firebase:firebase-core:17.4.1] /home/gerus/.gradle/caches/transforms-2/files-2.1/9333326a4e04ebd79c0c29ff87663307/firebase-core-17.4.1/AndroidManifest.xml:2:1-9:12
@@ -57,7 +57,6 @@ MERGED from [androidx.fragment:fragment:1.2.1] /home/gerus/.gradle/caches/transf
 MERGED from [androidx.coordinatorlayout:coordinatorlayout:1.1.0] /home/gerus/.gradle/caches/transforms-2/files-2.1/50bc18373f9e048960858ea8ee821b80/coordinatorlayout-1.1.0/AndroidManifest.xml:17:1-24:12
 MERGED from [androidx.swiperefreshlayout:swiperefreshlayout:1.0.0] /home/gerus/.gradle/caches/transforms-2/files-2.1/3a50861bf9424135f9d1f8134a5c6c92/swiperefreshlayout-1.0.0/AndroidManifest.xml:17:1-22:12
 MERGED from [com.facebook.fresco:fbcore:2.0.0] /home/gerus/.gradle/caches/transforms-2/files-2.1/9df120fcdf312195c61b7b164551978e/jetified-fbcore-2.0.0/AndroidManifest.xml:2:1-9:12
-MERGED from [com.facebook.soloader:annotation:0.8.0] /home/gerus/.gradle/caches/transforms-2/files-2.1/6a33ed8952a8d2fbcb3c13e05daea5b6/annotation-0.8.0/AndroidManifest.xml:2:1-13:12
 MERGED from [androidx.appcompat:appcompat-resources:1.1.0] /home/gerus/.gradle/caches/transforms-2/files-2.1/32c70b105fd3ff9d39651de69567e776/appcompat-resources-1.1.0/AndroidManifest.xml:17:1-24:12
 MERGED from [androidx.drawerlayout:drawerlayout:1.0.0] /home/gerus/.gradle/caches/transforms-2/files-2.1/99f864aeab9ced40015354f065bb63f7/drawerlayout-1.0.0/AndroidManifest.xml:17:1-22:12
 MERGED from [androidx.viewpager:viewpager:1.0.0] /home/gerus/.gradle/caches/transforms-2/files-2.1/be9f34bf942929f753938a4d65b2b257/viewpager-1.0.0/AndroidManifest.xml:17:1-22:12
@@ -131,12 +130,12 @@ application
 ADDED from /home/gerus/Dev/SmartLists/android/app/src/main/AndroidManifest.xml:6:5-24:19
 MERGED from /home/gerus/Dev/SmartLists/android/app/src/main/AndroidManifest.xml:6:5-24:19
 MERGED from /home/gerus/Dev/SmartLists/android/app/src/main/AndroidManifest.xml:6:5-24:19
-MERGED from [com.facebook.react:react-native:0.62.2] /home/gerus/.gradle/caches/transforms-2/files-2.1/4953a854a21d1101a3765ebb73392eb5/jetified-react-native-0.62.2/AndroidManifest.xml:11:5-20
-MERGED from [com.facebook.react:react-native:0.62.2] /home/gerus/.gradle/caches/transforms-2/files-2.1/4953a854a21d1101a3765ebb73392eb5/jetified-react-native-0.62.2/AndroidManifest.xml:11:5-20
+MERGED from [com.facebook.react:react-native:0.61.5] /home/gerus/.gradle/caches/transforms-2/files-2.1/4f51aeddcc485f243c7f1e4e18bb9e16/jetified-react-native-0.61.5/AndroidManifest.xml:11:5-20
+MERGED from [com.facebook.react:react-native:0.61.5] /home/gerus/.gradle/caches/transforms-2/files-2.1/4f51aeddcc485f243c7f1e4e18bb9e16/jetified-react-native-0.61.5/AndroidManifest.xml:11:5-20
 MERGED from [com.google.android.material:material:1.1.0] /home/gerus/.gradle/caches/transforms-2/files-2.1/91cce03d19de29395edb51be931978de/material-1.1.0/AndroidManifest.xml:22:5-20
 MERGED from [com.google.android.material:material:1.1.0] /home/gerus/.gradle/caches/transforms-2/files-2.1/91cce03d19de29395edb51be931978de/material-1.1.0/AndroidManifest.xml:22:5-20
-MERGED from [com.facebook.soloader:soloader:0.8.0] /home/gerus/.gradle/caches/transforms-2/files-2.1/f209b847a4f587873c5ea43edee4213d/soloader-0.8.0/AndroidManifest.xml:11:5-20
-MERGED from [com.facebook.soloader:soloader:0.8.0] /home/gerus/.gradle/caches/transforms-2/files-2.1/f209b847a4f587873c5ea43edee4213d/soloader-0.8.0/AndroidManifest.xml:11:5-20
+MERGED from [com.facebook.soloader:soloader:0.6.0] /home/gerus/.gradle/caches/transforms-2/files-2.1/0882cce5a7f45530a0e4d6e7741b0d58/soloader-0.6.0/AndroidManifest.xml:11:5-20
+MERGED from [com.facebook.soloader:soloader:0.6.0] /home/gerus/.gradle/caches/transforms-2/files-2.1/0882cce5a7f45530a0e4d6e7741b0d58/soloader-0.6.0/AndroidManifest.xml:11:5-20
 MERGED from [com.google.firebase:firebase-firestore:21.4.3] /home/gerus/.gradle/caches/transforms-2/files-2.1/07a38dba08e475a37d7a944d3878d28b/jetified-firebase-firestore-21.4.3/AndroidManifest.xml:16:5-24:19
 MERGED from [com.google.firebase:firebase-firestore:21.4.3] /home/gerus/.gradle/caches/transforms-2/files-2.1/07a38dba08e475a37d7a944d3878d28b/jetified-firebase-firestore-21.4.3/AndroidManifest.xml:16:5-24:19
 MERGED from [com.google.firebase:firebase-core:17.4.1] /home/gerus/.gradle/caches/transforms-2/files-2.1/9333326a4e04ebd79c0c29ff87663307/firebase-core-17.4.1/AndroidManifest.xml:7:5-20
@@ -177,8 +176,6 @@ MERGED from [com.google.android.gms:play-services-ads-identifier:17.0.0] /home/g
 MERGED from [com.google.android.gms:play-services-ads-identifier:17.0.0] /home/gerus/.gradle/caches/transforms-2/files-2.1/880be9db6e69f3ba4c0c54df3718a0a5/play-services-ads-identifier-17.0.0/AndroidManifest.xml:22:5-20
 MERGED from [com.google.android.gms:play-services-basement:17.0.0] /home/gerus/.gradle/caches/transforms-2/files-2.1/906e1dde6f7e8dd8993466ed927649ed/jetified-play-services-basement-17.0.0/AndroidManifest.xml:22:5-26:19
 MERGED from [com.google.android.gms:play-services-basement:17.0.0] /home/gerus/.gradle/caches/transforms-2/files-2.1/906e1dde6f7e8dd8993466ed927649ed/jetified-play-services-basement-17.0.0/AndroidManifest.xml:22:5-26:19
-MERGED from [com.facebook.soloader:annotation:0.8.0] /home/gerus/.gradle/caches/transforms-2/files-2.1/6a33ed8952a8d2fbcb3c13e05daea5b6/annotation-0.8.0/AndroidManifest.xml:11:5-20
-MERGED from [com.facebook.soloader:annotation:0.8.0] /home/gerus/.gradle/caches/transforms-2/files-2.1/6a33ed8952a8d2fbcb3c13e05daea5b6/annotation-0.8.0/AndroidManifest.xml:11:5-20
 MERGED from [androidx.core:core:1.1.0] /home/gerus/.gradle/caches/transforms-2/files-2.1/5644a94d9f003a0b90383b8c36ca5e5e/core-1.1.0/AndroidManifest.xml:24:5-89
 MERGED from [androidx.core:core:1.1.0] /home/gerus/.gradle/caches/transforms-2/files-2.1/5644a94d9f003a0b90383b8c36ca5e5e/core-1.1.0/AndroidManifest.xml:24:5-89
 MERGED from [androidx.versionedparcelable:versionedparcelable:1.1.0] /home/gerus/.gradle/caches/transforms-2/files-2.1/24ee8fd3de587622551e6fff76c48f08/versionedparcelable-1.1.0/AndroidManifest.xml:24:5-25:19
@@ -257,8 +254,8 @@ MERGED from [:react-native-safe-area-context] /home/gerus/Dev/SmartLists/node_mo
 MERGED from [:react-native-safe-area-context] /home/gerus/Dev/SmartLists/node_modules/react-native-safe-area-context/android/build/intermediates/library_manifest/debug/AndroidManifest.xml:5:5-7:41
 MERGED from [:react-native-screens] /home/gerus/Dev/SmartLists/node_modules/react-native-screens/android/build/intermediates/library_manifest/debug/AndroidManifest.xml:7:5-9:41
 MERGED from [:react-native-screens] /home/gerus/Dev/SmartLists/node_modules/react-native-screens/android/build/intermediates/library_manifest/debug/AndroidManifest.xml:7:5-9:41
-MERGED from [com.facebook.react:react-native:0.62.2] /home/gerus/.gradle/caches/transforms-2/files-2.1/4953a854a21d1101a3765ebb73392eb5/jetified-react-native-0.62.2/AndroidManifest.xml:7:5-9:41
-MERGED from [com.facebook.react:react-native:0.62.2] /home/gerus/.gradle/caches/transforms-2/files-2.1/4953a854a21d1101a3765ebb73392eb5/jetified-react-native-0.62.2/AndroidManifest.xml:7:5-9:41
+MERGED from [com.facebook.react:react-native:0.61.5] /home/gerus/.gradle/caches/transforms-2/files-2.1/4f51aeddcc485f243c7f1e4e18bb9e16/jetified-react-native-0.61.5/AndroidManifest.xml:7:5-9:41
+MERGED from [com.facebook.react:react-native:0.61.5] /home/gerus/.gradle/caches/transforms-2/files-2.1/4f51aeddcc485f243c7f1e4e18bb9e16/jetified-react-native-0.61.5/AndroidManifest.xml:7:5-9:41
 MERGED from [org.webkit:android-jsc:r245459] /home/gerus/.gradle/caches/transforms-2/files-2.1/ec73ba1c6d2849b4eaaeae9a310820bd/android-jsc-r245459/AndroidManifest.xml:7:5-9:41
 MERGED from [org.webkit:android-jsc:r245459] /home/gerus/.gradle/caches/transforms-2/files-2.1/ec73ba1c6d2849b4eaaeae9a310820bd/android-jsc-r245459/AndroidManifest.xml:7:5-9:41
 MERGED from [com.google.android.material:material:1.1.0] /home/gerus/.gradle/caches/transforms-2/files-2.1/91cce03d19de29395edb51be931978de/material-1.1.0/AndroidManifest.xml:20:5-44
@@ -279,8 +276,8 @@ MERGED from [com.facebook.fresco:nativeimagetranscoder:2.0.0] /home/gerus/.gradl
 MERGED from [com.facebook.fresco:nativeimagetranscoder:2.0.0] /home/gerus/.gradle/caches/transforms-2/files-2.1/5909facf328bc45ba7063d99ff65d055/nativeimagetranscoder-2.0.0/AndroidManifest.xml:5:5-7:41
 MERGED from [com.facebook.fresco:imagepipeline-base:2.0.0] /home/gerus/.gradle/caches/transforms-2/files-2.1/c151360b196877583f8186fee763893d/imagepipeline-base-2.0.0/AndroidManifest.xml:5:5-7:41
 MERGED from [com.facebook.fresco:imagepipeline-base:2.0.0] /home/gerus/.gradle/caches/transforms-2/files-2.1/c151360b196877583f8186fee763893d/imagepipeline-base-2.0.0/AndroidManifest.xml:5:5-7:41
-MERGED from [com.facebook.soloader:soloader:0.8.0] /home/gerus/.gradle/caches/transforms-2/files-2.1/f209b847a4f587873c5ea43edee4213d/soloader-0.8.0/AndroidManifest.xml:7:5-9:41
-MERGED from [com.facebook.soloader:soloader:0.8.0] /home/gerus/.gradle/caches/transforms-2/files-2.1/f209b847a4f587873c5ea43edee4213d/soloader-0.8.0/AndroidManifest.xml:7:5-9:41
+MERGED from [com.facebook.soloader:soloader:0.6.0] /home/gerus/.gradle/caches/transforms-2/files-2.1/0882cce5a7f45530a0e4d6e7741b0d58/soloader-0.6.0/AndroidManifest.xml:7:5-9:41
+MERGED from [com.facebook.soloader:soloader:0.6.0] /home/gerus/.gradle/caches/transforms-2/files-2.1/0882cce5a7f45530a0e4d6e7741b0d58/soloader-0.6.0/AndroidManifest.xml:7:5-9:41
 MERGED from [com.google.firebase:firebase-firestore:21.4.3] /home/gerus/.gradle/caches/transforms-2/files-2.1/07a38dba08e475a37d7a944d3878d28b/jetified-firebase-firestore-21.4.3/AndroidManifest.xml:7:5-9:41
 MERGED from [com.google.firebase:firebase-firestore:21.4.3] /home/gerus/.gradle/caches/transforms-2/files-2.1/07a38dba08e475a37d7a944d3878d28b/jetified-firebase-firestore-21.4.3/AndroidManifest.xml:7:5-9:41
 MERGED from [io.grpc:grpc-android:1.21.0] /home/gerus/.gradle/caches/transforms-2/files-2.1/fdb687b4561d867fe3ef1aa6ca7473cf/grpc-android-1.21.0/AndroidManifest.xml:7:5-9:41
@@ -341,8 +338,6 @@ MERGED from [androidx.swiperefreshlayout:swiperefreshlayout:1.0.0] /home/gerus/.
 MERGED from [androidx.swiperefreshlayout:swiperefreshlayout:1.0.0] /home/gerus/.gradle/caches/transforms-2/files-2.1/3a50861bf9424135f9d1f8134a5c6c92/swiperefreshlayout-1.0.0/AndroidManifest.xml:20:5-44
 MERGED from [com.facebook.fresco:fbcore:2.0.0] /home/gerus/.gradle/caches/transforms-2/files-2.1/9df120fcdf312195c61b7b164551978e/jetified-fbcore-2.0.0/AndroidManifest.xml:5:5-7:41
 MERGED from [com.facebook.fresco:fbcore:2.0.0] /home/gerus/.gradle/caches/transforms-2/files-2.1/9df120fcdf312195c61b7b164551978e/jetified-fbcore-2.0.0/AndroidManifest.xml:5:5-7:41
-MERGED from [com.facebook.soloader:annotation:0.8.0] /home/gerus/.gradle/caches/transforms-2/files-2.1/6a33ed8952a8d2fbcb3c13e05daea5b6/annotation-0.8.0/AndroidManifest.xml:7:5-9:41
-MERGED from [com.facebook.soloader:annotation:0.8.0] /home/gerus/.gradle/caches/transforms-2/files-2.1/6a33ed8952a8d2fbcb3c13e05daea5b6/annotation-0.8.0/AndroidManifest.xml:7:5-9:41
 MERGED from [androidx.appcompat:appcompat-resources:1.1.0] /home/gerus/.gradle/caches/transforms-2/files-2.1/32c70b105fd3ff9d39651de69567e776/appcompat-resources-1.1.0/AndroidManifest.xml:20:5-22:41
 MERGED from [androidx.appcompat:appcompat-resources:1.1.0] /home/gerus/.gradle/caches/transforms-2/files-2.1/32c70b105fd3ff9d39651de69567e776/appcompat-resources-1.1.0/AndroidManifest.xml:20:5-22:41
 MERGED from [androidx.drawerlayout:drawerlayout:1.0.0] /home/gerus/.gradle/caches/transforms-2/files-2.1/99f864aeab9ced40015354f065bb63f7/drawerlayout-1.0.0/AndroidManifest.xml:20:5-44
