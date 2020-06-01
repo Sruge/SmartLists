@@ -169,6 +169,7 @@ com/facebook/infer/annotation/ThreadConfined.class
 com/facebook/infer/annotation/ThreadSafe.class
 com/facebook/infer/annotation/TrueOnNull.class
 com/facebook/infer/annotation/Verify.class
+com/facebook/jni/annotations/DoNotStrip.class
 com/facebook/proguard/annotations/DoNotStrip.class
 com/facebook/proguard/annotations/KeepGettersAndSetters.class
 com/facebook/react/PackageList.class
@@ -193,6 +194,7 @@ com/facebook/react/module/annotations/ReactModule.class
 com/facebook/react/module/annotations/ReactModuleList.class
 com/facebook/react/surface/ReactStage.class
 com/facebook/react/uimanager/BaseViewManager.class
+com/facebook/react/uimanager/BaseViewManagerInterface.class
 com/facebook/react/uimanager/IViewManagerWithChildren.class
 com/facebook/react/uimanager/UIImplementationProvider.class
 com/facebook/react/uimanager/ViewGroupManager.class
