@@ -15,11 +15,11 @@
 12-->/home/gerus/Dev/SmartLists/android/app/src/main/AndroidManifest.xml:4:5-67
 12-->/home/gerus/Dev/SmartLists/android/app/src/main/AndroidManifest.xml:4:22-64
 13    <uses-permission android:name="android.permission.WAKE_LOCK" />
-13-->[:@react-native-firebase_database] /home/gerus/Dev/SmartLists/node_modules/@react-native-firebase/database/android/build/intermediates/library_manifest/debug/AndroidManifest.xml:12:5-68
-13-->[:@react-native-firebase_database] /home/gerus/Dev/SmartLists/node_modules/@react-native-firebase/database/android/build/intermediates/library_manifest/debug/AndroidManifest.xml:12:22-65
+13-->[:react-native-firebase_database] /home/gerus/Dev/SmartLists/node_modules/@react-native-firebase/database/android/build/intermediates/library_manifest/debug/AndroidManifest.xml:12:5-68
+13-->[:react-native-firebase_database] /home/gerus/Dev/SmartLists/node_modules/@react-native-firebase/database/android/build/intermediates/library_manifest/debug/AndroidManifest.xml:12:22-65
 14    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" /> <!-- Required by older versions of Google Play services to create IID tokens -->
-14-->[:@react-native-firebase_database] /home/gerus/Dev/SmartLists/node_modules/@react-native-firebase/database/android/build/intermediates/library_manifest/debug/AndroidManifest.xml:13:5-79
-14-->[:@react-native-firebase_database] /home/gerus/Dev/SmartLists/node_modules/@react-native-firebase/database/android/build/intermediates/library_manifest/debug/AndroidManifest.xml:13:22-76
+14-->[:react-native-firebase_database] /home/gerus/Dev/SmartLists/node_modules/@react-native-firebase/database/android/build/intermediates/library_manifest/debug/AndroidManifest.xml:13:5-79
+14-->[:react-native-firebase_database] /home/gerus/Dev/SmartLists/node_modules/@react-native-firebase/database/android/build/intermediates/library_manifest/debug/AndroidManifest.xml:13:22-76
 15    <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
 15-->[com.google.firebase:firebase-iid:20.1.5] /home/gerus/.gradle/caches/transforms-2/files-2.1/ed783ed6254827bc46be3f89c881b86c/firebase-iid-20.1.5/AndroidManifest.xml:26:5-82
 15-->[com.google.firebase:firebase-iid:20.1.5] /home/gerus/.gradle/caches/transforms-2/files-2.1/ed783ed6254827bc46be3f89c881b86c/firebase-iid-20.1.5/AndroidManifest.xml:26:22-79
@@ -127,25 +127,25 @@
 68            </intent-filter>
 69        </receiver>
 70
-71        <activity
-71-->[com.google.android.gms:play-services-base:17.0.0] /home/gerus/.gradle/caches/transforms-2/files-2.1/45bb801ab1148052b41001ba0c7a905f/play-services-base-17.0.0/AndroidManifest.xml:23:9-26:75
-72            android:name="com.google.android.gms.common.api.GoogleApiActivity"
-72-->[com.google.android.gms:play-services-base:17.0.0] /home/gerus/.gradle/caches/transforms-2/files-2.1/45bb801ab1148052b41001ba0c7a905f/play-services-base-17.0.0/AndroidManifest.xml:24:13-79
-73            android:exported="false"
-73-->[com.google.android.gms:play-services-base:17.0.0] /home/gerus/.gradle/caches/transforms-2/files-2.1/45bb801ab1148052b41001ba0c7a905f/play-services-base-17.0.0/AndroidManifest.xml:25:13-37
-74            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
-74-->[com.google.android.gms:play-services-base:17.0.0] /home/gerus/.gradle/caches/transforms-2/files-2.1/45bb801ab1148052b41001ba0c7a905f/play-services-base-17.0.0/AndroidManifest.xml:26:13-72
-75
-76        <provider
-76-->[com.google.firebase:firebase-common:19.3.0] /home/gerus/.gradle/caches/transforms-2/files-2.1/a8ed181725605e0765ba0551ab7e7ffc/jetified-firebase-common-19.3.0/AndroidManifest.xml:26:9-30:39
-77            android:name="com.google.firebase.provider.FirebaseInitProvider"
-77-->[com.google.firebase:firebase-common:19.3.0] /home/gerus/.gradle/caches/transforms-2/files-2.1/a8ed181725605e0765ba0551ab7e7ffc/jetified-firebase-common-19.3.0/AndroidManifest.xml:27:13-77
-78            android:authorities="com.smartlists.firebaseinitprovider"
-78-->[com.google.firebase:firebase-common:19.3.0] /home/gerus/.gradle/caches/transforms-2/files-2.1/a8ed181725605e0765ba0551ab7e7ffc/jetified-firebase-common-19.3.0/AndroidManifest.xml:28:13-72
+71        <provider
+71-->[com.google.firebase:firebase-common:19.3.0] /home/gerus/.gradle/caches/transforms-2/files-2.1/a8ed181725605e0765ba0551ab7e7ffc/jetified-firebase-common-19.3.0/AndroidManifest.xml:26:9-30:39
+72            android:name="com.google.firebase.provider.FirebaseInitProvider"
+72-->[com.google.firebase:firebase-common:19.3.0] /home/gerus/.gradle/caches/transforms-2/files-2.1/a8ed181725605e0765ba0551ab7e7ffc/jetified-firebase-common-19.3.0/AndroidManifest.xml:27:13-77
+73            android:authorities="com.smartlists.firebaseinitprovider"
+73-->[com.google.firebase:firebase-common:19.3.0] /home/gerus/.gradle/caches/transforms-2/files-2.1/a8ed181725605e0765ba0551ab7e7ffc/jetified-firebase-common-19.3.0/AndroidManifest.xml:28:13-72
+74            android:exported="false"
+74-->[com.google.firebase:firebase-common:19.3.0] /home/gerus/.gradle/caches/transforms-2/files-2.1/a8ed181725605e0765ba0551ab7e7ffc/jetified-firebase-common-19.3.0/AndroidManifest.xml:29:13-37
+75            android:initOrder="100" />
+75-->[com.google.firebase:firebase-common:19.3.0] /home/gerus/.gradle/caches/transforms-2/files-2.1/a8ed181725605e0765ba0551ab7e7ffc/jetified-firebase-common-19.3.0/AndroidManifest.xml:30:13-36
+76
+77        <activity
+77-->[com.google.android.gms:play-services-base:17.0.0] /home/gerus/.gradle/caches/transforms-2/files-2.1/45bb801ab1148052b41001ba0c7a905f/play-services-base-17.0.0/AndroidManifest.xml:23:9-26:75
+78            android:name="com.google.android.gms.common.api.GoogleApiActivity"
+78-->[com.google.android.gms:play-services-base:17.0.0] /home/gerus/.gradle/caches/transforms-2/files-2.1/45bb801ab1148052b41001ba0c7a905f/play-services-base-17.0.0/AndroidManifest.xml:24:13-79
 79            android:exported="false"
-79-->[com.google.firebase:firebase-common:19.3.0] /home/gerus/.gradle/caches/transforms-2/files-2.1/a8ed181725605e0765ba0551ab7e7ffc/jetified-firebase-common-19.3.0/AndroidManifest.xml:29:13-37
-80            android:initOrder="100" />
-80-->[com.google.firebase:firebase-common:19.3.0] /home/gerus/.gradle/caches/transforms-2/files-2.1/a8ed181725605e0765ba0551ab7e7ffc/jetified-firebase-common-19.3.0/AndroidManifest.xml:30:13-36
+79-->[com.google.android.gms:play-services-base:17.0.0] /home/gerus/.gradle/caches/transforms-2/files-2.1/45bb801ab1148052b41001ba0c7a905f/play-services-base-17.0.0/AndroidManifest.xml:25:13-37
+80            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+80-->[com.google.android.gms:play-services-base:17.0.0] /home/gerus/.gradle/caches/transforms-2/files-2.1/45bb801ab1148052b41001ba0c7a905f/play-services-base-17.0.0/AndroidManifest.xml:26:13-72
 81
 82        <receiver
 82-->[com.google.android.gms:play-services-measurement:17.4.1] /home/gerus/.gradle/caches/transforms-2/files-2.1/c835347705c69f8598202e27770fc9d5/play-services-measurement-17.4.1/AndroidManifest.xml:29:9-33:20

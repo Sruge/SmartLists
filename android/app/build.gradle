@@ -183,12 +183,6 @@ android {
 }
 
 dependencies {
-    implementation project(':@react-native-community_masked-view')
-    implementation project(':react-native-safe-area-context')
-    implementation project(':react-native-screens')
-    implementation project(':react-native-reanimated')
-    implementation project(':react-native-gesture-handler')
-    implementation project(':@react-native-firebase_database')
     implementation 'com.android.support:multidex:1.0.3'
     implementation fileTree(dir: "libs", include: ["*.jar"])
     implementation "com.facebook.react:react-native:+"  // From node_modules

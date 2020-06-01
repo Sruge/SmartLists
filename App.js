@@ -79,7 +79,7 @@ export default class App extends Component<Props> {
           <Stack.Screen name="InsideList" component={InsideList} options={{title: "Inside List"}}/>
           <Stack.Screen name="AddListElement" component={AddListElement} options={{title: "Add List Element", headerRight: () => (
               <TouchableOpacity style={styles.headerButton}
-              onPress={() => console.log("Save pressed")}>
+                onPress={() => console.log("Save pressed")}>
                 <Text>
                     Save
                 </Text>

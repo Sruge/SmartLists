@@ -27,7 +27,7 @@ export default AddListElement = (props) => {
     const [listItems, setListItems] = useState({});
     const [textKey, setTextKey] = useState('');
     const [textVal, setTextVal] = useState('');
-    const [lists, setLists] = useState();
+    const [entries, setEntries] = useState();
     const [loading, setLoading] = useState();
     const route = useRoute();
     const navigation = useNavigation();
@@ -37,32 +37,32 @@ export default AddListElement = (props) => {
     useEffect(() => {
         const listNames = firestore()
           .collection('Lists')
-          .doc(props.listName)
+          .doc(route.params.listName)
           .onSnapshot(documentSnapshot => {
-            console.log("ListName: ", route.params)
+            console.log("Document: ", documentSnapshot.get('elements'))
 
-            // const lists = [];
+            // const entries = [];
       
-            // querySnapshot.forEach(documentSnapshot => {
-            //     console.log("Document: ", documentSnapshot.get('name'))
+            // documentSnapshot.get('elements').forEach(entry => {
+            //     console.log("Entry: ", entry)
 
-            //   lists.push({
-            //     value: documentSnapshot.get('name'),
-            //     key: documentSnapshot.id,
+        
+            //   entries.push({
+            //     value: entry.value,
+            //     key: entry.key,
             //   });
-            //   console.log("Data: ", documentSnapshot.get('elements'))
-            //   console.log(lists)
             // });
       
-            // setLists(lists);
+            // setEntries(entries);
             // setLoading(false);
           });
+
       
         // Unsubscribe from events when no longer in use
         return () => listNames();
       }, []);
 
-    handleOk = () => {
+    handleAdd = () => {
         inputAvailable = false;
         setListItems(list => { 
             list[textKey.toString()] = textVal
@@ -78,13 +78,13 @@ export default AddListElement = (props) => {
       <View style={styles.container}>
           <TextInput editable={inputAvailable} onChangeText={textKey => setTextKey(textKey)} defaultValue={textKey} style={styles.textInput} placeholder="Key of the List Element"/>
           <TextInput editable={inputAvailable} onChangeText={textVal => setTextVal(textVal)} defaultValue={textVal} style={styles.textInput} placeholder="Value of the List Element"/>
-          <TouchableOpacity title="Ok" onPress={handleOk} style={styles.okButton}>
+          <TouchableOpacity title="Ok" onPress={handleAdd} style={styles.okButton}>
               <Text style={styles.buttonTitle}>ADD</Text> 
           </TouchableOpacity>
           <FlatList
-            data={lists}
+            data={entries}
             renderItem={({ item }) => (
-                    <Text style = {styles.listEntry}>{item.value}</Text>
+                <Text style = {styles.listEntry}>{item.value}</Text>
             )}/>
       </View>
     </>
