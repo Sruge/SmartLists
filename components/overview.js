@@ -9,30 +9,15 @@ import 'react-native-gesture-handler';
 import '@react-native-firebase/app';
 import firestore from '@react-native-firebase/firestore';
 
-
 import React, { useEffect, useState } from 'react';
 import {
-  SafeAreaView,
   StyleSheet,
-  ScrollView,
-  View,
-  Text,
-  StatusBar,
   ActivityIndicator,
   FlatList,
-  TouchableOpacity
 } from 'react-native';
 
-import {
-  Colors,
-} from 'react-native/Libraries/NewAppScreen';
-import { NavigationContainer, useNavigation, useRoute, useFocusEffect } from '@react-navigation/native';
-import AsyncStorage from '@react-native-community/async-storage';
-
-import database from '@react-native-firebase/database';
-import { max } from 'react-native-reanimated';
-import addListElement from './addListElement';
-import { Button } from 'react-native-elements';
+import { useNavigation } from '@react-navigation/native';
+import { ListItem } from 'react-native-elements';
 
 
 
@@ -53,6 +38,7 @@ export default Overview = (props) => {
               lists.push({
                 value: documentSnapshot.get('name'),
                 key: documentSnapshot.id,
+                len: documentSnapshot.get('elements').length.toString()
               });
             });
       
@@ -78,8 +64,16 @@ export default Overview = (props) => {
     }
 
     renderItem = ({ item }) => {
+      console.log("render item: ", item)
       return (
-        <Button title={item.value} onPress={() => handleItemClick(item)} buttonStyle={styles.listItem}/>
+        <ListItem 
+          title={item.value}
+          subtitle={item.len}
+          key={item.key} 
+          //chevron={{color: 'blue'}}
+          onPress={() => handleItemClick(item)} 
+          style={styles.listItem}
+          bottomDivider/>
       )
     }
 
@@ -93,7 +87,7 @@ export default Overview = (props) => {
 
 const styles = StyleSheet.create({
   listItem: {
-    marginHorizontal: 20,
-    marginTop: 20,
+    marginHorizontal: 10,
+    marginTop: 5
   },
 });
