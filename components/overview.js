@@ -68,13 +68,18 @@ export default Overview = (props) => {
         return <ActivityIndicator />;
     }
 
-    handleClick = (item) => {
-      navigation.navigate("AddListElement", {listName: item.key, title: "Hans"})
+    handleItemClick = (item) => {
+      navigation.navigate("AddListElement", {listId: item.key})
+    }
+
+    handleAddClick = () => {
+      navigation.navigate("AddList")
+
     }
 
     renderItem = ({ item }) => {
       return (
-        <Button title={item.value} onPress={() => handleClick(item)} buttonStyle={styles.listItem}/>
+        <Button title={item.value} onPress={() => handleItemClick(item)} buttonStyle={styles.listItem}/>
       )
     }
 

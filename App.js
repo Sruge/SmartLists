@@ -72,11 +72,13 @@ export default class App extends Component<Props> {
         <Stack.Navigator initialRouteName="Overview">
           <Stack.Screen name="AddList" component={AddList} options={{title: "Add List"}}/>
           <Stack.Screen name="Overview" component={Overview} options={{title: "List Overview", headerRight: () => (
-              <Button title="ADD" buttonStyle={styles.headerButton} onPress={() => console.log("ADD pressed")}/>
+              <Button title="ADD" buttonStyle={styles.headerButton} onPress={() => 
+                handleAddClick()  
+              }/>
               )}}/>
           <Stack.Screen name="InsideList" component={InsideList} options={{title: "Inside List"}}/>
           <Stack.Screen name="AddListElement" component={AddListElement} options={{title: "Add List Element", headerRight: () => (
-              <Button title="SAVE" buttonStyle={styles.headerButton} onPress={() => console.log("Save pressed")}/>
+              <Button title="SAVE" buttonStyle={styles.headerButton} onPress={() => handleSaveClick()}/>
               )}}/>
         </Stack.Navigator>
       </NavigationContainer>
