@@ -58,6 +58,10 @@ export default Explore = (props) => {
     navigation.navigate("AddList");
   };
 
+  handleLongPress = (item) => {
+    navigation.navigate("EditList", { listName: item.key });
+  };
+
   renderItem = ({ item }) => {
     return (
       <ListItem
@@ -68,6 +72,7 @@ export default Explore = (props) => {
         onPress={() => handleItemClick(item)}
         style={styles.listItem}
         bottomDivider
+        onLongPress={() => handleLongPress(item)}
       />
     );
   };

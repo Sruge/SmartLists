@@ -18,8 +18,7 @@ import {
   TextInput,
 } from "react-native";
 import auth from "@react-native-firebase/auth";
-import { Button } from 'react-native-elements'
-
+import { Button } from "react-native-elements";
 
 export default SignUp = () => {
   const [loading, setLoading] = useState(false);
@@ -28,22 +27,23 @@ export default SignUp = () => {
   const [userName, setUserName] = useState();
 
   handleSignUp = () => {
-      auth().createUserWithEmailAndPassword(email, pw)
+    auth()
+      .createUserWithEmailAndPassword(email, pw)
       .then(() => {
-        console.log("Success", email, pw)
+        console.log("Success", email, pw);
       })
-      .catch(error => {
-        if (error.code === 'auth/email-already-in-use') {
-          console.log('That email address is already in use!');
+      .catch((error) => {
+        if (error.code === "auth/email-already-in-use") {
+          console.log("That email address is already in use!");
         }
-    
-        if (error.code === 'auth/invalid-email') {
-          console.log('That email address is invalid!');
+
+        if (error.code === "auth/invalid-email") {
+          console.log("That email address is invalid!");
         }
-    
+
         console.error(error);
       });
-  }
+  };
 
   if (loading) {
     return <ActivityIndicator />;
@@ -82,8 +82,11 @@ export default SignUp = () => {
             placeholder={"Choose a Password"}
             maxLength={40}
           />
-                  <Button title="OK" onPress={handleSignUp} buttonStyle={styles.okButton} />
-
+          <Button
+            title="OK"
+            onPress={handleSignUp}
+            buttonStyle={styles.okButton}
+          />
         </View>
       </View>
     </View>
@@ -99,7 +102,7 @@ const styles = StyleSheet.create({
   textInput: {
     padding: 10,
     fontSize: 20,
-    marginEnd: 10
+    marginEnd: 10,
   },
   title: {
     fontSize: 30,
@@ -112,7 +115,7 @@ const styles = StyleSheet.create({
   },
   okButton: {
     backgroundColor: "#f4511e",
-    marginTop: 20
+    marginTop: 20,
   },
   inputContainer: {
     backgroundColor: "white",

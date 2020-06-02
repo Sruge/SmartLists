@@ -42,7 +42,7 @@ export default EditList = (props) => {
   useEffect(() => {
     const subscriber = firestore()
       .collection("Lists")
-      .doc(route.params.listId)
+      .doc(route.params.listName)
       .onSnapshot((documentSnapshot) => {
         const entries = [];
         if (documentSnapshot.get("elements") !== undefined) {
