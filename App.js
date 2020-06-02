@@ -19,7 +19,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 
 import Explore from './src/screens/explore.js';
-import InsideList from './src/screens/insideList.js';
+import Baggy from './src/screens/baggy.js';
 import AddList from './src/screens/addList.js';
 import AddListElement from './src/screens/addListElement.js';
 import ExploreStack from './src/screens/exploreStack.js';
@@ -55,10 +55,7 @@ export default class App extends Component<Props> {
         <StatusBar barStyle="dark-content" />
         <BottomTab.Navigator initialRouteName="ExploreStack">
           <BottomTab.Screen name="ExploreStack" component={ExploreStack} options={{title: "Explore"}}/>
-          <BottomTab.Screen name="InsideList" component={InsideList} options={{title: "Inside List"}}/>
-          <BottomTab.Screen name="AddListElement" component={AddListElement} options={{title: "Add List Element", headerRight: () => (
-              <Button title="SAVE" buttonStyle={styles.headerButton} onPress={() => handleSaveClick()}/>
-              )}}/>
+          <BottomTab.Screen name="Baggy" component={Baggy} options={{title: "Baggy"}}/>
         </BottomTab.Navigator>
       </NavigationContainer>
     );

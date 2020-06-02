@@ -21,57 +21,31 @@ import { ListItem } from 'react-native-elements';
 import { FloatingAction } from "react-native-floating-action";
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-const actions = [
-  {
-    text: "New List",
-    name: "bt_accessibility",
-    position: 0
-  },
-];
 
-
-
-
-export default Explore = (props) => {
-    const [loading, setLoading] = useState(true); // Set loading to true on component mount
-    const [lists, setLists] = useState([]); // Initial empty array of users
-    const navigation = useNavigation();
-
+export default Baggy = () => {
+    const [ lists, setLists ] = useState();
     useEffect(() => {
-        const subscriber = firestore()
-          .collection('Lists')
-          .onSnapshot(querySnapshot => {
+      const subscriber = firestore()
+        .collection('Lists')
+        .onSnapshot(querySnapshot => {
 
-            const lists = [];
-      
-            querySnapshot.forEach(documentSnapshot => {
+          const lists = [];
+    
+          querySnapshot.forEach(documentSnapshot => {
 
-              lists.push({
-                value: documentSnapshot.get('name'),
-                key: documentSnapshot.id,
-                len: documentSnapshot.get('elements').length.toString()
-              });
+            lists.push({
+              value: documentSnapshot.get('name'),
+              key: documentSnapshot.id,
+              len: documentSnapshot.get('elements').length.toString()
             });
-      
-            setLists(lists);
-            setLoading(false);
           });
-      
-        // Unsubscribe from events when no longer in use
-        return () => subscriber;
-      }, []);
-
-    if (loading) {
-        return <ActivityIndicator />;
-    }
-
-    handleItemClick = (item) => {
-      navigation.navigate("ListView", {listId: item.key})
-    }
-
-    handleAddClick = (item) => {
-      navigation.navigate("AddList")
-    }
+    
+          setLists(lists);
+        });
+    
+      // Unsubscribe from events when no longer in use
+      return () => subscriber;
+    }, []);
 
     renderItem = ({ item }) => {
       return (
@@ -92,10 +66,6 @@ export default Explore = (props) => {
           style={styles.list}
           data={lists}
           renderItem={renderItem}
-        />
-        <FloatingAction 
-          onPressItem={(item) => handleAddClick(item)} 
-          actions={actions}
         />
       </SafeAreaView>
       );

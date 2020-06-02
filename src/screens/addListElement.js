@@ -29,10 +29,9 @@ export default AddListElement = (props) => {
     const [loading, setLoading] = useState(true);
     const route = useRoute();
     const navigation = useNavigation();
-    let inputAvailable = true
 
     useEffect(() => {
-        const listNames = firestore()
+        const subscriber = firestore()
           .collection('Lists')
           .doc(route.params.listId)
           .onSnapshot(documentSnapshot => {
@@ -52,16 +51,14 @@ export default AddListElement = (props) => {
 
       
         // Unsubscribe from events when no longer in use
-        return () => listNames();
+        return () => subscriber();
       }, []);
 
     handleAdd = () => {
-        inputAvailable = false;
         setEntries(entries => { 
             entries.push({key: entries.length.toString(), value: textVal})
             return entries});
         setTextVal('')
-        inputAvailable = true
         
     }
 
