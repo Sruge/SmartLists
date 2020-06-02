@@ -116,12 +116,12 @@ export default EditList = (props) => {
             <Text style={styles.listEntry}>{item.value}</Text>
           )}
         />
-              <FloatingAction
-        onPressItem={(item) => handleSaveClick(item)}
-        actions={actions}
-        color={"#f4511e"}
-        overlayColor={"transparent"}
-      />
+        <FloatingAction
+          onPressItem={(item) => handleSaveClick(item)}
+          actions={actions}
+          color={"#f4511e"}
+          overlayColor={"transparent"}
+        />
       </SafeAreaView>
     </>
   );

@@ -5,26 +5,25 @@
  * @format
  * @flow
  */
-import 'react-native-gesture-handler';
-import React, { Component } from 'react';
+import "react-native-gesture-handler";
+import React, { useState, useEffect } from "react";
+
+import { Platform, StyleSheet, StatusBar, View, Text } from "react-native";
 
 import {
-  Platform,
-  StyleSheet,
-  StatusBar,
-} from 'react-native';
+  NavigationContainer,
+  useNavigation,
+  useRoute,
+} from "@react-navigation/native";
+import { createStackNavigator } from "@react-navigation/stack";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 
-import { NavigationContainer, useNavigation, useRoute} from '@react-navigation/native';
-import { createStackNavigator } from '@react-navigation/stack';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
-
-import Explore from './src/screens/explore.js';
-import Baggy from './src/screens/baggy.js';
-import AddList from './src/screens/addList.js';
-import AddListElement from './src/screens/addListElement.js';
-import ExploreStack from './src/screens/exploreStack.js';
-import { Button } from 'react-native-elements';
-
+import Baggy from "./src/screens/baggy.js";
+import Login from "./src/screens/login.js";
+import ExploreStack from "./src/screens/exploreStack.js";
+import auth from "@react-native-firebase/auth";
+import SignUp from "./src/screens/signUp.js";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 const Stack = createStackNavigator();
 const BottomTab = createBottomTabNavigator();
@@ -37,33 +36,65 @@ const BottomTab = createBottomTabNavigator();
 //    4) The Firebase Auth service is now available to use here: `firebase.auth().currentUser`
 
 const instructions = Platform.select({
-  ios: 'Press Cmd+R to reload,\nCmd+D or shake for dev menu',
-  android: 'Double tap R on your keyboard to reload,\nShake or press menu button for dev menu',
+  ios: "Press Cmd+R to reload,\nCmd+D or shake for dev menu",
+  android:
+    "Double tap R on your keyboard to reload,\nShake or press menu button for dev menu",
 });
 
 const firebaseCredentials = Platform.select({
-  ios: 'https://invertase.link/firebase-ios',
-  android: 'https://invertase.link/firebase-android',
+  ios: "https://invertase.link/firebase-ios",
+  android: "https://invertase.link/firebase-android",
 });
 
-type Props = {};
+export default App = () => {
+  const [initializing, setInitializing] = useState(true);
+  const [user, setUser] = useState();
 
-export default class App extends Component<Props> {
-  render() {
+  // Handle user state changes
+  function onAuthStateChanged(user) {
+    setUser(user);
+    if (initializing) setInitializing(false);
+  }
+
+  useEffect(() => {
+    const subscriber = auth().onAuthStateChanged(onAuthStateChanged);
+    return subscriber; // unsubscribe on unmount
+  }, []);
+
+  if (initializing) return null;
+
+  if (!user) {
     return (
-      <NavigationContainer>
-        <StatusBar barStyle="dark-content" />
-        <BottomTab.Navigator initialRouteName="ExploreStack">
-          <BottomTab.Screen name="ExploreStack" component={ExploreStack} options={{title: "Explore"}}/>
-          <BottomTab.Screen name="Baggy" component={Baggy} options={{title: "Baggy"}}/>
-        </BottomTab.Navigator>
-      </NavigationContainer>
+      <View style={styles.loginContainer}>
+        <SignUp />
+      </View>
     );
   }
-}
+
+  return (
+    <NavigationContainer>
+      <StatusBar barStyle="dark-content" />
+      <BottomTab.Navigator initialRouteName="ExploreStack">
+        <BottomTab.Screen
+          name="ExploreStack"
+          component={ExploreStack}
+          options={{ title: "Explore" }}
+        />
+        <BottomTab.Screen
+          name="Baggy"
+          component={Baggy}
+          options={{ title: "Baggy" }}
+        />
+      </BottomTab.Navigator>
+    </NavigationContainer>
+  );
+};
 
 const styles = StyleSheet.create({
   headerButton: {
     marginRight: 20,
-   }
+  },
+  loginContainer: {
+    flex: 1,
+  },
 });
