@@ -25,6 +25,8 @@ import AddList from './components/addList.js';
 import AddListElement from './components/addListElement.js';
 
 import database from '@react-native-firebase/database';
+import { Button } from 'react-native-elements';
+
 
 const Stack = createStackNavigator();
 
@@ -70,20 +72,14 @@ export default class App extends Component<Props> {
         <Stack.Navigator initialRouteName="Overview">
           <Stack.Screen name="AddList" component={AddList} options={{title: "Add List"}}/>
           <Stack.Screen name="Overview" component={Overview} options={{title: "List Overview", headerRight: () => (
-              <TouchableOpacity style={styles.headerButton}
-                onPress={() => console.log("ADD pressed")}>
-                <Text>
-                    ADD
-                </Text>
-              </TouchableOpacity>)}}/>
+              <Button title="ADD" buttonStyle={styles.headerButton} onPress={() => 
+                handleAddClick()  
+              }/>
+              )}}/>
           <Stack.Screen name="InsideList" component={InsideList} options={{title: "Inside List"}}/>
           <Stack.Screen name="AddListElement" component={AddListElement} options={{title: "Add List Element", headerRight: () => (
-              <TouchableOpacity style={styles.headerButton}
-                onPress={() => console.log("Save pressed")}>
-                <Text>
-                    Save
-                </Text>
-            </TouchableOpacity>)}}/>
+              <Button title="SAVE" buttonStyle={styles.headerButton} onPress={() => handleSaveClick()}/>
+              )}}/>
         </Stack.Navigator>
       </NavigationContainer>
     );
@@ -92,10 +88,6 @@ export default class App extends Component<Props> {
 
 const styles = StyleSheet.create({
   headerButton: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    padding: 10,
-    marginRight: 10,
-    backgroundColor: 'green'
+    marginRight: 20,
    }
 });

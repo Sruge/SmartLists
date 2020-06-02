@@ -15,46 +15,39 @@ import {
   View,
   Text,
   StatusBar,
-  TextInput,
-  TouchableOpacity,
+  ActivityIndicator,
   FlatList
 } from 'react-native';
 import { useRoute, useNavigation } from '@react-navigation/native';
 import firestore from '@react-native-firebase/firestore';
+import { Button, Input } from 'react-native-elements';
 
 
 export default AddListElement = (props) => {
-    const [listItems, setListItems] = useState({});
-    const [textKey, setTextKey] = useState('');
     const [textVal, setTextVal] = useState('');
-    const [entries, setEntries] = useState();
-    const [loading, setLoading] = useState();
+    const [entries, setEntries] = useState([]);
+    const [loading, setLoading] = useState(true);
     const route = useRoute();
     const navigation = useNavigation();
     let inputAvailable = true
 
-
     useEffect(() => {
         const listNames = firestore()
           .collection('Lists')
-          .doc(route.params.listName)
+          .doc(route.params.listId)
           .onSnapshot(documentSnapshot => {
-            console.log("Document: ", documentSnapshot.get('elements'))
 
-            // const entries = [];
-      
-            // documentSnapshot.get('elements').forEach(entry => {
-            //     console.log("Entry: ", entry)
-
-        
-            //   entries.push({
-            //     value: entry.value,
-            //     key: entry.key,
-            //   });
-            // });
-      
-            // setEntries(entries);
-            // setLoading(false);
+            const entries = [];
+            if (documentSnapshot.get('elements') !== undefined) {
+              Object.entries(documentSnapshot.get('elements')).forEach(([key, val]) => {
+                  entries.push({
+                    value: val,
+                    key: key,
+                  });
+                });
+              }
+              setEntries(entries)
+              setLoading(false)
           });
 
       
@@ -64,54 +57,59 @@ export default AddListElement = (props) => {
 
     handleAdd = () => {
         inputAvailable = false;
-        setListItems(list => { 
-            list[textKey.toString()] = textVal
-            return list});
-        setTextKey('')
+        setEntries(entries => { 
+            entries.push({key: entries.length.toString(), value: textVal})
+            return entries});
         setTextVal('')
         inputAvailable = true
+        
     }
+
+    handleSaveClick = () => {
+      const resultList = []
+      entries.forEach(entry => {
+        resultList.push(entry.value)
+      })
+      if(route.params.listId) {
+        firestore().collection('Lists').doc(route.params.listId).update({
+          elements: resultList
+        })
+      } else {
+        firestore().collection('Lists').add({
+          name: route.params.listName,
+          elements: resultList
+        })
+      }
+      navigation.navigate("Overview")
+    }
+
+
+  if (loading) {
+      return <ActivityIndicator />;
+  }
 
   return (
     <>
-      <StatusBar barStyle="dark-content" />
-      <View style={styles.container}>
-          <TextInput editable={inputAvailable} onChangeText={textKey => setTextKey(textKey)} defaultValue={textKey} style={styles.textInput} placeholder="Key of the List Element"/>
-          <TextInput editable={inputAvailable} onChangeText={textVal => setTextVal(textVal)} defaultValue={textVal} style={styles.textInput} placeholder="Value of the List Element"/>
-          <TouchableOpacity title="Ok" onPress={handleAdd} style={styles.okButton}>
-              <Text style={styles.buttonTitle}>ADD</Text> 
-          </TouchableOpacity>
+      <SafeAreaView style={styles.container}>
+          <Input editable={inputAvailable} onChangeText={textVal => setTextVal(textVal)} defaultValue={textVal} placeholder="New List Element"/>
+          <Button title="ADD" onPress={handleAdd} buttonStyle={styles.okButton}/>
           <FlatList
             data={entries}
             renderItem={({ item }) => (
                 <Text style = {styles.listEntry}>{item.value}</Text>
             )}/>
-      </View>
+      </SafeAreaView>
     </>
   );
 };
 
 const styles = StyleSheet.create({
     container: {
-        flexDirection: 'column',
-        flex: 1
-    },
-    textInput: {
-        backgroundColor: "#d8d8e8",
-        marginHorizontal: 20,
-        marginTop: 10,
-        alignContent: 'center',
-        padding: 10,
-    },
-    buttonTitle: {
-        fontSize: 18,
+        flex: 1,
+        marginVertical: 5
     },
     okButton: {
-        backgroundColor: '#007788',
-        padding: 10,
         marginHorizontal: 20,
-        marginTop: 10,
-        alignItems: 'center'
     },
     listView: {
         marginHorizontal: 20,
