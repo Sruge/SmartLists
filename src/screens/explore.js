@@ -18,10 +18,21 @@ import {
 
 import { useNavigation } from '@react-navigation/native';
 import { ListItem } from 'react-native-elements';
+import { FloatingAction } from "react-native-floating-action";
+import { SafeAreaView } from 'react-native-safe-area-context';
+
+const actions = [
+  {
+    text: "New List",
+    name: "bt_accessibility",
+    position: 0
+  },
+];
 
 
 
-export default Overview = (props) => {
+
+export default Explore = (props) => {
     const [loading, setLoading] = useState(true); // Set loading to true on component mount
     const [lists, setLists] = useState([]); // Initial empty array of users
     const navigation = useNavigation();
@@ -58,13 +69,11 @@ export default Overview = (props) => {
       navigation.navigate("AddListElement", {listId: item.key})
     }
 
-    handleAddClick = () => {
+    handleAddClick = (item) => {
       navigation.navigate("AddList")
-
     }
 
     renderItem = ({ item }) => {
-      console.log("render item: ", item)
       return (
         <ListItem 
           title={item.value}
@@ -78,10 +87,18 @@ export default Overview = (props) => {
     }
 
     return (
+      <SafeAreaView style={styles.container}>
         <FlatList
+          style={styles.list}
           data={lists}
           renderItem={renderItem}
         />
+        <FloatingAction 
+          onPressItem={(item) => handleAddClick(item)} 
+          actions={actions}
+        />
+      </SafeAreaView>
+
       );
 };
 
@@ -90,4 +107,11 @@ const styles = StyleSheet.create({
     marginHorizontal: 10,
     marginTop: 5
   },
+  floating: {
+    
+  },
+  container: {
+    flex: 1
+  },
+
 });
