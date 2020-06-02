@@ -1,10 +1,3 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- * @flow strict-local
- */
 import "react-native-gesture-handler";
 import "@react-native-firebase/app";
 import firestore from "@react-native-firebase/firestore";
@@ -85,7 +78,6 @@ export default Explore = (props) => {
       <FloatingAction
         onPressItem={(item) => handleAddClick(item)}
         actions={actions}
-        style={styles.floating}
         color={"#f4511e"}
         overlayColor={"transparent"}
       />
@@ -98,7 +90,6 @@ const styles = StyleSheet.create({
     marginHorizontal: 10,
     marginTop: 5,
   },
-  floating: {},
   container: {
     flex: 1,
   },

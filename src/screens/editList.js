@@ -17,9 +17,19 @@ import {
   FlatList,
   TextInput,
 } from "react-native";
+import { FloatingAction } from "react-native-floating-action";
 import { useRoute, useNavigation } from "@react-navigation/native";
 import firestore from "@react-native-firebase/firestore";
 import { Button } from "react-native-elements";
+
+const actions = [
+  {
+    text: "Save",
+    name: "bt_save",
+    position: 0,
+    color: "#f4511e",
+  },
+];
 
 export default EditList = (props) => {
   const [textVal, setTextVal] = useState("");
@@ -54,11 +64,13 @@ export default EditList = (props) => {
   }, []);
 
   handleAdd = () => {
-    setEntries((entries) => {
-      entries.push({ key: entries.length.toString(), value: textVal });
-      return entries;
-    });
-    setTextVal("");
+    if (textVal !== "") {
+      setEntries((entries) => {
+        entries.push({ key: entries.length.toString(), value: textVal });
+        return entries;
+      });
+      setTextVal("");
+    }
   };
 
   handleSaveClick = () => {
@@ -76,7 +88,7 @@ export default EditList = (props) => {
         elements: resultList,
       });
     }
-    navigation.navigate("Overview");
+    navigation.navigate("Baggy");
   };
 
   if (loading) {
@@ -93,7 +105,7 @@ export default EditList = (props) => {
             onChangeText={(text) => setTextVal(text)}
             defaultValue={textVal}
             style={styles.textInput}
-            placeholder={"Name of the List"}
+            placeholder={"List Element"}
             maxLength={40}
           />
         </View>
@@ -104,6 +116,12 @@ export default EditList = (props) => {
             <Text style={styles.listEntry}>{item.value}</Text>
           )}
         />
+              <FloatingAction
+        onPressItem={(item) => handleSaveClick(item)}
+        actions={actions}
+        color={"#f4511e"}
+        overlayColor={"transparent"}
+      />
       </SafeAreaView>
     </>
   );
@@ -129,7 +147,7 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   textInput: {
-    padding: 0,
+    padding: 5,
   },
   inputContainer: {
     backgroundColor: "white",

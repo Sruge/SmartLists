@@ -69,7 +69,7 @@ const styles = StyleSheet.create({
     marginTop: 0,
   },
   textInput: {
-    padding: 0,
+    padding: 5,
   },
   inputContainer: {
     backgroundColor: "white",
