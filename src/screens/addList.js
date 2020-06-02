@@ -5,34 +5,52 @@
  * @format
  * @flow strict-local
  */
-import 'react-native-gesture-handler';
+import "react-native-gesture-handler";
 
-import React, { useState } from 'react';
-import {
-  SafeAreaView,
-  StyleSheet,
-} from 'react-native';
-import { Button, Input } from 'react-native-elements'
-import firestore from '@react-native-firebase/firestore';
-import { useRoute, useNavigation } from '@react-navigation/native';
-
+import React, { useState } from "react";
+import { SafeAreaView, StyleSheet, TextInput, View } from "react-native";
+import { Button, CheckBox } from "react-native-elements";
+import firestore from "@react-native-firebase/firestore";
+import { useRoute, useNavigation } from "@react-navigation/native";
 
 export default AddList = (props) => {
-    const route = useRoute();
-    const [listname, setListname] = useState('');
-    const navigation = useNavigation();
+  const [listname, setListname] = useState("");
+  const [pub, setPub] = useState(true);
+  const navigation = useNavigation();
+  const input = React.createRef();
 
-    handleOk = () => {
-      if (listname !== "") {
-        navigation.navigate("AddListElement", {listName: listname});
-      }
+  handleOk = () => {
+    if (listname !== "") {
+      navigation.navigate("EditList", { listName: listname });
+      //input.current.shake()
     }
+  };
 
   return (
     <>
       <SafeAreaView style={styles.container}>
-          <Input onChangeText={text => setListname(text)} defaultValue={listname} style={styles.textInput} placeholder="Name of the List"/>
-          <Button title="CREATE" onPress={handleOk} buttonStyle={styles.okButton}/>
+        <View style={styles.inputContainer}>
+          <TextInput
+            ref={input}
+            label={"handsons"}
+            onChangeText={(text) => setListname(text)}
+            defaultValue={listname}
+            style={styles.textInput}
+            placeholder={"Name of the List"}
+            maxLength={40}
+          />
+        </View>
+        <CheckBox
+          center
+          checked={pub}
+          style={styles.checkBox}
+          title={"Public"}
+        />
+        <Button
+          title="CREATE"
+          onPress={handleOk}
+          buttonStyle={styles.okButton}
+        />
       </SafeAreaView>
     </>
   );
@@ -40,10 +58,25 @@ export default AddList = (props) => {
 
 const styles = StyleSheet.create({
   container: {
-      flex: 1,
-      marginVertical: 5
+    flex: 1,
+    marginVertical: 5,
   },
   okButton: {
-      marginHorizontal: 20,
+    backgroundColor: "#f4511e",
+    marginHorizontal: 10,
+  },
+  checkBox: {
+    marginTop: 0,
+  },
+  textInput: {
+    padding: 0,
+  },
+  inputContainer: {
+    backgroundColor: "white",
+    borderBottomColor: "#eeeeee",
+    borderBottomWidth: 0.3,
+    marginHorizontal: 10,
+    marginTop: 5,
+    padding: 10,
   },
 });
