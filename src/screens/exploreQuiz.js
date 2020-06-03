@@ -43,7 +43,7 @@ export default ExploreQuiz = (props) => {
     return <ActivityIndicator />;
   }
 
-  handleItemClickExplore = (item) => {
+  handleItemClickQuiz = (item) => {
     navigation.navigate("Quiz", { listId: item.key });
   };
 
@@ -54,7 +54,7 @@ export default ExploreQuiz = (props) => {
         subtitle={item.len}
         key={item.key}
         chevron={{ color: "black" }}
-        onPress={() => handleItemClickExplore(item)}
+        onPress={() => handleItemClickQuiz(item)}
         style={styles.listItem}
         bottomDivider
       />

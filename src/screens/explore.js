@@ -51,14 +51,14 @@ export default Explore = (props) => {
   }, []);
 
   if (loading) {
-    return <ActivityIndicator />;
+    return <ActivityIndicator size={"large"} style={styles.activityIndicator}/>;
   }
 
   handleItemClickExplore = (item) => {
     navigation.navigate("ListView", { listId: item.key });
   };
 
-  handleAddClick = (item) => {
+  handleAddClickExplore = (item) => {
     navigation.navigate("AddList", {
       listName: item.key,
       userEmail: route.params.userEmail,
@@ -92,7 +92,7 @@ export default Explore = (props) => {
     <SafeAreaView style={styles.container}>
       <FlatList style={styles.list} data={lists} renderItem={renderItem} />
       <FloatingAction
-        onPressItem={(item) => handleAddClick(item)}
+        onPressItem={(item) => handleAddClickExplore(item)}
         actions={actions}
         color={"#f4511e"}
         overlayColor={"transparent"}
@@ -109,4 +109,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
+  activityIndicator: {
+    flex: 1
+  }
 });
