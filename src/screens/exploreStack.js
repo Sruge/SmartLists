@@ -4,6 +4,7 @@ import React from "react";
 import { StyleSheet } from "react-native";
 
 import { createStackNavigator } from "@react-navigation/stack";
+import { useRoute, useNavigation } from "@react-navigation/native";
 
 import Explore from "./explore.js";
 import ListView from "./listView.js";
@@ -13,6 +14,7 @@ import EditList from "./editList.js";
 const Stack = createStackNavigator();
 
 export default ExploreStack = (props) => {
+  const route = useRoute();
   return (
     <Stack.Navigator
       initialRouteName="Explore"
@@ -31,6 +33,7 @@ export default ExploreStack = (props) => {
         name="Explore"
         component={Explore}
         options={{ title: "Explore" }}
+        initialParams={{ userEmail: route.params.userEmail }}
       />
       <Stack.Screen
         name="ListView"

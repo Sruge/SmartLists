@@ -5,10 +5,11 @@ import firestore from "@react-native-firebase/firestore";
 import React, { useEffect, useState } from "react";
 import { StyleSheet, ActivityIndicator, FlatList } from "react-native";
 
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, useRoute } from "@react-navigation/native";
 import { ListItem } from "react-native-elements";
 import { FloatingAction } from "react-native-floating-action";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { round } from "react-native-reanimated";
 
 const actions = [
   {
@@ -23,10 +24,12 @@ export default Explore = (props) => {
   const [loading, setLoading] = useState(true); // Set loading to true on component mount
   const [lists, setLists] = useState([]); // Initial empty array of users
   const navigation = useNavigation();
+  const route = useRoute();
 
   useEffect(() => {
     const subscriber = firestore()
       .collection("Lists")
+      .where("pub", "==", true)
       .onSnapshot((querySnapshot) => {
         const lists = [];
 
@@ -51,17 +54,21 @@ export default Explore = (props) => {
   }
 
   handleItemClick = (item) => {
-    console.log(item)
     navigation.navigate("ListView", { listId: item.key });
   };
 
   handleAddClick = (item) => {
-    console.log(item)
-    navigation.navigate("AddList");
+    navigation.navigate("AddList", {
+      listName: item.key,
+      userEmail: route.params.userEmail,
+    });
   };
 
   handleLongPress = (item) => {
-    navigation.navigate("EditList", { listName: item.key });
+    navigation.navigate("EditList", {
+      listName: item.key,
+      userEmail: route.params.userEmail,
+    });
   };
 
   renderItem = ({ item }) => {
@@ -70,7 +77,7 @@ export default Explore = (props) => {
         title={item.value}
         subtitle={item.len}
         key={item.key}
-        //chevron={{color: 'blue'}}
+        chevron={{ color: "black" }}
         onPress={() => handleItemClick(item)}
         style={styles.listItem}
         bottomDivider

@@ -9,7 +9,7 @@ import "react-native-gesture-handler";
 
 import React, { useState } from "react";
 import { SafeAreaView, StyleSheet, TextInput, View } from "react-native";
-import { Button, CheckBox } from "react-native-elements";
+import { Button, CheckBox, Text } from "react-native-elements";
 import firestore from "@react-native-firebase/firestore";
 import { useRoute, useNavigation } from "@react-navigation/native";
 
@@ -18,12 +18,31 @@ export default AddList = (props) => {
   const [pub, setPub] = useState(true);
   const navigation = useNavigation();
   const input = React.createRef();
+  const [advancedOpen, setAdvancedOpen] = useState(false);
+  const [multiValue, setMultiValue] = useState(false);
+  const route = useRoute();
 
   handleOk = () => {
     if (listname !== "") {
-      navigation.navigate("EditList", { listName: listname });
+      navigation.navigate("EditList", {
+        listName: listname,
+        pub: pub,
+        userEmail: route.params.userEmail,
+      });
       //input.current.shake()
     }
+  };
+
+  handleCheckBoxPublicPress = () => {
+    setPub(!pub);
+  };
+
+  handleCheckBoxMultiPress = () => {
+    setMultiValue(!multiValue);
+  };
+
+  handleAdvancedClick = () => {
+    setAdvancedOpen(!advancedOpen);
   };
 
   return (
@@ -45,12 +64,28 @@ export default AddList = (props) => {
           checked={pub}
           style={styles.checkBox}
           title={"Public"}
+          onPress={handleCheckBoxPublicPress}
         />
+        {advancedOpen && (
+          <View>
+            <Text style={styles.advancedButton}>Some more options</Text>
+            <CheckBox
+              center
+              checked={multiValue}
+              style={styles.checkBox}
+              title={"Multivalue"}
+              onPress={handleCheckBoxMultiPress}
+            />
+          </View>
+        )}
         <Button
           title="CREATE"
           onPress={handleOk}
           buttonStyle={styles.okButton}
         />
+        <Text onPress={handleAdvancedClick} style={styles.advancedButton}>
+          Advanced
+        </Text>
       </SafeAreaView>
     </>
   );
@@ -70,6 +105,11 @@ const styles = StyleSheet.create({
   },
   textInput: {
     padding: 5,
+  },
+  advancedButton: {
+    padding: 5,
+    marginTop: 5,
+    textAlign: "center",
   },
   inputContainer: {
     backgroundColor: "white",

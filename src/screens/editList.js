@@ -40,6 +40,7 @@ export default EditList = (props) => {
   const input = React.createRef();
 
   useEffect(() => {
+    console.log(route.params.userEmail);
     const subscriber = firestore()
       .collection("Lists")
       .doc(route.params.listName)
@@ -78,16 +79,31 @@ export default EditList = (props) => {
     entries.forEach((entry) => {
       resultList.push(entry.value);
     });
-    if (route.params.listName) {
-      firestore().collection("Lists").doc(route.params.listName).update({
-        elements: resultList,
+    console.log(route.params.listName);
+    const docRef = firestore().collection("Lists").doc(route.params.listName);
+
+    docRef
+      .get()
+      .then(function (doc) {
+        if (doc.exists) {
+          console.log("Updating already existing doc ", route.params.listName);
+          firestore().collection("Lists").doc(route.params.listName).update({
+            elements: resultList,
+          });
+        } else {
+          // doc.data() will be undefined in this case
+          console.log("No such document, creating a new one!");
+          firestore().collection("Lists").add({
+            name: route.params.listName,
+            elements: resultList,
+            pub: route.params.pub,
+            creator: route.params.userEmail,
+          });
+        }
+      })
+      .catch(function (error) {
+        console.log("Error getting document:", error);
       });
-    } else {
-      firestore().collection("Lists").add({
-        name: route.params.listName,
-        elements: resultList,
-      });
-    }
     navigation.navigate("Explore");
   };
 
