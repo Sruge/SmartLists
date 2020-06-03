@@ -78,8 +78,8 @@ export default EditList = (props) => {
     entries.forEach((entry) => {
       resultList.push(entry.value);
     });
-    if (route.params.listId) {
-      firestore().collection("Lists").doc(route.params.listId).update({
+    if (route.params.listName) {
+      firestore().collection("Lists").doc(route.params.listName).update({
         elements: resultList,
       });
     } else {
@@ -88,7 +88,7 @@ export default EditList = (props) => {
         elements: resultList,
       });
     }
-    navigation.navigate("Baggy");
+    navigation.navigate("Explore");
   };
 
   if (loading) {

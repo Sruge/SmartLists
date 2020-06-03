@@ -51,10 +51,12 @@ export default Explore = (props) => {
   }
 
   handleItemClick = (item) => {
+    console.log(item)
     navigation.navigate("ListView", { listId: item.key });
   };
 
   handleAddClick = (item) => {
+    console.log(item)
     navigation.navigate("AddList");
   };
 
