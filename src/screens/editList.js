@@ -20,7 +20,7 @@ import {
 import { FloatingAction } from "react-native-floating-action";
 import { useRoute, useNavigation } from "@react-navigation/native";
 import firestore from "@react-native-firebase/firestore";
-import { Button } from "react-native-elements";
+import { Button, ListItem } from "react-native-elements";
 
 const actions = [
   {
@@ -98,6 +98,7 @@ export default EditList = (props) => {
             elements: resultList,
             pub: route.params.pub,
             creator: route.params.userEmail,
+            multiValue: route.params.multiValue,
           });
         }
       })
@@ -105,6 +106,34 @@ export default EditList = (props) => {
         console.log("Error getting document:", error);
       });
     navigation.navigate("Explore");
+  };
+
+  renderItem = ({ item }) => {
+    console.log(route.params.multiValue);
+    if (!route.params.multiValue) {
+      return (
+        <ListItem
+          title={item.value}
+          key={item.key}
+          //onPress={() => handleItemClick(item)}
+          style={styles.listItem}
+          bottomDivider
+          //onLongPress={() => handleLongPress(item)}
+        />
+      );
+    }
+
+    return (
+      <ListItem
+        title={item.key}
+        subtitle={item.value}
+        key={item.key}
+        //onPress={() => handleItemClick(item)}
+        style={styles.listItem}
+        bottomDivider
+        //onLongPress={() => handleLongPress(item)}
+      />
+    );
   };
 
   if (loading) {
@@ -126,12 +155,7 @@ export default EditList = (props) => {
           />
         </View>
         <Button title="ADD" onPress={handleAdd} buttonStyle={styles.okButton} />
-        <FlatList
-          data={entries}
-          renderItem={({ item }) => (
-            <Text style={styles.listEntry}>{item.value}</Text>
-          )}
-        />
+        <FlatList data={entries} renderItem={renderItem} />
         <FloatingAction
           onPressItem={(item) => handleSaveClick(item)}
           actions={actions}
@@ -152,15 +176,9 @@ const styles = StyleSheet.create({
     backgroundColor: "#f4511e",
     marginHorizontal: 10,
   },
-  listView: {
-    marginHorizontal: 20,
-    marginVertical: 10,
-    flex: 1,
-  },
-  listEntry: {
-    fontSize: 20,
-    marginTop: 10,
-    textAlign: "center",
+  listItem: {
+    marginHorizontal: 10,
+    marginTop: 5,
   },
   textInput: {
     padding: 5,

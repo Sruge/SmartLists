@@ -28,6 +28,7 @@ export default AddList = (props) => {
         listName: listname,
         pub: pub,
         userEmail: route.params.userEmail,
+        multiValue: multiValue,
       });
       //input.current.shake()
     }

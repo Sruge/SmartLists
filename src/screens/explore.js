@@ -38,6 +38,7 @@ export default Explore = (props) => {
             value: documentSnapshot.get("name"),
             key: documentSnapshot.id,
             len: documentSnapshot.get("elements").length.toString(),
+            multiValue: documentSnapshot.get("multiValue"),
           });
         });
 
@@ -68,6 +69,7 @@ export default Explore = (props) => {
     navigation.navigate("EditList", {
       listName: item.key,
       userEmail: route.params.userEmail,
+      multiValue: item.multiValue,
     });
   };
 
