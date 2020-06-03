@@ -23,6 +23,7 @@ import Login from "./src/screens/login.js";
 import ExploreStack from "./src/screens/exploreStack.js";
 import auth from "@react-native-firebase/auth";
 import SignUp from "./src/screens/signUp.js";
+import QuizStack from "./src/screens/quizStack.js";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 const Stack = createStackNavigator();
@@ -85,6 +86,12 @@ export default App = () => {
           name="Baggy"
           component={Baggy}
           options={{ title: "Baggy" }}
+          initialParams={{ userEmail: user.email }}
+        />
+        <BottomTab.Screen
+          name="QuizStack"
+          component={QuizStack}
+          options={{ title: "Quiz" }}
           initialParams={{ userEmail: user.email }}
         />
       </BottomTab.Navigator>

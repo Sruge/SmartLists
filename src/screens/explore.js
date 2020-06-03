@@ -54,7 +54,7 @@ export default Explore = (props) => {
     return <ActivityIndicator />;
   }
 
-  handleItemClick = (item) => {
+  handleItemClickExplore = (item) => {
     navigation.navigate("ListView", { listId: item.key });
   };
 
@@ -80,7 +80,7 @@ export default Explore = (props) => {
         subtitle={item.len}
         key={item.key}
         chevron={{ color: "black" }}
-        onPress={() => handleItemClick(item)}
+        onPress={() => handleItemClickExplore(item)}
         style={styles.listItem}
         bottomDivider
         onLongPress={() => handleLongPress(item)}

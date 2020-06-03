@@ -1,10 +1,3 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- * @flow strict-local
- */
 import "react-native-gesture-handler";
 import "@react-native-firebase/app";
 import firestore from "@react-native-firebase/firestore";
@@ -12,19 +5,20 @@ import firestore from "@react-native-firebase/firestore";
 import React, { useEffect, useState } from "react";
 import { StyleSheet, ActivityIndicator, FlatList } from "react-native";
 
-import { useRoute } from "@react-navigation/native";
+import { useNavigation, useRoute } from "@react-navigation/native";
 import { ListItem } from "react-native-elements";
-import { FloatingAction } from "react-native-floating-action";
 import { SafeAreaView } from "react-native-safe-area-context";
 
-export default Baggy = () => {
-  const [lists, setLists] = useState();
+export default ExploreQuiz = (props) => {
+  const [loading, setLoading] = useState(true); // Set loading to true on component mount
+  const [lists, setLists] = useState([]); // Initial empty array of lists
+  const navigation = useNavigation();
   const route = useRoute();
+
   useEffect(() => {
-    console.log(route.params.userEmail);
     const subscriber = firestore()
       .collection("Lists")
-      .where("creator", "==", route.params.userEmail)
+      .where("pub", "==", true)
       .onSnapshot((querySnapshot) => {
         const lists = [];
 
@@ -33,18 +27,24 @@ export default Baggy = () => {
             value: documentSnapshot.get("name"),
             key: documentSnapshot.id,
             len: documentSnapshot.get("elements").length.toString(),
+            multiValue: documentSnapshot.get("multiValue"),
           });
         });
 
         setLists(lists);
+        setLoading(false);
       });
 
     // Unsubscribe from events when no longer in use
     return () => subscriber;
   }, []);
 
-  handleItemClick = () => {
-    console.log("Item in baggy clicked");
+  if (loading) {
+    return <ActivityIndicator />;
+  }
+
+  handleItemClickExplore = (item) => {
+    navigation.navigate("Quiz", { listId: item.key });
   };
 
   renderItem = ({ item }) => {
@@ -53,8 +53,8 @@ export default Baggy = () => {
         title={item.value}
         subtitle={item.len}
         key={item.key}
-        //chevron={{color: 'blue'}}
-        onPress={() => handleItemClick(item)}
+        chevron={{ color: "black" }}
+        onPress={() => handleItemClickExplore(item)}
         style={styles.listItem}
         bottomDivider
       />
@@ -73,7 +73,6 @@ const styles = StyleSheet.create({
     marginHorizontal: 10,
     marginTop: 5,
   },
-  floating: {},
   container: {
     flex: 1,
   },
