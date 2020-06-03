@@ -52,6 +52,8 @@ export default Quiz = () => {
           );
         }
         setEntries(entries);
+        console.log(route.params.multivalue)
+        setInQuestion(() => {return (route.params.multiValue ? 'description' : 'key')})
         setCurrentEntry(entries[Math.floor(Math.random() * entries.length)]);
         setLoading(false);
       });
@@ -61,6 +63,7 @@ export default Quiz = () => {
   }, []);
 
   handleCheck = () => {
+      console.log(currentEntry[inQuestion])
     if (answer === currentEntry[inQuestion]) {
       console.log("correct");
       setScore((score) => {
@@ -80,7 +83,7 @@ export default Quiz = () => {
   };
 
   renderQuestion = () => {
-    if (inQuestion === "description") {
+    if (inQuestion === "description" || inQuestion === 'key') {
       return <Text style={styles.title}>{currentEntry.value}</Text>;
     } else {
       if (route.params.multivalue) {
