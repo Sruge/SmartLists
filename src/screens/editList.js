@@ -40,7 +40,6 @@ export default EditList = (props) => {
   const input = React.createRef();
 
   useEffect(() => {
-    console.log(route.params.userEmail);
     const subscriber = firestore()
       .collection("Lists")
       .doc(route.params.listName)

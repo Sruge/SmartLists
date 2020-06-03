@@ -12,16 +12,19 @@ import firestore from "@react-native-firebase/firestore";
 import React, { useEffect, useState } from "react";
 import { StyleSheet, ActivityIndicator, FlatList } from "react-native";
 
-import { useNavigation } from "@react-navigation/native";
+import { useRoute } from "@react-navigation/native";
 import { ListItem } from "react-native-elements";
 import { FloatingAction } from "react-native-floating-action";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 export default Baggy = () => {
   const [lists, setLists] = useState();
+  const route = useRoute();
   useEffect(() => {
+    console.log(route.params.userEmail);
     const subscriber = firestore()
       .collection("Lists")
+      .where("creator", "==", route.params.userEmail)
       .onSnapshot((querySnapshot) => {
         const lists = [];
 

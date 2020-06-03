@@ -52,7 +52,6 @@ export default App = () => {
 
   // Handle user state changes
   function onAuthStateChanged(user) {
-    console.log(user.email)
     setUser(user);
     if (initializing) setInitializing(false);
   }
@@ -86,6 +85,7 @@ export default App = () => {
           name="Baggy"
           component={Baggy}
           options={{ title: "Baggy" }}
+          initialParams={{ userEmail: user.email }}
         />
       </BottomTab.Navigator>
     </NavigationContainer>
