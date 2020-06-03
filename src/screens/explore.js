@@ -51,11 +51,16 @@ export default Explore = (props) => {
   }, []);
 
   if (loading) {
-    return <ActivityIndicator size={"large"} style={styles.activityIndicator}/>;
+    return (
+      <ActivityIndicator size={"large"} style={styles.activityIndicator} />
+    );
   }
 
   handleItemClickExplore = (item) => {
-    navigation.navigate("ListView", { listId: item.key });
+    navigation.navigate("ListView", {
+      listId: item.key,
+      multiValue: item.multiValue,
+    });
   };
 
   handleAddClickExplore = (item) => {
@@ -110,6 +115,6 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   activityIndicator: {
-    flex: 1
-  }
+    flex: 1,
+  },
 });

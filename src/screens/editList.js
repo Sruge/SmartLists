@@ -33,11 +33,11 @@ const actions = [
 
 export default EditList = (props) => {
   const [textVal, setTextVal] = useState("");
+  const [description, setDescription] = useState("");
   const [entries, setEntries] = useState([]);
   const [loading, setLoading] = useState(true);
   const route = useRoute();
   const navigation = useNavigation();
-  const input = React.createRef();
 
   useEffect(() => {
     const subscriber = firestore()
@@ -49,7 +49,8 @@ export default EditList = (props) => {
           Object.entries(documentSnapshot.get("elements")).forEach(
             ([key, val]) => {
               entries.push({
-                value: val,
+                value: val.value,
+                description: val.description,
                 key: key,
               });
             }
@@ -66,17 +67,22 @@ export default EditList = (props) => {
   handleAdd = () => {
     if (textVal !== "") {
       setEntries((entries) => {
-        entries.push({ key: entries.length.toString(), value: textVal });
+        entries.push({
+          key: entries.length.toString(),
+          value: textVal,
+          description: description,
+        });
         return entries;
       });
       setTextVal("");
+      setDescription("");
     }
   };
 
   handleSaveClick = () => {
     const resultList = [];
     entries.forEach((entry) => {
-      resultList.push(entry.value);
+      resultList.push(entry);
     });
     console.log(route.params.listName);
     const docRef = firestore().collection("Lists").doc(route.params.listName);
@@ -94,7 +100,7 @@ export default EditList = (props) => {
           console.log("No such document, creating a new one!");
           firestore().collection("Lists").add({
             name: route.params.listName,
-            elements: resultList,
+            elements: entries,
             pub: route.params.pub,
             creator: route.params.userEmail,
             multiValue: route.params.multiValue,
@@ -108,7 +114,6 @@ export default EditList = (props) => {
   };
 
   renderItem = ({ item }) => {
-    console.log(route.params.multiValue);
     if (!route.params.multiValue) {
       return (
         <ListItem
@@ -124,14 +129,47 @@ export default EditList = (props) => {
 
     return (
       <ListItem
-        title={item.key}
-        subtitle={item.value}
+        title={item.value}
+        subtitle={item.description}
         key={item.key}
         //onPress={() => handleItemClick(item)}
         style={styles.listItem}
         bottomDivider
         //onLongPress={() => handleLongPress(item)}
       />
+    );
+  };
+
+  renderInput = (item) => {
+    if (!route.params.multiValue) {
+      return (
+        <TextInput
+          onChangeText={(text) => setTextVal(text)}
+          defaultValue={textVal}
+          style={styles.textInput}
+          placeholder={"Value"}
+          maxLength={40}
+        />
+      );
+    }
+
+    return (
+      <View>
+        <TextInput
+          onChangeText={(text) => setTextVal(text)}
+          defaultValue={textVal}
+          style={styles.textInput}
+          placeholder={"Value"}
+          maxLength={40}
+        />
+        <TextInput
+          onChangeText={(text) => setDescription(text)}
+          defaultValue={description}
+          style={styles.textInput}
+          placeholder={"Description"}
+          maxLength={40}
+        />
+      </View>
     );
   };
 
@@ -142,17 +180,7 @@ export default EditList = (props) => {
   return (
     <>
       <SafeAreaView style={styles.container}>
-        <View style={styles.inputContainer}>
-          <TextInput
-            ref={input}
-            label={"handsons"}
-            onChangeText={(text) => setTextVal(text)}
-            defaultValue={textVal}
-            style={styles.textInput}
-            placeholder={"List Element"}
-            maxLength={40}
-          />
-        </View>
+        <View style={styles.inputContainer}>{renderInput()}</View>
         <Button title="ADD" onPress={handleAdd} buttonStyle={styles.okButton} />
         <FlatList data={entries} renderItem={renderItem} />
         <FloatingAction

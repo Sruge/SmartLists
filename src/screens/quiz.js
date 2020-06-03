@@ -31,6 +31,7 @@ export default Quiz = () => {
   const route = useRoute();
   const [score, setScore] = useState(0);
   const [total, setTotal] = useState(0);
+  const [inQuestion, setInQuestion] = useState("description");
 
   console.log(currentEntry);
   useEffect(() => {
@@ -43,7 +44,8 @@ export default Quiz = () => {
           Object.entries(documentSnapshot.get("elements")).forEach(
             ([key, val]) => {
               entries.push({
-                value: val,
+                value: val.value,
+                description: val.description,
                 key: key,
               });
             }
@@ -59,7 +61,7 @@ export default Quiz = () => {
   }, []);
 
   handleCheck = () => {
-    if (answer === currentEntry.key) {
+    if (answer === currentEntry[inQuestion]) {
       console.log("correct");
       setScore((score) => {
         return (score += 1);
@@ -77,12 +79,24 @@ export default Quiz = () => {
     setAnswer("");
   };
 
+  renderQuestion = () => {
+    if (inQuestion === "description") {
+      return <Text style={styles.title}>{currentEntry.value}</Text>;
+    } else {
+      if (route.params.multivalue) {
+        return <Text style={styles.title}>{currentEntry.description}</Text>;
+      } else {
+        return <Text style={styles.title}>{currentEntry.key}</Text>;
+      }
+    }
+  };
+
   if (loading) return null;
 
   return (
     <View style={styles.container}>
       <View style={styles.inputContainer}>
-        <Text style={styles.title}>{currentEntry.value}</Text>
+        {renderQuestion()}
         <Text style={styles.score}>
           {score} / {total}
         </Text>
@@ -92,7 +106,7 @@ export default Quiz = () => {
             defaultValue={answer}
             style={styles.textInput}
             placeholder={"Answer"}
-            keyboardType="numeric"
+            //keyboardType="numeric"
             maxLength={5}
           />
 
@@ -117,6 +131,7 @@ const styles = StyleSheet.create({
     padding: 10,
     fontSize: 20,
     marginEnd: 10,
+    alignContent: "center",
   },
   title: {
     fontSize: 30,

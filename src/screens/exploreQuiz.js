@@ -44,7 +44,10 @@ export default ExploreQuiz = (props) => {
   }
 
   handleItemClickQuiz = (item) => {
-    navigation.navigate("Quiz", { listId: item.key });
+    navigation.navigate("Quiz", {
+      listId: item.key,
+      multiValue: item.multiValue,
+    });
   };
 
   renderItem = ({ item }) => {

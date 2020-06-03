@@ -31,7 +31,8 @@ export default ListView = () => {
           Object.entries(documentSnapshot.get("elements")).forEach(
             ([key, val]) => {
               entries.push({
-                value: val,
+                value: val.value,
+                description: val.description,
                 key: key,
               });
             }
@@ -46,14 +47,28 @@ export default ListView = () => {
   }, []);
 
   renderItem = ({ item }) => {
+    if (!route.params.multiValue) {
+      return (
+        <ListItem
+          title={item.value}
+          key={item.key}
+          //onPress={() => handleItemClick(item)}
+          style={styles.listItem}
+          bottomDivider
+          //onLongPress={() => handleLongPress(item)}
+        />
+      );
+    }
+
     return (
       <ListItem
         title={item.value}
+        subtitle={item.description}
         key={item.key}
-        //chevron={{color: 'blue'}}
         //onPress={() => handleItemClick(item)}
         style={styles.listItem}
         bottomDivider
+        //onLongPress={() => handleLongPress(item)}
       />
     );
   };
