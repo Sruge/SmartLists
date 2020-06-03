@@ -22,6 +22,8 @@ import { useRoute } from "@react-navigation/native";
 import { Button } from "react-native-elements";
 import { FloatingAction } from "react-native-floating-action";
 import { SafeAreaView } from "react-native-safe-area-context";
+import Icon from 'react-native-vector-icons/AntDesign';
+
 
 export default Quiz = () => {
   const [entries, setEntries] = useState([]);
@@ -82,11 +84,25 @@ export default Quiz = () => {
     setAnswer("");
   };
 
+  switchInQuestion = () => {
+      setInQuestion((inQuestion) => {
+        if (inQuestion === 'value') {
+            if (route.params.multiValue) {
+                setInQuestion('description')
+            } else {
+                setInQuestion('key')
+            }
+        } else {
+            setInQuestion('value')
+        }
+      })
+  }
+
   renderQuestion = () => {
     if (inQuestion === "description" || inQuestion === 'key') {
       return <Text style={styles.title}>{currentEntry.value}</Text>;
     } else {
-      if (route.params.multivalue) {
+      if (route.params.multiValue) {
         return <Text style={styles.title}>{currentEntry.description}</Text>;
       } else {
         return <Text style={styles.title}>{currentEntry.key}</Text>;
@@ -99,6 +115,7 @@ export default Quiz = () => {
   return (
     <View style={styles.container}>
       <View style={styles.inputContainer}>
+          <Icon name='smile-circle' onPress={switchInQuestion}/>
         {renderQuestion()}
         <Text style={styles.score}>
           {score} / {total}
