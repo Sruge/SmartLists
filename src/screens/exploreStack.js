@@ -10,6 +10,7 @@ import Explore from "./explore.js";
 import ListView from "./listView.js";
 import AddList from "./addList.js";
 import EditList from "./editList.js";
+import Chess from "./chess.js";
 
 const Stack = createStackNavigator();
 
@@ -49,6 +50,11 @@ export default ExploreStack = (props) => {
         name="EditList"
         component={EditList}
         options={{ title: "Edit mode" }}
+      />
+      <Stack.Screen
+        name="Chess"
+        component={Chess}
+        options={{ title: "Chess Mode" }}
       />
     </Stack.Navigator>
   );

@@ -76,7 +76,7 @@ export default App = () => {
   return (
     <NavigationContainer>
       <StatusBar barStyle="dark-content" />
-      <BottomTab.Navigator initialRouteName="Chess">
+      <BottomTab.Navigator initialRouteName="ExploreStack">
         <BottomTab.Screen
           name="ExploreStack"
           component={ExploreStack}
@@ -93,12 +93,6 @@ export default App = () => {
           name="QuizStack"
           component={QuizStack}
           options={{ title: "Quiz" }}
-          initialParams={{ userEmail: user.email }}
-        />
-                <BottomTab.Screen
-          name="Chess"
-          component={Chess}
-          options={{ title: "Chess" }}
           initialParams={{ userEmail: user.email }}
         />
       </BottomTab.Navigator>

@@ -16,6 +16,7 @@ import { useRoute, useNavigation } from "@react-navigation/native";
 export default AddList = (props) => {
   const [listname, setListname] = useState("");
   const [pub, setPub] = useState(true);
+  const [chessSupport, setChessSupport] = useState(false);
   const navigation = useNavigation();
   const input = React.createRef();
   const [advancedOpen, setAdvancedOpen] = useState(false);
@@ -23,12 +24,21 @@ export default AddList = (props) => {
   const route = useRoute();
 
   handleOk = () => {
-    if (listname !== "") {
+    if (chessSupport) {
+      navigation.navigate("Chess", {
+        listName: listname,
+        pub: pub,
+        userEmail: route.params.userEmail,
+        multiValue: multiValue,
+        chessSupport: chessSupport,
+      });
+    } else if (listname !== "") {
       navigation.navigate("EditList", {
         listName: listname,
         pub: pub,
         userEmail: route.params.userEmail,
         multiValue: multiValue,
+        chessSupport: chessSupport,
       });
       //input.current.shake()
     }
@@ -40,6 +50,9 @@ export default AddList = (props) => {
 
   handleCheckBoxMultiPress = () => {
     setMultiValue(!multiValue);
+  };
+  handleCheckChessPress = () => {
+    setChessSupport(!chessSupport);
   };
 
   handleAdvancedClick = () => {
@@ -76,6 +89,13 @@ export default AddList = (props) => {
               style={styles.checkBox}
               title={"Multivalue"}
               onPress={handleCheckBoxMultiPress}
+            />
+            <CheckBox
+              center
+              checked={chessSupport}
+              style={styles.checkBox}
+              title={"Chess Support"}
+              onPress={handleCheckChessPress}
             />
           </View>
         )}
