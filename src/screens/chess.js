@@ -42,6 +42,7 @@ export default Chess = () => {
   const [position, setPosition] = useState(
     "rnbqkbnr/pppppppp/6p1/8/8/8/PPPPPPPP/RNBQKBNR"
   );
+  const [path, setPath] = useState([]);
   useEffect(() => {
     console.log(route.params.userEmail);
     const subscriber = firestore()
@@ -73,7 +74,31 @@ export default Chess = () => {
     );
   };
 
-  exchangeSquares = (firstSquare, secondSquare) => {
+  makeMove = (firstSquare, secondSquare) => {
+    const letters = "ABCDEFGH";
+    const numbers = "87654321";
+    setPath((path) => {
+      pos = position
+      pos = pos.replace(/8/g, "00000000");
+      pos = pos.replace(/7/g, "0000000");
+      pos = pos.replace(/6/g, "000000");
+      pos = pos.replace(/5/g, "00000");
+      pos = pos.replace(/4/g, "0000");
+      pos = pos.replace(/3/g, "000");
+      pos = pos.replace(/2/g, "00");
+      pos = pos.replace(/1/g, "0");
+      let rows = pos.split("/");
+      path.push(
+          rows[firstSquare.row][firstSquare.column].toString() + 
+          "  " +
+          letters[firstSquare.column].toString() +
+          numbers[firstSquare.row.toString()] +
+          " - " +
+          letters[secondSquare.column].toString() +
+          numbers[secondSquare.row.toString()]
+      );
+      return path;
+    });
     setPosition((pos) => {
       pos = pos.replace(/8/g, "00000000");
       pos = pos.replace(/7/g, "0000000");
@@ -85,7 +110,6 @@ export default Chess = () => {
       pos = pos.replace(/1/g, "0");
       let rows = pos.split("/");
       const firstContent = rows[firstSquare.row][firstSquare.column];
-      console.log(firstContent);
       rows[firstSquare.row] = rows[[firstSquare.row]].replaceAt(
         firstSquare.column,
         rows[secondSquare.row][secondSquare.column]
@@ -128,13 +152,11 @@ export default Chess = () => {
 
   handlePressField = (rowIndex, column) => {
     if (rowIndex === currentSquare.row && column === currentSquare.column) {
-      console.log("same sq");
       setCurrentSquare({ row: 9, column: 9 });
     } else if (currentSquare.row === 9 && currentSquare.column === 9) {
       setCurrentSquare({ column: column, row: rowIndex });
     } else {
-      console.log("handleexchange");
-      exchangeSquares(
+      makeMove(
         { row: currentSquare.row, column: currentSquare.column },
         { row: rowIndex, column: column }
       );
@@ -204,7 +226,14 @@ export default Chess = () => {
     }
   };
 
-  return <SafeAreaView style={styles.container}>{renderBoard()}</SafeAreaView>;
+  return (
+    <SafeAreaView style={styles.container}>
+      {renderBoard()}
+      {path.map((entry) => {
+        return <Text>{entry}</Text>;
+      })}
+    </SafeAreaView>
+  );
 };
 
 const styles = StyleSheet.create({
