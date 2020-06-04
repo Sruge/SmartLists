@@ -65,9 +65,7 @@ export default Quiz = () => {
   }, []);
 
   handleCheck = () => {
-    console.log(currentEntry[inQuestion]);
     if (answer === currentEntry[inQuestion]) {
-      console.log("correct");
       setScore((score) => {
         return (score += 1);
       });
@@ -75,7 +73,6 @@ export default Quiz = () => {
         return (total += 1);
       });
     } else {
-      console.log("wrong");
       setTotal((total) => {
         return (total += 1);
       });
@@ -127,7 +124,7 @@ export default Quiz = () => {
             style={styles.textInput}
             placeholder={"Answer"}
             //keyboardType="numeric"
-            maxLength={5}
+            maxLength={100}
           />
 
           <Button

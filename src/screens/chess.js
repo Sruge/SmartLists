@@ -10,8 +10,15 @@ import "@react-native-firebase/app";
 import firestore from "@react-native-firebase/firestore";
 
 import React, { useEffect, useState } from "react";
-import { StyleSheet, Text, View } from "react-native";
-import { Image } from "react-native-elements";
+
+import {
+  StyleSheet,
+  Text,
+  View,
+  TouchableHighlight,
+  TouchableOpacity,
+} from "react-native";
+import { Image, ListItem } from "react-native-elements";
 import { useRoute } from "@react-navigation/native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import WhitePawn from "./chessPieces/whitePawn.js";
@@ -26,11 +33,15 @@ import BlackQueen from "./chessPieces/blackQueen.js";
 import BlackBishop from "./chessPieces/blackBishop.js";
 import BlackKnight from "./chessPieces/blackKnight.js";
 import BlackRook from "./chessPieces/blackRook.js";
+import {} from "react-native-gesture-handler";
 
 export default Chess = () => {
   const [lists, setLists] = useState();
   const route = useRoute();
-  let position = "rnbqkbnr/pppppppp/6p1/8/8/8/PPPPPPPP/RNBQKBNR";
+  const [currentSquare, setCurrentSquare] = useState({ row: 9, column: 9 });
+  const [position, setPosition] = useState(
+    "rnbqkbnr/pppppppp/6p1/8/8/8/PPPPPPPP/RNBQKBNR"
+  );
   useEffect(() => {
     console.log(route.params.userEmail);
     const subscriber = firestore()
@@ -54,17 +65,51 @@ export default Chess = () => {
     return () => subscriber;
   }, []);
 
+  String.prototype.replaceAt = function (index, replacement) {
+    return (
+      this.substr(0, index) +
+      replacement +
+      this.substr(index + replacement.length)
+    );
+  };
+
+  exchangeSquares = (firstSquare, secondSquare) => {
+    setPosition((pos) => {
+      pos = pos.replace(/8/g, "00000000");
+      pos = pos.replace(/7/g, "0000000");
+      pos = pos.replace(/6/g, "000000");
+      pos = pos.replace(/5/g, "00000");
+      pos = pos.replace(/4/g, "0000");
+      pos = pos.replace(/3/g, "000");
+      pos = pos.replace(/2/g, "00");
+      pos = pos.replace(/1/g, "0");
+      let rows = pos.split("/");
+      const firstContent = rows[firstSquare.row][firstSquare.column];
+      console.log(firstContent);
+      rows[firstSquare.row] = rows[[firstSquare.row]].replaceAt(
+        firstSquare.column,
+        rows[secondSquare.row][secondSquare.column]
+      );
+      rows[secondSquare.row] = rows[[secondSquare.row]].replaceAt(
+        secondSquare.column,
+        firstContent
+      );
+
+      return rows.join("/");
+    });
+  };
+
   renderBoard = () => {
-    position = position.replace(/8/g, "00000000");
-    position = position.replace(/7/g, "0000000");
-    position = position.replace(/6/g, "000000");
-    position = position.replace(/5/g, "00000");
-    position = position.replace(/4/g, "0000");
-    position = position.replace(/3/g, "000");
-    position = position.replace(/2/g, "00");
-    position = position.replace(/1/g, "0");
-    console.log(position);
-    const rows = position.split("/");
+    currentPos = position;
+    currentPos = currentPos.replace(/8/g, "00000000");
+    currentPos = currentPos.replace(/7/g, "0000000");
+    currentPos = currentPos.replace(/6/g, "000000");
+    currentPos = currentPos.replace(/5/g, "00000");
+    currentPos = currentPos.replace(/4/g, "0000");
+    currentPos = currentPos.replace(/3/g, "000");
+    currentPos = currentPos.replace(/2/g, "00");
+    currentPos = currentPos.replace(/1/g, "0");
+    let rows = currentPos.split("/");
 
     return [...rows].map((row, rowIndex) => {
       return renderRow(row, rowIndex);
@@ -73,24 +118,49 @@ export default Chess = () => {
 
   renderRow = (row, rowIndex) => {
     return (
-      <View style={styles.row}>
-        {[...row].map((square, index) => {
-          return renderSquare(square, index, rowIndex);
+      <View key={rowIndex} style={styles.row}>
+        {[...row].map((square, column) => {
+          return renderSquare(square, column, rowIndex);
         })}
       </View>
     );
   };
 
-  renderSquare = (content, index, rowIndex) => {
-    console.log(rowIndex + index);
+  handlePressField = (rowIndex, column) => {
+    if (rowIndex === currentSquare.row && column === currentSquare.column) {
+      console.log("same sq");
+      setCurrentSquare({ row: 9, column: 9 });
+    } else if (currentSquare.row === 9 && currentSquare.column === 9) {
+      setCurrentSquare({ column: column, row: rowIndex });
+    } else {
+      console.log("handleexchange");
+      exchangeSquares(
+        { row: currentSquare.row, column: currentSquare.column },
+        { row: rowIndex, column: column }
+      );
+      setCurrentSquare({ row: 9, column: 9 });
+    }
+    {
+    }
+  };
+
+  renderSquare = (content, column, rowIndex) => {
     let shade = "grey";
-    if ((rowIndex + index) % 2 === 0) {
+    if ((rowIndex + column) % 2 === 0) {
       shade = "white";
+    }
+    if (column === currentSquare.column && rowIndex === currentSquare.row) {
+      shade = "red";
     }
 
     return (
-      <View style={{ backgroundColor: shade, height: 45, width: 45 }}>
-        {renderPiece(content)}
+      <View key={column + 10 * rowIndex}>
+        <TouchableOpacity
+          onPress={() => handlePressField(rowIndex, column)}
+          style={{ backgroundColor: shade, height: 45, width: 45 }}
+        >
+          {renderPiece(content)}
+        </TouchableOpacity>
       </View>
     );
   };
@@ -115,7 +185,7 @@ export default Chess = () => {
       return <WhiteQueen />;
     }
     if (content === "b") {
-      return <BlackBishop style={{ marginTop: 30 }} />;
+      return <BlackBishop />;
     }
     if (content === "B") {
       return <WhiteBishop />;

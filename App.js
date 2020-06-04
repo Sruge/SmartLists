@@ -76,7 +76,7 @@ export default App = () => {
   return (
     <NavigationContainer>
       <StatusBar barStyle="dark-content" />
-      <BottomTab.Navigator initialRouteName="ExploreStack">
+      <BottomTab.Navigator initialRouteName="Chess">
         <BottomTab.Screen
           name="ExploreStack"
           component={ExploreStack}

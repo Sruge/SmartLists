@@ -41,7 +41,7 @@ export default class BlackQueen extends React.Component {
       >
         <Svg>
           <G
-            fill={0}
+            fill="#000"
             fillRule="evenodd"
             stroke="#000"
             strokeWidth="1.5"
@@ -60,6 +60,7 @@ export default class BlackQueen extends React.Component {
               strokeLinecap="butt"
             />
             <Path
+              fill="none"
               d="M9 26c0 2 1.5 2 2.5 4 1 1.5 1 1 .5 3.5-1.5 1-1.5 2.5-1.5 2.5-1.5 1.5.5 2.5.5 2.5 6.5 1 16.5 1 23 0 0 0 1.5-1 0-2.5 0 0 .5-1.5-1-2.5-.5-2.5-.5-2 .5-3.5 1-2 2.5-2 2.5-4-8.5-1.5-18.5-1.5-27 0z"
               strokeLinecap="butt"
             />
