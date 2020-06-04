@@ -17,6 +17,7 @@ import {
   View,
   TouchableHighlight,
   TouchableOpacity,
+  TextInput,
 } from "react-native";
 import { Image, ListItem } from "react-native-elements";
 import { useRoute } from "@react-navigation/native";
@@ -33,16 +34,17 @@ import BlackQueen from "./chessPieces/blackQueen.js";
 import BlackBishop from "./chessPieces/blackBishop.js";
 import BlackKnight from "./chessPieces/blackKnight.js";
 import BlackRook from "./chessPieces/blackRook.js";
-import {} from "react-native-gesture-handler";
+import { ScrollView } from "react-native-gesture-handler";
 
 export default Chess = () => {
   const [lists, setLists] = useState();
   const route = useRoute();
+  const [description, setDescription] = useState();
   const [currentSquare, setCurrentSquare] = useState({ row: 9, column: 9 });
   const [position, setPosition] = useState(
     "rnbqkbnr/pppppppp/6p1/8/8/8/PPPPPPPP/RNBQKBNR"
   );
-  const [path, setPath] = useState([]);
+  const [path, setPath] = useState(['Moves: ']);
   useEffect(() => {
     console.log(route.params.userEmail);
     const subscriber = firestore()
@@ -89,6 +91,7 @@ export default Chess = () => {
       pos = pos.replace(/1/g, "0");
       let rows = pos.split("/");
       path.push(
+          (path.length).toString() + ". " + 
           rows[firstSquare.row][firstSquare.column].toString() + 
           "  " +
           letters[firstSquare.column].toString() +
@@ -229,9 +232,18 @@ export default Chess = () => {
   return (
     <SafeAreaView style={styles.container}>
       {renderBoard()}
-      {path.map((entry) => {
-        return <Text>{entry}</Text>;
+      <ScrollView horizontal={true} style={styles.ScrollView}>
+      {path.map((entry, index) => {
+        return <Text key={index} style={styles.moves}>{entry}</Text>;
       })}
+      </ScrollView>
+      <TextInput
+          onChangeText={(text) => setDescription(text)}
+          defaultValue={description}
+          style={styles.textInput}
+          placeholder={"Description"}
+          maxLength={100}
+        />
     </SafeAreaView>
   );
 };
@@ -242,11 +254,22 @@ const styles = StyleSheet.create({
     marginTop: 5,
   },
   container: {
-    flex: 1,
     alignItems: "center",
-    marginTop: 5,
+    marginTop: 20,
+    justifyContent: 'flex-start'
   },
   row: {
     flexDirection: "row",
+  },
+  moves: {
+    fontSize: 16,
+    marginRight: 5
+  },
+  ScrollView: {
+    marginHorizontal: 50,
+    marginTop: 15,
+  },
+  textInput: {
+    padding: 5,
   },
 });
