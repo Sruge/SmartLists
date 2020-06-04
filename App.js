@@ -23,6 +23,7 @@ import Login from "./src/screens/login.js";
 import ExploreStack from "./src/screens/exploreStack.js";
 import auth from "@react-native-firebase/auth";
 import SignUp from "./src/screens/signUp.js";
+import Chess from "./src/screens/chess.js";
 import QuizStack from "./src/screens/quizStack.js";
 import { SafeAreaView } from "react-native-safe-area-context";
 
@@ -92,6 +93,12 @@ export default App = () => {
           name="QuizStack"
           component={QuizStack}
           options={{ title: "Quiz" }}
+          initialParams={{ userEmail: user.email }}
+        />
+                <BottomTab.Screen
+          name="Chess"
+          component={Chess}
+          options={{ title: "Chess" }}
           initialParams={{ userEmail: user.email }}
         />
       </BottomTab.Navigator>

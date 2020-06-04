@@ -20,10 +20,8 @@ import {
 
 import { useRoute } from "@react-navigation/native";
 import { Button } from "react-native-elements";
-import { FloatingAction } from "react-native-floating-action";
-import { SafeAreaView } from "react-native-safe-area-context";
-import Icon from 'react-native-vector-icons/AntDesign';
 
+import Icon from "react-native-vector-icons/AntDesign";
 
 export default Quiz = () => {
   const [entries, setEntries] = useState([]);
@@ -54,8 +52,10 @@ export default Quiz = () => {
           );
         }
         setEntries(entries);
-        console.log(route.params.multivalue)
-        setInQuestion(() => {return (route.params.multiValue ? 'description' : 'key')})
+        console.log(route.params.multivalue);
+        setInQuestion(() => {
+          return route.params.multiValue ? "description" : "key";
+        });
         setCurrentEntry(entries[Math.floor(Math.random() * entries.length)]);
         setLoading(false);
       });
@@ -65,7 +65,7 @@ export default Quiz = () => {
   }, []);
 
   handleCheck = () => {
-      console.log(currentEntry[inQuestion])
+    console.log(currentEntry[inQuestion]);
     if (answer === currentEntry[inQuestion]) {
       console.log("correct");
       setScore((score) => {
@@ -85,21 +85,21 @@ export default Quiz = () => {
   };
 
   switchInQuestion = () => {
-      setInQuestion((inQuestion) => {
-        if (inQuestion === 'value') {
-            if (route.params.multiValue) {
-                setInQuestion('description')
-            } else {
-                setInQuestion('key')
-            }
+    setInQuestion((inQuestion) => {
+      if (inQuestion === "value") {
+        if (route.params.multiValue) {
+          setInQuestion("description");
         } else {
-            setInQuestion('value')
+          setInQuestion("key");
         }
-      })
-  }
+      } else {
+        setInQuestion("value");
+      }
+    });
+  };
 
   renderQuestion = () => {
-    if (inQuestion === "description" || inQuestion === 'key') {
+    if (inQuestion === "description" || inQuestion === "key") {
       return <Text style={styles.title}>{currentEntry.value}</Text>;
     } else {
       if (route.params.multiValue) {
@@ -115,7 +115,7 @@ export default Quiz = () => {
   return (
     <View style={styles.container}>
       <View style={styles.inputContainer}>
-          <Icon name='smile-circle' onPress={switchInQuestion}/>
+        <Icon name="smile-circle" onPress={switchInQuestion} />
         {renderQuestion()}
         <Text style={styles.score}>
           {score} / {total}
