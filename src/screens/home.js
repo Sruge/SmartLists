@@ -12,18 +12,37 @@ import firestore from "@react-native-firebase/firestore";
 import React, { useEffect, useState } from "react";
 import { StyleSheet, ActivityIndicator, FlatList } from "react-native";
 
-import { useRoute } from "@react-navigation/native";
+import { useRoute, useNavigation } from "@react-navigation/native";
 import { ListItem } from "react-native-elements";
 import { FloatingAction } from "react-native-floating-action";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 export default Baggy = () => {
-  const [lists, setLists] = useState();
+  const [lists, setLists] = useState([]);
   const route = useRoute();
+  const navigation = useNavigation();
   useEffect(() => {
     console.log(route.params.userEmail);
+    // const subscriber = firestore()
+    //   .collection("Lists")
+    //   .where("creator", "==", route.params.userEmail)
+    //   .onSnapshot((querySnapshot) => {
+    //     const lists2 = [];
+
+    //     querySnapshot.forEach((documentSnapshot) => {
+    //       lists2.push({
+    //         value: documentSnapshot.get("name"),
+    //         key: documentSnapshot.id,
+    //         len: documentSnapshot.get("elements").length.toString(),
+    //       });
+    //     });
+
+    //     setLists((lists) => {
+    //       return lists.concat(lists2);
+    //     });
+    //   });
     const subscriber = firestore()
-      .collection("Lists")
+      .collection("ChessLists")
       .where("creator", "==", route.params.userEmail)
       .onSnapshot((querySnapshot) => {
         const lists = [];
@@ -43,8 +62,10 @@ export default Baggy = () => {
     return () => subscriber;
   }, []);
 
-  handleItemClick = () => {
-    console.log("Item in baggy clicked");
+  handleItemClick = (item) => {
+    navigation.navigate("Chess", {
+      listId: item.key,
+    });
   };
 
   renderItem = ({ item }) => {

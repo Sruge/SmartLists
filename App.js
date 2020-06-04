@@ -18,7 +18,7 @@ import {
 import { createStackNavigator } from "@react-navigation/stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 
-import Baggy from "./src/screens/baggy.js";
+import Home from "./src/screens/home.js";
 import Login from "./src/screens/login.js";
 import ExploreStack from "./src/screens/exploreStack.js";
 import auth from "@react-native-firebase/auth";
@@ -26,6 +26,8 @@ import SignUp from "./src/screens/signUp.js";
 import Chess from "./src/screens/chess.js";
 import QuizStack from "./src/screens/quizStack.js";
 import { SafeAreaView } from "react-native-safe-area-context";
+import Icon from "react-native-vector-icons/AntDesign";
+
 
 const Stack = createStackNavigator();
 const BottomTab = createBottomTabNavigator();
@@ -84,10 +86,12 @@ export default App = () => {
           initialParams={{ userEmail: user.email }}
         />
         <BottomTab.Screen
-          name="Baggy"
-          component={Baggy}
-          options={{ title: "Baggy" }}
+          name="Home"
+          component={Home}
+          options={{ title: "Home"  ,         tabBarIcon: () => <Icon name="profile" color="#333" size={24} />,
+        }}
           initialParams={{ userEmail: user.email }}
+          
         />
         <BottomTab.Screen
           name="QuizStack"

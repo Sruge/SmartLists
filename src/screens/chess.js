@@ -20,7 +20,7 @@ import {
   TextInput,
 } from "react-native";
 import { Button } from "react-native-elements";
-import { Image, ListItem } from "react-native-elements";
+import { Image, ListItem, Icon } from "react-native-elements";
 import { useRoute, useNavigation } from "@react-navigation/native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import WhitePawn from "./chessPieces/whitePawn.js";
@@ -38,36 +38,56 @@ import BlackRook from "./chessPieces/blackRook.js";
 import { ScrollView } from "react-native-gesture-handler";
 
 export default Chess = () => {
-  const [lists, setLists] = useState();
   const route = useRoute();
   const [description, setDescription] = useState();
   const navigation = useNavigation();
   const [currentSquare, setCurrentSquare] = useState({ row: 9, column: 9 });
-  const [position, setPosition] = useState(
-    "rnbqkbnr/pppppppp/6p1/8/8/8/PPPPPPPP/RNBQKBNR"
-  );
-  const [path, setPath] = useState(["Moves: "]);
+  const [position, setPosition] = useState("");
+  const [path, setPath] = useState("");
+  const [currentEntry, setCurrentEntry] = useState(0);
+  const [entries, setEntries] = useState([]);
+  const [currentContent, setCurrentContent] = useState(0);
+
   useEffect(() => {
-    console.log(route.params.userEmail);
+    if (entries.length === 0) {
+      console.log("setInititalState");
+      setPosition("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR");
+    } else {
+      setPath(entries[currentEntry].path);
+      setPosition(entries[currentEntry].value);
+      setDescription(entries[currentEntry].description);
+    }
+  }, [currentEntry]);
+
+  useEffect(() => {
     const subscriber = firestore()
-      .collection("Lists")
-      .where("type", "==", "chess")
-      .onSnapshot((querySnapshot) => {
-        const lists = [];
-
-        querySnapshot.forEach((documentSnapshot) => {
-          lists.push({
-            value: documentSnapshot.get("name"),
-            key: documentSnapshot.id,
-            len: documentSnapshot.get("elements").length.toString(),
-          });
-        });
-
-        setLists(lists);
+      .collection("ChessLists")
+      .doc(route.params.listId)
+      .onSnapshot((documentSnapshot) => {
+        const entries = [];
+        if (documentSnapshot.get("elements") !== undefined) {
+          Object.entries(documentSnapshot.get("elements")).forEach(
+            ([key, val]) => {
+              entries.push({
+                value: val.value,
+                description: val.description,
+                key: key,
+                path: val.path,
+              });
+            }
+          );
+        }
+        if (entries.length > 0) {
+          console.log("updating state");
+          setEntries(entries);
+          setPath(entries[currentEntry].path);
+          setPosition(entries[currentEntry].value);
+          setDescription(entries[currentEntry].description);
+        }
       });
 
     // Unsubscribe from events when no longer in use
-    return () => subscriber;
+    return () => subscriber();
   }, []);
 
   String.prototype.replaceAt = function (index, replacement) {
@@ -78,33 +98,20 @@ export default Chess = () => {
     );
   };
 
-  makeMove = (firstSquare, secondSquare) => {
+  makeMove = (content, firstSquare, secondSquare) => {
     const letters = "ABCDEFGH";
     const numbers = "87654321";
     setPath((path) => {
-      pos = position;
-      pos = pos.replace(/8/g, "00000000");
-      pos = pos.replace(/7/g, "0000000");
-      pos = pos.replace(/6/g, "000000");
-      pos = pos.replace(/5/g, "00000");
-      pos = pos.replace(/4/g, "0000");
-      pos = pos.replace(/3/g, "000");
-      pos = pos.replace(/2/g, "00");
-      pos = pos.replace(/1/g, "0");
-      let rows = pos.split("/");
-      path.push(
-        path.length.toString() +
-          ". " +
-          rows[firstSquare.row][firstSquare.column].toString() +
-          "  " +
-          letters[firstSquare.column].toString() +
-          numbers[firstSquare.row.toString()] +
-          " - " +
-          letters[secondSquare.column].toString() +
-          numbers[secondSquare.row.toString()]
+      return (
+        path.toString() +
+        " " +
+        currentContent.toString() +
+        letters[secondSquare.column] +
+        numbers[secondSquare.row]
       );
-      return path;
     });
+
+    console.log(firstSquare.row, secondSquare.column);
     setPosition((pos) => {
       pos = pos.replace(/8/g, "00000000");
       pos = pos.replace(/7/g, "0000000");
@@ -127,6 +134,84 @@ export default Chess = () => {
 
       return rows.join("/");
     });
+  };
+
+  handlePressField = (content, rowIndex, column) => {
+    console.log(content);
+    //click on the already red square
+    if (rowIndex === currentSquare.row && column === currentSquare.column) {
+      setCurrentSquare({ row: 9, column: 9 });
+      //nothing selected yet so simply select
+    } else if (currentSquare.row === 9 && currentSquare.column === 9) {
+      if (isNaN(content)) {
+        setCurrentSquare({ column: column, row: rowIndex });
+        setCurrentContent(content);
+      }
+      //click while there is already something selected
+    } else {
+      makeMove(
+        content,
+        { row: currentSquare.row, column: currentSquare.column },
+        { row: rowIndex, column: column }
+      );
+      //set outside so none is selected
+      setCurrentSquare({ row: 9, column: 9 });
+    }
+    {
+    }
+  };
+
+  handleAddPosition = () => {
+    setEntries((entries) => {
+      entries.push({
+        value: position,
+        description: description,
+        path: path,
+        key: entries.length,
+      });
+    });
+    console.log(entries);
+
+    const docRef = firestore()
+      .collection("ChessLists")
+      .doc(route.params.listId);
+
+    docRef
+      .get()
+      .then(function (doc) {
+        if (doc.exists) {
+          console.log("Updating already existing doc ", route.params.listName);
+          firestore().collection("ChessLists").doc(route.params.listId).update({
+            elements: entries,
+          });
+        } else {
+          // doc.data() will be undefined in this case
+          console.log("No such document, creating a new one!");
+          firestore().collection("ChessLists").add({
+            name: route.params.listName,
+            elements: entries,
+            pub: route.params.pub,
+            creator: route.params.userEmail,
+            multiValue: route.params.multiValue,
+          });
+        }
+      })
+      .catch(function (error) {
+        console.log("Error getting document:", error);
+      });
+    navigation.navigate("Explore");
+  };
+
+  pressFurther = () => {
+    if (!(currentEntry + 2 > entries.length)) {
+      setCurrentEntry(currentEntry + 1);
+    }
+  };
+
+  pressBack = () => {
+    if (!(currentEntry === 0)) {
+      setCurrentEntry(currentEntry - 1);
+    }
   };
 
   renderBoard = () => {
@@ -156,63 +241,6 @@ export default Chess = () => {
     );
   };
 
-  handlePressField = (rowIndex, column) => {
-    //click on the already red square
-    if (rowIndex === currentSquare.row && column === currentSquare.column) {
-      setCurrentSquare({ row: 9, column: 9 });
-      //nothing selected yet so simply select
-    } else if (currentSquare.row === 9 && currentSquare.column === 9) {
-      setCurrentSquare({ column: column, row: rowIndex });
-      //click while there is already something selected
-    } else {
-      makeMove(
-        { row: currentSquare.row, column: currentSquare.column },
-        { row: rowIndex, column: column }
-      );
-      setCurrentSquare({ row: 9, column: 9 });
-    }
-    {
-    }
-  };
-
-  handleAddPosition = () => {
-    const docRef = firestore()
-      .collection("ChessLists")
-      .doc(route.params.listName);
-
-    docRef
-      .get()
-      .then(function (doc) {
-        if (doc.exists) {
-          console.log("Updating already existing doc ", route.params.listName);
-          firestore()
-            .collection("ChessLists")
-            .doc(route.params.listName)
-            .update({
-              description: description,
-              path: path,
-              position: position,
-            });
-        } else {
-          // doc.data() will be undefined in this case
-          console.log("No such document, creating a new one!");
-          firestore().collection("ChessLists").add({
-            name: route.params.listName,
-            description: description,
-            path: path,
-            position: position,
-            pub: route.params.pub,
-            creator: route.params.userEmail,
-            multiValue: route.params.multiValue,
-          });
-        }
-      })
-      .catch(function (error) {
-        console.log("Error getting document:", error);
-      });
-    navigation.navigate("Explore");
-  };
-
   renderSquare = (content, column, rowIndex) => {
     let shade = "grey";
     if ((rowIndex + column) % 2 === 0) {
@@ -225,7 +253,7 @@ export default Chess = () => {
     return (
       <View key={column + 10 * rowIndex}>
         <TouchableOpacity
-          onPress={() => handlePressField(rowIndex, column)}
+          onPress={() => handlePressField(content, rowIndex, column)}
           style={{ backgroundColor: shade, height: 45, width: 45 }}
         >
           {renderPiece(content)}
@@ -277,22 +305,35 @@ export default Chess = () => {
     <SafeAreaView style={styles.container}>
       <View style={styles.chessContainer}>
         {renderBoard()}
-        <ScrollView horizontal={true} style={styles.ScrollView}>
-          {path.map((entry, index) => {
-            return (
-              <Text key={index} style={styles.moves}>
-                {entry}
-              </Text>
-            );
-          })}
+        <ScrollView horizontal={true} style={styles.scrollView}>
+          <Text style={styles.moves}>{path}</Text>
         </ScrollView>
-        <TextInput
-          onChangeText={(text) => setDescription(text)}
-          defaultValue={description}
-          style={styles.textInput}
-          placeholder={"Description"}
-          maxLength={100}
-        />
+        <View style={styles.descriptionView}>
+          <TextInput
+            onChangeText={(text) => setDescription(text)}
+            defaultValue={description}
+            style={styles.textInput}
+            placeholder={"Description"}
+            maxLength={100}
+          />
+          <View style={styles.numIndicator}>
+            <Text style={styles.currentEntry}>{currentEntry}</Text>
+            <Button
+              onPress={pressBack}
+              buttonStyle={styles.furtherButton}
+              icon={() => {
+                return <Icon name="arrow-back" />;
+              }}
+            />
+            <Button
+              onPress={pressFurther}
+              buttonStyle={styles.furtherButton}
+              icon={() => {
+                return <Icon name="arrow-forward" />;
+              }}
+            />
+          </View>
+        </View>
       </View>
       <Button
         title="ADD"
@@ -323,16 +364,35 @@ const styles = StyleSheet.create({
   okButton: {
     backgroundColor: "#f4511e",
     marginHorizontal: 10,
+    marginTop: 10,
+  },
+  furtherButton: {
+    backgroundColor: "#f4511e",
+  },
+  numIndicator: {
+    flex: 1,
+    flexDirection: "row",
+    justifyContent: "flex-end",
+  },
+  descriptionView: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    marginHorizontal: 10,
   },
   moves: {
     fontSize: 16,
     marginRight: 5,
   },
-  ScrollView: {
+  scrollView: {
     marginHorizontal: 50,
-    marginTop: 15,
+    marginVertical: 15,
   },
   textInput: {
-    padding: 15,
+    flex: 1,
+    marginHorizontal: 10,
+  },
+  currentEntry: {
+    fontSize: 18,
+    padding: 10,
   },
 });
