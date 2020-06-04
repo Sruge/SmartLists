@@ -21,13 +21,14 @@ import { FloatingAction } from "react-native-floating-action";
 import { useRoute, useNavigation } from "@react-navigation/native";
 import firestore from "@react-native-firebase/firestore";
 import { Button, ListItem } from "react-native-elements";
+import COLORS from "../res/colors.js";
 
 const actions = [
   {
     text: "Save",
     name: "bt_save",
     position: 0,
-    color: "#f4511e",
+    color: COLORS.main,
   },
 ];
 
@@ -186,7 +187,7 @@ export default EditList = (props) => {
         <FloatingAction
           onPressItem={(item) => handleSaveClick(item)}
           actions={actions}
-          color={"#f4511e"}
+          color={COLORS.main}
           overlayColor={"transparent"}
         />
       </SafeAreaView>
@@ -200,7 +201,7 @@ const styles = StyleSheet.create({
     marginVertical: 5,
   },
   okButton: {
-    backgroundColor: "#f4511e",
+    backgroundColor: COLORS.main,
     marginHorizontal: 10,
   },
   listItem: {
@@ -212,7 +213,7 @@ const styles = StyleSheet.create({
   },
   inputContainer: {
     backgroundColor: "white",
-    borderBottomColor: "#eeeeee",
+    borderBottomColor: COLORS.main,
     borderBottomWidth: 0.3,
     marginHorizontal: 10,
     marginTop: 5,

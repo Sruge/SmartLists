@@ -10,13 +10,14 @@ import { ListItem } from "react-native-elements";
 import { FloatingAction } from "react-native-floating-action";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { round } from "react-native-reanimated";
+import COLORS from "../res/colors.js";
 
 const actions = [
   {
     text: "New List",
-    name: "bt_accessibility",
+    name: "addList",
     position: 0,
-    color: "#f4511e",
+    color: COLORS.main,
   },
 ];
 
@@ -39,6 +40,7 @@ export default Explore = (props) => {
             key: documentSnapshot.id,
             len: documentSnapshot.get("elements").length.toString(),
             multiValue: documentSnapshot.get("multiValue"),
+            type: documentSnapshot.get("type"),
           });
         });
 
@@ -57,21 +59,28 @@ export default Explore = (props) => {
   }
 
   handleItemClickExplore = (item) => {
-    navigation.navigate("ListView", {
-      listId: item.key,
-      multiValue: item.multiValue,
-    });
+    console.log(item.type);
+    if (item.type === "chess") {
+      navigation.push("Chess", {
+        listId: item.key,
+      });
+    } else {
+      navigation.push("ListView", {
+        listId: item.key,
+        multiValue: item.multiValue,
+      });
+    }
   };
 
   handleAddClickExplore = (item) => {
-    navigation.navigate("AddList", {
+    navigation.push("AddList", {
       listName: item.key,
       userEmail: route.params.userEmail,
     });
   };
 
   handleLongPress = (item) => {
-    navigation.navigate("EditList", {
+    navigation.push("EditList", {
       listName: item.key,
       userEmail: route.params.userEmail,
       multiValue: item.multiValue,
@@ -84,6 +93,7 @@ export default Explore = (props) => {
         title={item.value}
         subtitle={item.len}
         key={item.key}
+        round="10"
         chevron={{ color: "black" }}
         onPress={() => handleItemClickExplore(item)}
         style={styles.listItem}
@@ -99,7 +109,7 @@ export default Explore = (props) => {
       <FloatingAction
         onPressItem={(item) => handleAddClickExplore(item)}
         actions={actions}
-        color={"#f4511e"}
+        color={COLORS.main}
         overlayColor={"transparent"}
       />
     </SafeAreaView>

@@ -10,14 +10,16 @@ import "@react-native-firebase/app";
 import firestore from "@react-native-firebase/firestore";
 
 import React, { useEffect, useState } from "react";
-import { StyleSheet, ActivityIndicator, FlatList } from "react-native";
+import { StyleSheet, Text, FlatList } from "react-native";
 
 import { useRoute, useNavigation } from "@react-navigation/native";
-import { ListItem } from "react-native-elements";
+import { ListItem, Header } from "react-native-elements";
 import { FloatingAction } from "react-native-floating-action";
 import { SafeAreaView } from "react-native-safe-area-context";
+import LinearGradient from "react-native-linear-gradient";
+import COLORS from "../res/colors.js";
 
-export default Baggy = () => {
+export default Home = () => {
   const [lists, setLists] = useState([]);
   const route = useRoute();
   const navigation = useNavigation();
@@ -42,7 +44,7 @@ export default Baggy = () => {
     //     });
     //   });
     const subscriber = firestore()
-      .collection("ChessLists")
+      .collection("Lists")
       .where("creator", "==", route.params.userEmail)
       .onSnapshot((querySnapshot) => {
         const lists = [];
@@ -52,6 +54,8 @@ export default Baggy = () => {
             value: documentSnapshot.get("name"),
             key: documentSnapshot.id,
             len: documentSnapshot.get("elements").length.toString(),
+            type: documentSnapshot.get("type"),
+            multiValue: documentSnapshot.get("multiValue"),
           });
         });
 
@@ -63,9 +67,17 @@ export default Baggy = () => {
   }, []);
 
   handleItemClick = (item) => {
-    navigation.navigate("Chess", {
-      listId: item.key,
-    });
+    console.log(item.type);
+    if (item.type === "chess") {
+      navigation.push("Chess", {
+        listId: item.key,
+      });
+    } else {
+      navigation.push("ListView", {
+        listId: item.key,
+        multiValue: item.multiValue,
+      });
+    }
   };
 
   renderItem = ({ item }) => {
@@ -84,6 +96,15 @@ export default Baggy = () => {
 
   return (
     <SafeAreaView style={styles.container}>
+      <Header
+        ViewComponent={LinearGradient} // Don't forget this!
+        linearGradientProps={{
+          colors: [COLORS.main, "white"],
+          start: { x: 0, y: 0.1 },
+          end: { x: 1, y: 0.1 },
+        }}
+        rightComponent={<Text style={styles.headerText}>Home</Text>}
+      />
       <FlatList style={styles.list} data={lists} renderItem={renderItem} />
     </SafeAreaView>
   );
@@ -93,9 +114,18 @@ const styles = StyleSheet.create({
   listItem: {
     marginHorizontal: 10,
     marginTop: 5,
+    borderRadius: 5,
+    borderColor: COLORS.second,
+    borderWidth: 0.5,
   },
   floating: {},
   container: {
     flex: 1,
+  },
+  headerText: {
+    fontSize: 18,
+    fontWeight: "bold",
+    fontFamily: "aria",
+    color: COLORS.second,
   },
 });

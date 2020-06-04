@@ -36,6 +36,7 @@ import BlackBishop from "./chessPieces/blackBishop.js";
 import BlackKnight from "./chessPieces/blackKnight.js";
 import BlackRook from "./chessPieces/blackRook.js";
 import { ScrollView } from "react-native-gesture-handler";
+import COLORS from "../res/colors.js";
 
 export default Chess = () => {
   const route = useRoute();
@@ -61,7 +62,7 @@ export default Chess = () => {
 
   useEffect(() => {
     const subscriber = firestore()
-      .collection("ChessLists")
+      .collection("Lists")
       .doc(route.params.listId)
       .onSnapshot((documentSnapshot) => {
         const entries = [];
@@ -172,27 +173,26 @@ export default Chess = () => {
     });
     console.log(entries);
 
-    const docRef = firestore()
-      .collection("ChessLists")
-      .doc(route.params.listId);
+    const docRef = firestore().collection("Lists").doc(route.params.listId);
 
     docRef
       .get()
       .then(function (doc) {
         if (doc.exists) {
           console.log("Updating already existing doc ", route.params.listName);
-          firestore().collection("ChessLists").doc(route.params.listId).update({
+          firestore().collection("Lists").doc(route.params.listId).update({
             elements: entries,
           });
         } else {
           // doc.data() will be undefined in this case
           console.log("No such document, creating a new one!");
-          firestore().collection("ChessLists").add({
+          firestore().collection("Lists").add({
             name: route.params.listName,
             elements: entries,
             pub: route.params.pub,
             creator: route.params.userEmail,
             multiValue: route.params.multiValue,
+            type: "chess",
           });
         }
       })
@@ -362,12 +362,12 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
   },
   okButton: {
-    backgroundColor: "#f4511e",
+    backgroundColor: COLORS.main,
     marginHorizontal: 10,
     marginTop: 10,
   },
   furtherButton: {
-    backgroundColor: "#f4511e",
+    backgroundColor: COLORS.main,
   },
   numIndicator: {
     flex: 1,

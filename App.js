@@ -25,6 +25,7 @@ import auth from "@react-native-firebase/auth";
 import SignUp from "./src/screens/signUp.js";
 import Chess from "./src/screens/chess.js";
 import QuizStack from "./src/screens/quizStack.js";
+import HomeStack from "./src/screens/homeStack.js";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Icon from "react-native-vector-icons/AntDesign";
 
@@ -78,25 +79,24 @@ export default App = () => {
   return (
     <NavigationContainer>
       <StatusBar barStyle="dark-content" />
-      <BottomTab.Navigator initialRouteName="ExploreStack">
+      <BottomTab.Navigator initialRouteName="HomeStack">
         <BottomTab.Screen
           name="ExploreStack"
           component={ExploreStack}
-          options={{ title: "Explore" }}
+          options={{ title: "Explore", tabBarIcon: () => <Icon name="profile" color="#333" size={24} />,}}
           initialParams={{ userEmail: user.email }}
         />
         <BottomTab.Screen
-          name="Home"
-          component={Home}
-          options={{ title: "Home"  ,         tabBarIcon: () => <Icon name="profile" color="#333" size={24} />,
-        }}
+          name="HomeStack"
+          component={HomeStack}
+          options={{ title: "Home", tabBarIcon: () => <Icon name="profile" color="#333" size={24} />,}}
           initialParams={{ userEmail: user.email }}
           
         />
         <BottomTab.Screen
           name="QuizStack"
           component={QuizStack}
-          options={{ title: "Quiz" }}
+          options={{ title: "Quiz", tabBarIcon: () => <Icon name="profile" color="#333" size={24} /> }}
           initialParams={{ userEmail: user.email }}
         />
       </BottomTab.Navigator>

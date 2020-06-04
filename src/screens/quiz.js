@@ -22,6 +22,7 @@ import { useRoute } from "@react-navigation/native";
 import { Button } from "react-native-elements";
 
 import Icon from "react-native-vector-icons/AntDesign";
+import COLORS from "../res/colors";
 
 export default Quiz = () => {
   const [entries, setEntries] = useState([]);
@@ -166,7 +167,7 @@ const styles = StyleSheet.create({
     textAlignVertical: "center",
   },
   okButton: {
-    backgroundColor: "#f4511e",
+    backgroundColor: COLORS.main,
     marginTop: 20,
   },
   inputContainer: {

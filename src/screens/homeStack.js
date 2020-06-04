@@ -6,7 +6,7 @@ import { StyleSheet } from "react-native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { useRoute, useNavigation } from "@react-navigation/native";
 
-import Explore from "./explore.js";
+import Home from "./home.js";
 import ListView from "./listView.js";
 import AddList from "./addList.js";
 import EditList from "./editList.js";
@@ -14,11 +14,11 @@ import Chess from "./chess.js";
 
 const Stack = createStackNavigator();
 
-export default ExploreStack = (props) => {
+export default HomeStack = (props) => {
   const route = useRoute();
   return (
     <Stack.Navigator
-      initialRouteName="Explore"
+      initialRouteName="Home"
       screenOptions={{
         headerShown: false,
         headerStyle: {
@@ -32,9 +32,9 @@ export default ExploreStack = (props) => {
       }}
     >
       <Stack.Screen
-        name="Explore"
-        component={Explore}
-        options={{ title: "Explore" }}
+        name="Home"
+        component={Home}
+        options={{ title: "Home" }}
         initialParams={{ userEmail: route.params.userEmail }}
       />
       <Stack.Screen

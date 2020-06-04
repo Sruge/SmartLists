@@ -12,6 +12,7 @@ import { SafeAreaView, StyleSheet, TextInput, View } from "react-native";
 import { Button, CheckBox, Text } from "react-native-elements";
 import firestore from "@react-native-firebase/firestore";
 import { useRoute, useNavigation } from "@react-navigation/native";
+import COLORS from "../res/colors.js";
 
 export default AddList = (props) => {
   const [listname, setListname] = useState("");
@@ -25,7 +26,7 @@ export default AddList = (props) => {
 
   handleOk = () => {
     if (chessSupport) {
-      navigation.navigate("Chess", {
+      navigation.push("Chess", {
         listName: listname,
         pub: pub,
         userEmail: route.params.userEmail,
@@ -33,7 +34,7 @@ export default AddList = (props) => {
         chessSupport: chessSupport,
       });
     } else if (listname !== "") {
-      navigation.navigate("EditList", {
+      navigation.push("EditList", {
         listName: listname,
         pub: pub,
         userEmail: route.params.userEmail,
@@ -64,8 +65,6 @@ export default AddList = (props) => {
       <SafeAreaView style={styles.container}>
         <View style={styles.inputContainer}>
           <TextInput
-            ref={input}
-            label={"handsons"}
             onChangeText={(text) => setListname(text)}
             defaultValue={listname}
             style={styles.textInput}
@@ -118,7 +117,7 @@ const styles = StyleSheet.create({
     marginVertical: 5,
   },
   okButton: {
-    backgroundColor: "#f4511e",
+    backgroundColor: COLORS.main,
     marginHorizontal: 10,
   },
   checkBox: {
@@ -134,7 +133,7 @@ const styles = StyleSheet.create({
   },
   inputContainer: {
     backgroundColor: "white",
-    borderBottomColor: "#eeeeee",
+    borderBottomColor: COLORS.main,
     borderBottomWidth: 0.3,
     marginHorizontal: 10,
     marginTop: 5,

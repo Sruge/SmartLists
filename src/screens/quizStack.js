@@ -16,7 +16,7 @@ export default QuizStack = (props) => {
     <Stack.Navigator
       initialRouteName="Explore"
       screenOptions={{
-        headerShown: true,
+        headerShown: false,
         headerStyle: {
           backgroundColor: "#f4511e",
         },
