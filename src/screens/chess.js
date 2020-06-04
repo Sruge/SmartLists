@@ -61,6 +61,19 @@ export default Chess = () => {
   }, [currentEntry]);
 
   useEffect(() => {
+    if (!(entries.length === 0)) {
+      entries.forEach((entry) => {
+        console.log(entry.value, position);
+        if (entry.value === position) {
+          setDescription(entry.description);
+        } else {
+          setDescription("");
+        }
+      });
+    }
+  }, [position]);
+
+  useEffect(() => {
     const subscriber = firestore()
       .collection("Lists")
       .doc(route.params.listId)
@@ -79,7 +92,6 @@ export default Chess = () => {
           );
         }
         if (entries.length > 0) {
-          console.log("updating state");
           setEntries(entries);
           setPath(entries[currentEntry].path);
           setPosition(entries[currentEntry].value);
