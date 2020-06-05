@@ -37,96 +37,28 @@ import BlackKnight from "./chessPieces/blackKnight.js";
 import BlackRook from "./chessPieces/blackRook.js";
 import { ScrollView } from "react-native-gesture-handler";
 import COLORS from "../res/colors.js";
-import ChessBoard from "./chessBoard.js"
-export default Chess = () => {
+
+export default ChessBoard = (props) => {
+  const money = props.path
+  console.log('money',money)
   const route = useRoute();
-  const [description, setDescription] = useState();
-  const navigation = useNavigation();
   const [currentSquare, setCurrentSquare] = useState({ row: 9, column: 9 });
-  const [position, setPosition] = useState("");
-  const [path, setPath] = useState("");
+  const [position, setPosition] = useState(props.position);
+  console.log(props)
+
   const [currentEntry, setCurrentEntry] = useState(0);
   const [entries, setEntries] = useState([]);
   const [currentContent, setCurrentContent] = useState(0);
 
-  useEffect(() => {
-    if (entries.length === 0) {
-      console.log("setInititalState");
-      setPosition("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR");
-    } else {
-      console.log("update state, description: ", description, entries[currentEntry].description)
-      setPath(entries[currentEntry].path);
-      setPosition(entries[currentEntry].value);
-      setDescription(entries[currentEntry].description);
-    }
-  }, [currentEntry]);
-
-  useEffect(() => {
-    if (!(entries.length === 0)) {
-      setDescription("");
-      entries.forEach((entry) => {
-        if (entry.value === position) {
-          console.log('setting description: ', entry.description)
-          setDescription(entry.description);
-          return
-        }
-      });
-    }
-  }, [position]);
-
-  useEffect(() => {
-    const subscriber = firestore()
-      .collection("Lists")
-      .doc(route.params.listId)
-      .onSnapshot((documentSnapshot) => {
-        const entries = [];
-        if (documentSnapshot.get("elements") !== undefined) {
-          Object.entries(documentSnapshot.get("elements")).forEach(
-            ([key, val]) => {
-              entries.push({
-                value: val.value,
-                description: val.description,
-                key: key,
-                path: val.path,
-              });
-            }
-          );
-        }
-        if (entries.length > 0) {
-          setEntries(entries);
-          setPath(entries[currentEntry].path);
-          setPosition(entries[currentEntry].value);
-          setDescription(entries[currentEntry].description);
-        }
-      });
-
-    // Unsubscribe from events when no longer in use
-    return () => subscriber();
-  }, []);
-
-  String.prototype.replaceAt = function (index, replacement) {
-    return (
-      this.substr(0, index) +
-      replacement +
-      this.substr(index + replacement.length)
-    );
-  };
 
   makeMove = (content, firstSquare, secondSquare) => {
     const letters = "ABCDEFGH";
     const numbers = "87654321";
-    setPath((path) => {
-      return (
-        path.toString() +
-        " " +
-        currentContent.toString() +
-        letters[secondSquare.column] +
-        numbers[secondSquare.row]
-      );
-    });
+
 
     console.log(firstSquare.row, secondSquare.column);
     setPosition((pos) => {
+      pos = props.position
       pos = pos.replace(/8/g, "00000000");
       pos = pos.replace(/7/g, "0000000");
       pos = pos.replace(/6/g, "000000");
@@ -175,60 +107,10 @@ export default Chess = () => {
     }
   };
 
-  handleAddPosition = () => {
-    setEntries((entries) => {
-      entries.push({
-        value: position,
-        description: description,
-        path: path,
-        key: entries.length,
-      });
-    });
-    console.log(entries);
 
-    const docRef = firestore().collection("Lists").doc(route.params.listId);
-
-    docRef
-      .get()
-      .then(function (doc) {
-        if (doc.exists) {
-          console.log("Updating already existing doc ", route.params.listName);
-          firestore().collection("Lists").doc(route.params.listId).update({
-            elements: entries,
-          });
-        } else {
-          // doc.data() will be undefined in this case
-          console.log("No such document, creating a new one!");
-          firestore().collection("Lists").add({
-            name: route.params.listName,
-            elements: entries,
-            pub: route.params.pub,
-            creator: route.params.userEmail,
-            multiValue: route.params.multiValue,
-            type: "chess",
-          });
-        }
-      })
-      .catch(function (error) {
-        console.log("Error getting document:", error);
-      });
-    navigation.navigate("Explore");
-  };
-
-  pressFurther = () => {
-    if (!(currentEntry + 2 > entries.length)) {
-      setCurrentEntry(currentEntry + 1);
-    }
-  };
-
-  pressBack = () => {
-    if (!(currentEntry === 0)) {
-      setCurrentEntry(currentEntry - 1);
-    }
-  };
-
-  renderBoard = () => {
-    currentPos = position;
+  renderBoard = (pos) => {
+    console.log('renderring new boards', pos)
+    currentPos = pos;
     currentPos = currentPos.replace(/8/g, "00000000");
     currentPos = currentPos.replace(/7/g, "0000000");
     currentPos = currentPos.replace(/6/g, "000000");
@@ -239,12 +121,15 @@ export default Chess = () => {
     currentPos = currentPos.replace(/1/g, "0");
     let rows = currentPos.split("/");
 
-    return [...rows].map((row, rowIndex) => {
+    return (<View style={props.style}>{rows.map((row, rowIndex) => {
+      console.log('doing somethin wit a row ', row)
       return renderRow(row, rowIndex);
-    });
+    })}
+    </View>)
   };
 
   renderRow = (row, rowIndex) => {
+    console.log(props.style)
     return (
       <View key={rowIndex} style={styles.row}>
         {[...row].map((square, column) => {
@@ -255,6 +140,7 @@ export default Chess = () => {
   };
 
   renderSquare = (content, column, rowIndex) => {
+    console.log('rendering square')
     let shade = "grey";
     if ((rowIndex + column) % 2 === 0) {
       shade = "white";
@@ -316,41 +202,13 @@ export default Chess = () => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.chessContainer}>
-      <ChessBoard style={styles.board} position={position} path={path}/>
-
-        <View style={styles.descriptionView}>
-          <TextInput
-            onChangeText={(text) => setDescription(text)}
-            defaultValue={description}
-            style={styles.textInput}
-            placeholder={"Description"}
-            maxLength={100}
-          />
-          <View style={styles.numIndicator}>
-            <Text style={styles.currentEntry}>{currentEntry}</Text>
-            <Button
-              onPress={pressBack}
-              buttonStyle={styles.furtherButton}
-              icon={() => {
-                return <Icon name="arrow-back" />;
-              }}
-            />
-            <Button
-              onPress={pressFurther}
-              buttonStyle={styles.furtherButton}
-              icon={() => {
-                return <Icon name="arrow-forward" />;
-              }}
-            />
-          </View>
+        {renderBoard(props.position)}
+        <View>
+          <Text>Hello its a board</Text>
         </View>
-      </View>
-      <Button
-        title="ADD"
-        onPress={handleAddPosition}
-        buttonStyle={styles.okButton}
-      />
+        <ScrollView horizontal={true} style={styles.scrollView}>
+          <Text style={styles.moves}>{props.path}</Text>
+        </ScrollView>
     </SafeAreaView>
   );
 };
@@ -406,7 +264,4 @@ const styles = StyleSheet.create({
     fontSize: 18,
     padding: 10,
   },
-  board:{
-    flex: 1
-  }
 });
