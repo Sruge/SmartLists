@@ -3,7 +3,13 @@ import "@react-native-firebase/app";
 import firestore from "@react-native-firebase/firestore";
 
 import React, { useEffect, useState } from "react";
-import { StyleSheet, ActivityIndicator, FlatList, View, Text } from "react-native";
+import {
+  StyleSheet,
+  ActivityIndicator,
+  FlatList,
+  View,
+  Text,
+} from "react-native";
 
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { ListItem, Header } from "react-native-elements";
@@ -70,7 +76,7 @@ export default ExploreQuiz = (props) => {
     <SafeAreaView style={styles.container}>
       <Header
         ViewComponent={LinearGradient} // Don't forget this!
-        containerStyle={{height: 60}}
+        containerStyle={{ height: 60 }}
         linearGradientProps={{
           colors: [COLORS.main, "white"],
           start: { x: 0, y: 0.1 },
@@ -96,6 +102,6 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     color: COLORS.second,
     marginTop: -15,
-    marginRight: 10
+    marginRight: 10,
   },
 });

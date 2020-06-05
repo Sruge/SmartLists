@@ -25,7 +25,7 @@ export default AddList = (props) => {
   const route = useRoute();
 
   handleOk = () => {
-    if (chessSupport) {
+    if (chessSupport && listname !== "") {
       navigation.push("Chess", {
         listName: listname,
         pub: pub,

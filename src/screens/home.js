@@ -98,7 +98,7 @@ export default Home = () => {
     <SafeAreaView style={styles.container}>
       <Header
         ViewComponent={LinearGradient} // Don't forget this!
-        containerStyle={{height: 60}}
+        containerStyle={{ height: 60 }}
         linearGradientProps={{
           colors: [COLORS.main, "white"],
           start: { x: 0, y: 0.1 },
@@ -128,6 +128,6 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     color: COLORS.second,
     marginTop: -15,
-    marginRight: 10
+    marginRight: 10,
   },
 });

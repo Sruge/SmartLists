@@ -18,6 +18,9 @@ import {
   TouchableHighlight,
   TouchableOpacity,
   TextInput,
+  ToastAndroid,
+  Platform,
+  AlertIOS,
 } from "react-native";
 import { Button } from "react-native-elements";
 import { Image, ListItem, Icon } from "react-native-elements";
@@ -54,7 +57,11 @@ export default Chess = () => {
       console.log("setInititalState");
       setPosition("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR");
     } else {
-      console.log("update state, description: ", description, entries[currentEntry].description)
+      console.log(
+        "update state, description: ",
+        description,
+        entries[currentEntry].description
+      );
       setPath(entries[currentEntry].path);
       setPosition(entries[currentEntry].value);
       setDescription(entries[currentEntry].description);
@@ -66,9 +73,9 @@ export default Chess = () => {
       setDescription("");
       entries.forEach((entry) => {
         if (entry.value === position) {
-          console.log('setting description: ', entry.description)
+          console.log("setting description: ", entry.description);
           setDescription(entry.description);
-          return
+          return;
         }
       });
     }
@@ -93,6 +100,7 @@ export default Chess = () => {
           );
         }
         if (entries.length > 0) {
+          //setCurrentEntry(entries.length - 1)
           setEntries(entries);
           setPath(entries[currentEntry].path);
           setPosition(entries[currentEntry].value);
@@ -175,6 +183,14 @@ export default Chess = () => {
     }
   };
 
+  notifyMessage = (msg) => {
+    if (Platform.OS === "android") {
+      ToastAndroid.show(msg, ToastAndroid.SHORT);
+    } else {
+      AlertIOS.alert(msg);
+    }
+  };
+
   handleAddPosition = () => {
     setEntries((entries) => {
       entries.push({
@@ -192,7 +208,7 @@ export default Chess = () => {
       .get()
       .then(function (doc) {
         if (doc.exists) {
-          console.log("Updating already existing doc ", route.params.listName);
+          console.log("Updating already existing doc ", route.params.listId);
           firestore().collection("Lists").doc(route.params.listId).update({
             elements: entries,
           });
@@ -212,7 +228,8 @@ export default Chess = () => {
       .catch(function (error) {
         console.log("Error getting document:", error);
       });
-    navigation.navigate("Explore");
+    //navigation.navigate("Explore");
+    notifyMessage("Nice");
   };
 
   pressFurther = () => {
