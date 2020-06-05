@@ -363,6 +363,7 @@ const styles = StyleSheet.create({
   chessContainer: {
     alignItems: "center",
     marginTop: 20,
+    flex: 1,
     justifyContent: "flex-start",
   },
   container: {

@@ -121,7 +121,7 @@ export default ChessBoard = (props) => {
     currentPos = currentPos.replace(/1/g, "0");
     let rows = currentPos.split("/");
 
-    return (<View style={props.style}>{rows.map((row, rowIndex) => {
+    return (<View >{rows.map((row, rowIndex) => {
       console.log('doing somethin wit a row ', row)
       return renderRow(row, rowIndex);
     })}
@@ -225,6 +225,7 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
+    justifyContent: 'space-between'
   },
   row: {
     flexDirection: "row",
