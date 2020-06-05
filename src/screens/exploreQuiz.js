@@ -3,11 +3,13 @@ import "@react-native-firebase/app";
 import firestore from "@react-native-firebase/firestore";
 
 import React, { useEffect, useState } from "react";
-import { StyleSheet, ActivityIndicator, FlatList } from "react-native";
+import { StyleSheet, ActivityIndicator, FlatList, View, Text } from "react-native";
 
 import { useNavigation, useRoute } from "@react-navigation/native";
-import { ListItem } from "react-native-elements";
+import { ListItem, Header } from "react-native-elements";
 import { SafeAreaView } from "react-native-safe-area-context";
+import LinearGradient from "react-native-linear-gradient";
+import COLORS from "../res/colors.js";
 
 export default ExploreQuiz = (props) => {
   const [loading, setLoading] = useState(true); // Set loading to true on component mount
@@ -66,6 +68,16 @@ export default ExploreQuiz = (props) => {
 
   return (
     <SafeAreaView style={styles.container}>
+      <Header
+        ViewComponent={LinearGradient} // Don't forget this!
+        containerStyle={{height: 60}}
+        linearGradientProps={{
+          colors: [COLORS.main, "white"],
+          start: { x: 0, y: 0.1 },
+          end: { x: 1, y: 0.1 },
+        }}
+        rightComponent={<Text style={styles.headerText}>Quiz</Text>}
+      />
       <FlatList style={styles.list} data={lists} renderItem={renderItem} />
     </SafeAreaView>
   );
@@ -78,5 +90,12 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
+  },
+  headerText: {
+    fontSize: 18,
+    fontWeight: "bold",
+    color: COLORS.second,
+    marginTop: -15,
+    marginRight: 10
   },
 });

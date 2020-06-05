@@ -54,6 +54,7 @@ export default Chess = () => {
       console.log("setInititalState");
       setPosition("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR");
     } else {
+      console.log("update state, description: ", description, entries[currentEntry].description)
       setPath(entries[currentEntry].path);
       setPosition(entries[currentEntry].value);
       setDescription(entries[currentEntry].description);
@@ -62,12 +63,12 @@ export default Chess = () => {
 
   useEffect(() => {
     if (!(entries.length === 0)) {
+      setDescription("");
       entries.forEach((entry) => {
-        console.log(entry.value, position);
         if (entry.value === position) {
+          console.log('setting description: ', entry.description)
           setDescription(entry.description);
-        } else {
-          setDescription("");
+          return
         }
       });
     }
