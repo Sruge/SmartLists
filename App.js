@@ -5,45 +5,33 @@
  * @format
  * @flow
  */
-import 'react-native-gesture-handler';
-import React, { Component } from 'react';
+import "react-native-gesture-handler";
+import React, { useState, useEffect } from "react";
+
+import { Platform, StyleSheet, StatusBar, View, Text } from "react-native";
 
 import {
-  Platform,
-  StyleSheet,
-  Text,
-  StatusBar,
-  TouchableOpacity
-} from 'react-native';
+  NavigationContainer,
+  useNavigation,
+  useRoute,
+} from "@react-navigation/native";
+import { createStackNavigator } from "@react-navigation/stack";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 
-import { NavigationContainer, useNavigation, useRoute} from '@react-navigation/native';
-import { createStackNavigator } from '@react-navigation/stack';
-
-import Overview from './components/overview.js';
-import InsideList from './components/insideList.js';
-import AddList from './components/addList.js';
-import AddListElement from './components/addListElement.js';
-
-import database from '@react-native-firebase/database';
-import { Button } from 'react-native-elements';
+import Home from "./src/screens/home.js";
+import Login from "./src/screens/login.js";
+import ExploreStack from "./src/screens/exploreStack.js";
+import auth from "@react-native-firebase/auth";
+import SignUp from "./src/screens/signUp.js";
+import Chess from "./src/screens/chess.js";
+import QuizStack from "./src/screens/quizStack.js";
+import HomeStack from "./src/screens/homeStack.js";
+import { SafeAreaView } from "react-native-safe-area-context";
+import Icon from "react-native-vector-icons/AntDesign";
 
 
 const Stack = createStackNavigator();
-
-database()
-  .ref('/users/123')
-  .set({
-    name: 'Ada Lovelace',
-    age: 31,
-  })
-  //.then(() => console.log('Data set.'));
-
-database()
-  .ref('/users/123')
-  .once('value')
-  .then(snapshot => {
-    //console.log('User data: ', snapshot.val());
-  });
+const BottomTab = createBottomTabNavigator();
 
 // TODO(you): import any additional firebase services that you require for your app, e.g for auth:
 //    1) install the npm package: `yarn add @react-native-firebase/auth@alpha` - you do not need to
@@ -53,41 +41,74 @@ database()
 //    4) The Firebase Auth service is now available to use here: `firebase.auth().currentUser`
 
 const instructions = Platform.select({
-  ios: 'Press Cmd+R to reload,\nCmd+D or shake for dev menu',
-  android: 'Double tap R on your keyboard to reload,\nShake or press menu button for dev menu',
+  ios: "Press Cmd+R to reload,\nCmd+D or shake for dev menu",
+  android:
+    "Double tap R on your keyboard to reload,\nShake or press menu button for dev menu",
 });
 
 const firebaseCredentials = Platform.select({
-  ios: 'https://invertase.link/firebase-ios',
-  android: 'https://invertase.link/firebase-android',
+  ios: "https://invertase.link/firebase-ios",
+  android: "https://invertase.link/firebase-android",
 });
 
-type Props = {};
+export default App = () => {
+  const [initializing, setInitializing] = useState(true);
+  const [user, setUser] = useState();
 
-export default class App extends Component<Props> {
-  render() {
+  // Handle user state changes
+  function onAuthStateChanged(user) {
+    setUser(user);
+    if (initializing) setInitializing(false);
+  }
+
+  useEffect(() => {
+    const subscriber = auth().onAuthStateChanged(onAuthStateChanged);
+    return subscriber; // unsubscribe on unmount
+  }, []);
+
+  if (initializing) return null;
+
+  if (!user) {
     return (
-      <NavigationContainer>
-        <StatusBar barStyle="dark-content" />
-        <Stack.Navigator initialRouteName="Overview">
-          <Stack.Screen name="AddList" component={AddList} options={{title: "Add List"}}/>
-          <Stack.Screen name="Overview" component={Overview} options={{title: "List Overview", headerRight: () => (
-              <Button title="ADD" buttonStyle={styles.headerButton} onPress={() => 
-                handleAddClick()  
-              }/>
-              )}}/>
-          <Stack.Screen name="InsideList" component={InsideList} options={{title: "Inside List"}}/>
-          <Stack.Screen name="AddListElement" component={AddListElement} options={{title: "Add List Element", headerRight: () => (
-              <Button title="SAVE" buttonStyle={styles.headerButton} onPress={() => handleSaveClick()}/>
-              )}}/>
-        </Stack.Navigator>
-      </NavigationContainer>
+      <View style={styles.loginContainer}>
+        <SignUp />
+      </View>
     );
   }
-}
+
+  return (
+    <NavigationContainer>
+      <StatusBar barStyle="dark-content" />
+      <BottomTab.Navigator initialRouteName="HomeStack">
+        <BottomTab.Screen
+          name="ExploreStack"
+          component={ExploreStack}
+          options={{ title: "Explore", tabBarIcon: () => <Icon name="profile" color="#333" size={24} />,}}
+          initialParams={{ userEmail: user.email }}
+        />
+        <BottomTab.Screen
+          name="HomeStack"
+          component={HomeStack}
+          options={{ title: "Home", tabBarIcon: () => <Icon name="profile" color="#333" size={24} />,}}
+          initialParams={{ userEmail: user.email }}
+          
+        />
+        <BottomTab.Screen
+          name="QuizStack"
+          component={QuizStack}
+          options={{ title: "Quiz", tabBarIcon: () => <Icon name="profile" color="#333" size={24} /> }}
+          initialParams={{ userEmail: user.email }}
+        />
+      </BottomTab.Navigator>
+    </NavigationContainer>
+  );
+};
 
 const styles = StyleSheet.create({
   headerButton: {
     marginRight: 20,
-   }
+  },
+  loginContainer: {
+    flex: 1,
+  },
 });
