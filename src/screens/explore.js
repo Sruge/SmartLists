@@ -33,18 +33,19 @@ export default Explore = (props) => {
       .where("pub", "==", true)
       .onSnapshot((querySnapshot) => {
         const lists = [];
-
-        querySnapshot.forEach((documentSnapshot) => {
-          lists.push({
-            value: documentSnapshot.get("name"),
-            key: documentSnapshot.id,
-            len: documentSnapshot.get("elements").length.toString(),
-            multiValue: documentSnapshot.get("multiValue"),
-            type: documentSnapshot.get("type"),
+        if (querySnapshot) {
+          querySnapshot.forEach((documentSnapshot) => {
+            lists.push({
+              value: documentSnapshot.get("name"),
+              key: documentSnapshot.id,
+              len: documentSnapshot.get("elements").length.toString(),
+              multiValue: documentSnapshot.get("multiValue"),
+              type: documentSnapshot.get("type"),
+            });
           });
-        });
 
-        setLists(lists);
+          setLists(lists);
+        }
         setLoading(false);
       });
 

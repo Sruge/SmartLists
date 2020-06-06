@@ -15,14 +15,13 @@ import {
   StyleSheet,
   Text,
   View,
-  TouchableHighlight,
   TouchableOpacity,
   TextInput,
   ToastAndroid,
   Platform,
   AlertIOS,
 } from "react-native";
-import { Button } from "react-native-elements";
+import { Button, Header } from "react-native-elements";
 import { Image, ListItem, Icon } from "react-native-elements";
 import { useRoute, useNavigation } from "@react-navigation/native";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -40,6 +39,7 @@ import BlackKnight from "./chessPieces/blackKnight.js";
 import BlackRook from "./chessPieces/blackRook.js";
 import { ScrollView } from "react-native-gesture-handler";
 import COLORS from "../res/colors.js";
+import LinearGradient from "react-native-linear-gradient";
 
 export default Chess = () => {
   const route = useRoute();
@@ -51,6 +51,7 @@ export default Chess = () => {
   const [currentEntry, setCurrentEntry] = useState(0);
   const [entries, setEntries] = useState([]);
   const [currentContent, setCurrentContent] = useState(0);
+  const [listName, setListName] = useState("");
 
   useEffect(() => {
     if (entries.length === 0) {
@@ -86,11 +87,14 @@ export default Chess = () => {
       .collection("Lists")
       .doc(route.params.listId)
       .onSnapshot((documentSnapshot) => {
-        const entries = [];
+        const entries2 = [];
+        if (documentSnapshot.get("name") !== undefined) {
+          setListName(documentSnapshot.get("name"));
+        }
         if (documentSnapshot.get("elements") !== undefined) {
           Object.entries(documentSnapshot.get("elements")).forEach(
             ([key, val]) => {
-              entries.push({
+              entries2.push({
                 value: val.value,
                 description: val.description,
                 key: key,
@@ -99,12 +103,13 @@ export default Chess = () => {
             }
           );
         }
-        if (entries.length > 0) {
+        if (entries2.length > 0) {
           //setCurrentEntry(entries.length - 1)
-          setEntries(entries);
-          setPath(entries[currentEntry].path);
-          setPosition(entries[currentEntry].value);
-          setDescription(entries[currentEntry].description);
+          console.log("setting entries to: ", entries2);
+          setEntries(entries2);
+          setPath(entries2[currentEntry].path);
+          setPosition(entries2[currentEntry].value);
+          setDescription(entries2[currentEntry].description);
         }
       });
 
@@ -118,6 +123,10 @@ export default Chess = () => {
       replacement +
       this.substr(index + replacement.length)
     );
+  };
+
+  goBack = () => {
+    setPosition(entries[currentEntry].value);
   };
 
   makeMove = (content, firstSquare, secondSquare) => {
@@ -215,20 +224,29 @@ export default Chess = () => {
         } else {
           // doc.data() will be undefined in this case
           console.log("No such document, creating a new one!");
-          firestore().collection("Lists").add({
-            name: route.params.listName,
-            elements: entries,
-            pub: route.params.pub,
-            creator: route.params.userEmail,
-            multiValue: route.params.multiValue,
-            type: "chess",
-          });
+          firestore()
+            .collection("Lists")
+            .add({
+              name: route.params.listName,
+              elements: entries,
+              pub: route.params.pub,
+              creator: route.params.userEmail,
+              multiValue: route.params.multiValue,
+              type: "chess",
+            })
+            .then(function (docRef) {
+              route.params.listId = docRef;
+              console.log("Document written with ID: ", docRef.id);
+            });
         }
       })
       .catch(function (error) {
         console.log("Error getting document:", error);
       });
-    //navigation.navigate("Explore");
+    //TODO: onSnapshot still reads on an undefined listId document so updated list isnt
+    //loaded in and entries.length is undefined (i dont even know why), so workaround: go to
+    // explore screen and after reentering in the list everything will work fine
+    navigation.navigate("Explore");
     notifyMessage("Nice");
   };
 
@@ -333,11 +351,31 @@ export default Chess = () => {
 
   return (
     <SafeAreaView style={styles.container}>
+      <Header
+        ViewComponent={LinearGradient} // Don't forget this!
+        containerStyle={{ height: 60 }}
+        linearGradientProps={{
+          colors: [COLORS.main, "white"],
+          start: { x: 0, y: 0.1 },
+          end: { x: 1, y: 0.1 },
+        }}
+        centerComponent={<Text style={styles.headerText}>{listName}</Text>}
+      />
       <View style={styles.chessContainer}>
         {renderBoard()}
-        <ScrollView horizontal={true} style={styles.scrollView}>
-          <Text style={styles.moves}>{path}</Text>
-        </ScrollView>
+        <View style={styles.descriptionView}>
+          <TouchableOpacity onPress={goBack} style={styles.goBackButton}>
+            <Text style={styles.moves}>Go back</Text>
+          </TouchableOpacity>
+          <ScrollView
+            ref={(ref) => (listView = ref)}
+            horizontal={true}
+            style={styles.scrollView}
+            onContentSizeChange={() => listView.scrollToEnd({ animated: true })}
+          >
+            <Text style={styles.moves}>{path}</Text>
+          </ScrollView>
+        </View>
         <View style={styles.descriptionView}>
           <TextInput
             onChangeText={(text) => setDescription(text)}
@@ -411,9 +449,20 @@ const styles = StyleSheet.create({
   },
   moves: {
     fontSize: 16,
-    marginRight: 5,
+    padding: 5,
   },
   scrollView: {
+    marginLeft: 30,
+    marginRight: 10,
+    marginVertical: 10,
+  },
+  goBackButton: {
+    marginHorizontal: 10,
+    marginVertical: 10,
+    borderWidth: 1,
+    borderColor: COLORS.main,
+  },
+  movesContainer: {
     marginHorizontal: 50,
     marginVertical: 15,
   },
@@ -424,5 +473,12 @@ const styles = StyleSheet.create({
   currentEntry: {
     fontSize: 18,
     padding: 10,
+  },
+  headerText: {
+    fontSize: 18,
+    fontWeight: "bold",
+    color: COLORS.second,
+    //marginTop: -15,
+    marginRight: 10,
   },
 });

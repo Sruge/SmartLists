@@ -19,6 +19,7 @@ import {
 } from "react-native";
 import auth from "@react-native-firebase/auth";
 import { Button } from "react-native-elements";
+import firestore from "@react-native-firebase/firestore";
 
 export default SignUp = () => {
   const [loading, setLoading] = useState(false);
@@ -29,8 +30,26 @@ export default SignUp = () => {
   handleSignUp = () => {
     auth()
       .createUserWithEmailAndPassword(email, pw)
-      .then(() => {
-        console.log("Success", email, pw);
+      .then((user) => {
+        const docRef = firestore().collection("Users").doc(user.user.uid);
+
+        // docRef
+        //   .get()
+        //   .then(function (doc) {
+        //     if (doc.exists) {
+        //       console.log("User already exists, we shouldnt be here ", route.params.listName);
+        //     } else {
+        //       // doc.data() will be undefined in this case
+        //       console.log("No such document, creating a new one!");
+        //       firestore().collection("Users").add({
+        //         username: userName,
+        //         email: user,
+        //       });
+        //     }
+        //   })
+        //   .catch(function (error) {
+        //     console.log("Error getting document:", error);
+        //   });
       })
       .catch((error) => {
         if (error.code === "auth/email-already-in-use") {

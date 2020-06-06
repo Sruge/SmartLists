@@ -21,14 +21,13 @@ import { FloatingAction } from "react-native-floating-action";
 import { useRoute, useNavigation } from "@react-navigation/native";
 import firestore from "@react-native-firebase/firestore";
 import { Button, ListItem } from "react-native-elements";
-import COLORS from "../res/colors.js";
 
 const actions = [
   {
     text: "Save",
     name: "bt_save",
     position: 0,
-    color: COLORS.main,
+    color: "#f4511e",
   },
 ];
 
@@ -46,6 +45,7 @@ export default EditList = (props) => {
       .doc(route.params.listName)
       .onSnapshot((documentSnapshot) => {
         const entries = [];
+        console.log(documentSnapshot);
         if (documentSnapshot.get("elements") !== undefined) {
           Object.entries(documentSnapshot.get("elements")).forEach(
             ([key, val]) => {
@@ -187,7 +187,7 @@ export default EditList = (props) => {
         <FloatingAction
           onPressItem={(item) => handleSaveClick(item)}
           actions={actions}
-          color={COLORS.main}
+          color={"#f4511e"}
           overlayColor={"transparent"}
         />
       </SafeAreaView>
@@ -201,7 +201,7 @@ const styles = StyleSheet.create({
     marginVertical: 5,
   },
   okButton: {
-    backgroundColor: COLORS.main,
+    backgroundColor: "#f4511e",
     marginHorizontal: 10,
   },
   listItem: {
@@ -213,7 +213,7 @@ const styles = StyleSheet.create({
   },
   inputContainer: {
     backgroundColor: "white",
-    borderBottomColor: COLORS.main,
+    borderBottomColor: "#eeeeee",
     borderBottomWidth: 0.3,
     marginHorizontal: 10,
     marginTop: 5,
