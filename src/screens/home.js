@@ -16,47 +16,47 @@ import {
   FlatList,
   TouchableOpacity,
   View,
+  TextInput,
+  Button,
 } from "react-native";
 
 import { useRoute, useNavigation } from "@react-navigation/native";
-import { ListItem, Header } from "react-native-elements";
+import { ListItem, Header, Overlay } from "react-native-elements";
 import { FloatingAction } from "react-native-floating-action";
 import { SafeAreaView } from "react-native-safe-area-context";
 import LinearGradient from "react-native-linear-gradient";
 import COLORS from "../res/colors.js";
 import auth from "@react-native-firebase/auth";
 
+const actions = [
+  {
+    text: "New List",
+    name: "addList",
+    position: 1,
+    color: COLORS.main,
+  },
+  {
+    text: "New Collection",
+    name: "addCollection",
+    position: 0,
+    color: COLORS.main,
+  },
+];
+
 export default Home = () => {
   const [lists, setLists] = useState([]);
   const route = useRoute();
   const navigation = useNavigation();
+  const [visible, setVisible] = useState(false);
+  const [collectionName, setCollectionName] = useState("");
+
   useEffect(() => {
-    console.log(route.params.userEmail);
-    // const subscriber = firestore()
-    //   .collection("Lists")
-    //   .where("creator", "==", route.params.userEmail)
-    //   .onSnapshot((querySnapshot) => {
-    //     const lists2 = [];
-
-    //     querySnapshot.forEach((documentSnapshot) => {
-    //       lists2.push({
-    //         value: documentSnapshot.get("name"),
-    //         key: documentSnapshot.id,
-    //         len: documentSnapshot.get("elements").length.toString(),
-    //       });
-    //     });
-
-    //     setLists((lists) => {
-    //       return lists.concat(lists2);
-    //     });
-    //   });
-    console.log(route.params.userEmail);
     const subscriber = firestore()
       .collection("Lists")
-      .where("creator", "==", route.params.userEmail)
+      .where("creator", "==", route.params.user)
+      //.orderBy("type")
       .onSnapshot((querySnapshot) => {
         const lists = [];
-        //console.log(querySnapshot)
 
         if (querySnapshot) {
           querySnapshot.forEach((documentSnapshot) => {
@@ -78,11 +78,10 @@ export default Home = () => {
       });
 
     // Unsubscribe from events when no longer in use
-    return () => subscriber;
+    return () => [subscriber];
   }, []);
 
   handleItemClick = (item) => {
-    console.log(item.type);
     if (item.type === "chess") {
       navigation.push("Chess", {
         listId: item.key,
@@ -96,7 +95,6 @@ export default Home = () => {
   };
 
   renderItem = ({ item }) => {
-    console.log(item);
     return (
       <ListItem
         title={item.value}
@@ -116,8 +114,83 @@ export default Home = () => {
       .then(() => console.log("User signed out!"));
   };
 
+  toggleOverlay = () => {
+    setVisible(!visible);
+  };
+
+  handleAddClickHome = (item) => {
+    if (item === "addList") {
+      navigation.push("AddList", {
+        userId: route.params.user,
+      });
+    } else if (item === "addCollection") toggleOverlay();
+  };
+
+  handleCreateCollection = () => {
+    firestore()
+      .collection("Lists")
+      .add({
+        name: collectionName,
+        pub: false,
+        creator: route.params.user,
+        multiValue: route.params.multiValue,
+        elements: [],
+        type: "collection",
+      })
+      .then((some) => {
+        console.log("Return from add List: ", some);
+        const docRef = firestore().collection("Users").doc(route.params.user);
+        docRef
+          .get()
+          .then(function (doc) {
+            if (doc.exists) {
+              console.log(
+                "Updating Favs of an already existing user: ",
+                route.params.user
+              );
+              firestore()
+                .collection("Users")
+                .doc(route.params.user)
+                .update({
+                  favLists: [collectionName],
+                });
+            } else {
+              // doc.data() will be undefined in this case
+              console.log("No such user, creating a new one!");
+              firestore()
+                .collection("Users")
+                .add({
+                  email: route.params.user,
+                  favLists: [collectionName],
+                });
+            }
+          })
+          .catch(function (error) {
+            console.log("Error getting document:", error);
+          });
+      });
+    setCollectionName("");
+    toggleOverlay();
+  };
+
   return (
     <SafeAreaView style={styles.container}>
+      <Overlay isVisible={visible} onBackdropPress={() => toggleOverlay()}>
+        <View>
+          <TextInput
+            onChangeText={(text) => setCollectionName(text)}
+            defaultValue={collectionName}
+            style={styles.textInput}
+            placeholder={"Name of the Collection"}
+            maxLength={40}
+          />
+          <Button
+            title="CREATE"
+            onPress={handleCreateCollection}
+            buttonStyle={styles.okButton}
+          />
+        </View>
+      </Overlay>
       <Header
         ViewComponent={LinearGradient} // Don't forget this!
         containerStyle={{ height: 60 }}
@@ -140,17 +213,22 @@ export default Home = () => {
         }
       />
       <FlatList style={styles.list} data={lists} renderItem={renderItem} />
+      <FloatingAction
+        onPressItem={(item) => handleAddClickHome(item)}
+        actions={actions}
+        color={COLORS.main}
+        overlayColor={"transparent"}
+      />
     </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
   listItem: {
-    marginHorizontal: 10,
-    marginTop: 5,
-    borderRadius: 5,
-    borderColor: COLORS.second,
-    borderWidth: 0.5,
+    marginTop: 0,
+    borderRadius: 100,
+    //borderColor: COLORS.second,
+    //borderWidth: 0.5,
   },
   floating: {},
   container: {
@@ -160,7 +238,10 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: "bold",
     color: COLORS.second,
-    //marginTop: -15,
     marginRight: 10,
+  },
+  okButton: {
+    backgroundColor: COLORS.main,
+    marginTop: 20,
   },
 });

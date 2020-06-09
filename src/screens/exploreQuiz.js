@@ -82,7 +82,7 @@ export default ExploreQuiz = (props) => {
           start: { x: 0, y: 0.1 },
           end: { x: 1, y: 0.1 },
         }}
-        rightComponent={<Text style={styles.headerText}>Quiz</Text>}
+        centerComponent={<Text style={styles.headerText}>Quiz</Text>}
       />
       <FlatList style={styles.list} data={lists} renderItem={renderItem} />
     </SafeAreaView>

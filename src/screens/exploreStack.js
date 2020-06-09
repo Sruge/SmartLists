@@ -35,7 +35,7 @@ export default ExploreStack = (props) => {
         name="Explore"
         component={Explore}
         options={{ title: "Explore" }}
-        initialParams={{ userEmail: route.params.userEmail }}
+        initialParams={{ user: route.params.user }}
       />
       <Stack.Screen
         name="ListView"

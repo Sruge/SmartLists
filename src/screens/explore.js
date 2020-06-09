@@ -11,15 +11,8 @@ import { FloatingAction } from "react-native-floating-action";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { round } from "react-native-reanimated";
 import COLORS from "../res/colors.js";
-
-const actions = [
-  {
-    text: "New List",
-    name: "addList",
-    position: 0,
-    color: COLORS.main,
-  },
-];
+import DraggableFlatList from "react-native-draggable-flatlist";
+import Swipeable from "react-native-gesture-handler/Swipeable";
 
 export default Explore = (props) => {
   const [loading, setLoading] = useState(true); // Set loading to true on component mount
@@ -73,17 +66,10 @@ export default Explore = (props) => {
     }
   };
 
-  handleAddClickExplore = (item) => {
-    navigation.push("AddList", {
-      listName: item.key,
-      userEmail: route.params.userEmail,
-    });
-  };
-
   handleLongPress = (item) => {
     navigation.push("EditList", {
       listName: item.key,
-      userEmail: route.params.userEmail,
+      user: route.params.user,
       multiValue: item.multiValue,
     });
   };
@@ -94,24 +80,24 @@ export default Explore = (props) => {
         title={item.value}
         subtitle={item.len}
         key={item.key}
-        round="10"
+        round="50"
         chevron={{ color: "black" }}
         onPress={() => handleItemClickExplore(item)}
         style={styles.listItem}
         bottomDivider
-        onLongPress={() => handleLongPress(item)}
+        //onLongPress={() => handleLongPress(item)}
       />
     );
   };
 
   return (
     <SafeAreaView style={styles.container}>
-      <FlatList style={styles.list} data={lists} renderItem={renderItem} />
-      <FloatingAction
-        onPressItem={(item) => handleAddClickExplore(item)}
-        actions={actions}
-        color={COLORS.main}
-        overlayColor={"transparent"}
+      <DraggableFlatList
+        style={styles.list}
+        data={lists}
+        renderItem={renderItem}
+        keyExtractor={(item, index) => `draggable-item-${item.key}`}
+        onDragEnd={({ entries }) => this.setLists({ entries })}
       />
     </SafeAreaView>
   );
@@ -119,8 +105,7 @@ export default Explore = (props) => {
 
 const styles = StyleSheet.create({
   listItem: {
-    marginHorizontal: 10,
-    marginTop: 5,
+    backgroundColor: "red",
   },
   container: {
     flex: 1,

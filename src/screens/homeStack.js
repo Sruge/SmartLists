@@ -35,7 +35,7 @@ export default HomeStack = (props) => {
         name="Home"
         component={Home}
         options={{ title: "Home" }}
-        initialParams={{ userEmail: route.params.userEmail }}
+        initialParams={{ user: route.params.user }}
       />
       <Stack.Screen
         name="ListView"
@@ -51,6 +51,7 @@ export default HomeStack = (props) => {
         name="EditList"
         component={EditList}
         options={{ title: "Edit mode" }}
+        initialParams={{ user: route.params.user }}
       />
       <Stack.Screen
         name="Chess"

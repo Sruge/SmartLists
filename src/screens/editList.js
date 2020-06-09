@@ -21,6 +21,7 @@ import { FloatingAction } from "react-native-floating-action";
 import { useRoute, useNavigation } from "@react-navigation/native";
 import firestore from "@react-native-firebase/firestore";
 import { Button, ListItem } from "react-native-elements";
+import COLORS from "../res/colors";
 
 const actions = [
   {
@@ -85,7 +86,6 @@ export default EditList = (props) => {
     entries.forEach((entry) => {
       resultList.push(entry);
     });
-    console.log(route.params.listName);
     const docRef = firestore().collection("Lists").doc(route.params.listName);
 
     docRef
@@ -103,7 +103,7 @@ export default EditList = (props) => {
             name: route.params.listName,
             elements: entries,
             pub: route.params.pub,
-            creator: route.params.userEmail,
+            creator: route.params.user,
             multiValue: route.params.multiValue,
           });
         }
@@ -111,7 +111,7 @@ export default EditList = (props) => {
       .catch(function (error) {
         console.log("Error getting document:", error);
       });
-    navigation.navigate("Explore");
+    navigation.navigate("Home");
   };
 
   renderItem = ({ item }) => {
@@ -201,7 +201,7 @@ const styles = StyleSheet.create({
     marginVertical: 5,
   },
   okButton: {
-    backgroundColor: "#f4511e",
+    backgroundColor: COLORS.main,
     marginHorizontal: 10,
   },
   listItem: {

@@ -132,10 +132,15 @@ export default Chess = () => {
   makeMove = (content, firstSquare, secondSquare) => {
     const letters = "ABCDEFGH";
     const numbers = "87654321";
+    let moveCount = "";
     setPath((path) => {
+      if (path.length % 11 === 0) {
+        moveCount = (Math.floor(path.length / 11) + 1).toString() + ". ";
+      }
       return (
         path.toString() +
         " " +
+        moveCount +
         currentContent.toString() +
         letters[secondSquare.column] +
         numbers[secondSquare.row]
@@ -290,7 +295,7 @@ export default Chess = () => {
   };
 
   renderSquare = (content, column, rowIndex) => {
-    let shade = "grey";
+    let shade = COLORS.third;
     if ((rowIndex + column) % 2 === 0) {
       shade = "white";
     }
