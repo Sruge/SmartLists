@@ -48,7 +48,9 @@ export default ExploreQuiz = (props) => {
   }, []);
 
   if (loading) {
-    return <ActivityIndicator />;
+    return (
+      <ActivityIndicator size={"large"} style={styles.activityIndicator} />
+    );
   }
 
   handleItemClickQuiz = (item) => {
@@ -101,7 +103,9 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: "bold",
     color: COLORS.second,
-    marginTop: -15,
     marginRight: 10,
+  },
+  activityIndicator: {
+    flex: 1,
   },
 });

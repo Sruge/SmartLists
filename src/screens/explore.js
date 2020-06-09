@@ -85,31 +85,30 @@ export default Explore = (props) => {
           backgroundColor: "white",
           //alignItems: "center",
           justifyContent: "center",
-          marginVertical: 0,
           borderBottomWidth: 0.5,
-          marginHorizontal: 5
+          padding: 10,
         }}
         onLongPress={drag}
-      ><View>
-        <Text
-          style={{
-            color: "black",
-            fontSize: 16,
-            marginHorizontal: 10
-          }}
-        >
-          {item.value}
-        </Text>
-        <Text
-          style={{
-            color: "black",
-            fontSize: 13,
-            marginHorizontal: 10
-
-          }}
-        >
-          {item.len}
-        </Text>
+      >
+        <View>
+          <Text
+            style={{
+              color: "black",
+              fontSize: 16,
+              padding: 5,
+            }}
+          >
+            {item.value}
+          </Text>
+          <Text
+            style={{
+              color: "black",
+              fontSize: 13,
+              padding: 5,
+            }}
+          >
+            Number of Elements: {item.len}
+          </Text>
         </View>
       </TouchableOpacity>
     );
@@ -117,7 +116,7 @@ export default Explore = (props) => {
 
   return (
     <SafeAreaView style={styles.container}>
-            <Header
+      <Header
         ViewComponent={LinearGradient} // Don't forget this!
         containerStyle={{ height: 60 }}
         linearGradientProps={{
@@ -126,16 +125,16 @@ export default Explore = (props) => {
           end: { x: 1, y: 0.1 },
         }}
         centerComponent={<Text style={styles.headerText}>Explore</Text>}
-        />
+      />
       <DraggableFlatList
         style={styles.list}
         data={lists}
         renderItem={renderItem}
         keyExtractor={(item, index) => `draggable-item-${item.key}`}
-        onDragEnd={( lists ) => {
-         console.log(lists.data)
-          setLists(lists.data)}
-        }
+        onDragEnd={(lists) => {
+          console.log(lists.data);
+          setLists(lists.data);
+        }}
       />
     </SafeAreaView>
   );
