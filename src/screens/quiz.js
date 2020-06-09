@@ -172,7 +172,6 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: "bold",
     color: COLORS.second,
-    marginTop: -15,
     marginRight: 10,
   },
   activityIndicator: {
