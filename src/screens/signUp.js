@@ -41,10 +41,11 @@ export default SignUp = () => {
             } else {
               // doc.data() will be undefined in this case
               console.log("No such user, creating a new one!");
-              firestore().collection("Users").add({
+              firestore().collection("Users").doc(user.user.uid).set({
                 username: userName,
                 email: user.user.email,
                 favLists: [],
+                uid: user.user.uid,
               });
             }
           })

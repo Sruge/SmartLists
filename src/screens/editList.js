@@ -99,13 +99,27 @@ export default EditList = (props) => {
         } else {
           // doc.data() will be undefined in this case
           console.log("No such document, creating a new one!");
-          firestore().collection("Lists").add({
-            name: route.params.listName,
-            elements: entries,
-            pub: route.params.pub,
-            creator: route.params.user,
-            multiValue: route.params.multiValue,
-          });
+          firestore()
+            .collection("Lists")
+            .add({
+              name: route.params.listName,
+              elements: entries,
+              pub: route.params.pub,
+              creator: route.params.user,
+              multiValue: route.params.multiValue,
+            })
+            .then((list) => {
+              console.log(list);
+
+              const userRef = firestore()
+                .collection("Users")
+                .doc(route.params.user);
+              let something = userRef.set(
+                { favLists: [list.id] },
+                { merge: true }
+              );
+              console.log(something);
+            });
         }
       })
       .catch(function (error) {

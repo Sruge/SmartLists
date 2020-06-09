@@ -15,12 +15,33 @@ import DraggableFlatList from "react-native-draggable-flatlist";
 import Swipeable from "react-native-gesture-handler/Swipeable";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import LinearGradient from "react-native-linear-gradient";
+import Icon from "react-native-vector-icons/AntDesign";
 
 export default Explore = (props) => {
   const [loading, setLoading] = useState(true); // Set loading to true on component mount
   const [lists, setLists] = useState([]); // Initial empty array of users
   const navigation = useNavigation();
   const route = useRoute();
+  const [favLists, setFavLists] = useState([]);
+
+  useEffect(() => {
+    const subscriber = firestore()
+      .collection("Users")
+      .doc(route.params.user)
+      .onSnapshot((documentSnapshot) => {
+        const entries = [];
+        if (documentSnapshot.get("favLists") !== undefined) {
+          Object.entries(documentSnapshot.get("favLists")).forEach((val) => {
+            entries.push(val);
+          });
+        }
+        setFavLists(entries);
+        console.log(route.params.user, favLists);
+      });
+
+    // Unsubscribe from events when no longer in use
+    return () => subscriber();
+  }, []);
 
   useEffect(() => {
     const subscriber = firestore()
@@ -30,12 +51,17 @@ export default Explore = (props) => {
         const lists = [];
         if (querySnapshot) {
           querySnapshot.forEach((documentSnapshot) => {
+            let fav = false;
+            if (documentSnapshot.id in favLists) {
+              fav = true;
+            }
             lists.push({
               value: documentSnapshot.get("name"),
               key: documentSnapshot.id,
               len: documentSnapshot.get("elements").length.toString(),
               multiValue: documentSnapshot.get("multiValue"),
               type: documentSnapshot.get("type"),
+              fav: fav,
             });
           });
 
@@ -45,7 +71,7 @@ export default Explore = (props) => {
       });
 
     // Unsubscribe from events when no longer in use
-    return () => subscriber;
+    return () => [subscriber];
   }, []);
 
   if (loading) {
@@ -55,15 +81,16 @@ export default Explore = (props) => {
   }
 
   handleItemClickExplore = (item) => {
-    console.log(item.type);
     if (item.type === "chess") {
       navigation.push("Chess", {
         listId: item.key,
+        name: item.value,
       });
     } else {
       navigation.push("ListView", {
         listId: item.key,
         multiValue: item.multiValue,
+        name: item.value,
       });
     }
   };
@@ -76,41 +103,60 @@ export default Explore = (props) => {
     });
   };
 
-  renderItem = ({ item, index, drag }) => {
-    //console.log(item)
+  circlePressed = () => {
+    console.log("circle pressed");
+  };
+
+  renderItem = ({ item, index, drag, isActive }) => {
+    console.log(item.fav);
     return (
-      <TouchableOpacity
+      <View
         style={{
-          height: 60,
-          backgroundColor: "white",
-          //alignItems: "center",
-          justifyContent: "center",
-          borderBottomWidth: 0.5,
-          padding: 10,
+          flexDirection: "row",
+          alignItems: "center",
+          justifyContent: "space-between",
+          backgroundColor: "yellow",
         }}
-        onLongPress={drag}
       >
-        <View>
-          <Text
-            style={{
-              color: "black",
-              fontSize: 16,
-              padding: 5,
-            }}
-          >
-            {item.value}
-          </Text>
-          <Text
-            style={{
-              color: "black",
-              fontSize: 13,
-              padding: 5,
-            }}
-          >
-            Number of Elements: {item.len}
-          </Text>
-        </View>
-      </TouchableOpacity>
+        <TouchableOpacity
+          style={{
+            flex: 1,
+            height: 60,
+            backgroundColor: isActive ? COLORS.main : "white",
+            justifyContent: "center",
+            padding: 15,
+            marginTop: 5,
+            borderRadius: 10,
+          }}
+          onLongPress={drag}
+          onPress={() => handleItemClickExplore(item)}
+        >
+          <View style={{ flex: 5 }}>
+            <Text
+              style={{
+                color: "#555",
+                fontSize: 16,
+              }}
+            >
+              {item.value}
+            </Text>
+            <Text
+              style={{
+                color: "#555",
+                fontSize: 13,
+              }}
+            >
+              # {item.len}
+            </Text>
+          </View>
+        </TouchableOpacity>
+        <Icon
+          onPress={circlePressed}
+          name={item.fav ? "checkcircle" : "checkcircleo"}
+          color="#333"
+          size={24}
+        />
+      </View>
     );
   };
 
@@ -132,7 +178,6 @@ export default Explore = (props) => {
         renderItem={renderItem}
         keyExtractor={(item, index) => `draggable-item-${item.key}`}
         onDragEnd={(lists) => {
-          console.log(lists.data);
           setLists(lists.data);
         }}
       />
@@ -141,9 +186,6 @@ export default Explore = (props) => {
 };
 
 const styles = StyleSheet.create({
-  listItem: {
-    backgroundColor: "red",
-  },
   container: {
     flex: 1,
   },

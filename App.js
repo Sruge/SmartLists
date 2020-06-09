@@ -83,7 +83,7 @@ export default App = () => {
     <GestureHandlerRootView style={{flex: 1}}>
     <NavigationContainer>
       <StatusBar barStyle="dark-content" />
-      <BottomTab.Navigator initialRouteName="HomeStack">
+      <BottomTab.Navigator initialRouteName="ExploreStack">
         <BottomTab.Screen
           name="ExploreStack"
           component={ExploreStack}
