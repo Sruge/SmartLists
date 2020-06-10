@@ -235,7 +235,7 @@ export default Chess = () => {
               name: route.params.listName,
               elements: entries,
               pub: route.params.pub,
-              creator: route.params.userEmail,
+              creator: route.params.user,
               multiValue: route.params.multiValue,
               type: "chess",
             })
@@ -251,7 +251,7 @@ export default Chess = () => {
     //TODO: onSnapshot still reads on an undefined listId document so updated list isnt
     //loaded in and entries.length is undefined (i dont even know why), so workaround: go to
     // explore screen and after reentering in the list everything will work fine
-    navigation.navigate("Explore");
+    //navigation.navigate("Home");
     notifyMessage("Nice");
   };
 

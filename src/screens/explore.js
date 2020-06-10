@@ -11,9 +11,7 @@ import { FloatingAction } from "react-native-floating-action";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { round } from "react-native-reanimated";
 import COLORS from "../res/colors.js";
-import DraggableFlatList from "react-native-draggable-flatlist";
-import Swipeable from "react-native-gesture-handler/Swipeable";
-import { TouchableOpacity } from "react-native-gesture-handler";
+import { TouchableOpacity, FlatList } from "react-native-gesture-handler";
 import LinearGradient from "react-native-linear-gradient";
 import Icon from "react-native-vector-icons/AntDesign";
 
@@ -22,26 +20,6 @@ export default Explore = (props) => {
   const [lists, setLists] = useState([]); // Initial empty array of users
   const navigation = useNavigation();
   const route = useRoute();
-  const [favLists, setFavLists] = useState([]);
-
-  useEffect(() => {
-    const subscriber = firestore()
-      .collection("Users")
-      .doc(route.params.user)
-      .onSnapshot((documentSnapshot) => {
-        const entries = [];
-        if (documentSnapshot.get("favLists") !== undefined) {
-          Object.entries(documentSnapshot.get("favLists")).forEach((val) => {
-            entries.push(val);
-          });
-        }
-        setFavLists(entries);
-        console.log(route.params.user, favLists);
-      });
-
-    // Unsubscribe from events when no longer in use
-    return () => subscriber();
-  }, []);
 
   useEffect(() => {
     const subscriber = firestore()
@@ -51,17 +29,13 @@ export default Explore = (props) => {
         const lists = [];
         if (querySnapshot) {
           querySnapshot.forEach((documentSnapshot) => {
-            let fav = false;
-            if (documentSnapshot.id in favLists) {
-              fav = true;
-            }
             lists.push({
               value: documentSnapshot.get("name"),
               key: documentSnapshot.id,
               len: documentSnapshot.get("elements").length.toString(),
-              multiValue: documentSnapshot.get("multiValue"),
+              multiValue:
+                documentSnapshot.get("type") === "multiValue" ? true : false,
               type: documentSnapshot.get("type"),
-              fav: fav,
             });
           });
 
@@ -89,7 +63,7 @@ export default Explore = (props) => {
     } else {
       navigation.push("ListView", {
         listId: item.key,
-        multiValue: item.multiValue,
+        type: item.type,
         name: item.value,
       });
     }
@@ -99,64 +73,50 @@ export default Explore = (props) => {
     navigation.push("EditList", {
       listName: item.key,
       user: route.params.user,
-      multiValue: item.multiValue,
+      multiValue: item.type === "multivalue" ? true : false,
     });
   };
 
-  circlePressed = () => {
-    console.log("circle pressed");
+  getBackgroundColor = (type) => {
+    switch (type) {
+      case "chess":
+        return "#700353";
+      case "multivalue":
+        return "#FFBFB7";
+      case "collection":
+        return "#4C1C00";
+      default:
+        return "#FFD447";
+    }
   };
 
   renderItem = ({ item, index, drag, isActive }) => {
-    console.log(item.fav);
+    let col = "white";
+    if (item.type === "chess") {
+      col = "red";
+    }
     return (
-      <View
+      <TouchableOpacity
         style={{
-          flexDirection: "row",
-          alignItems: "center",
-          justifyContent: "space-between",
-          backgroundColor: "yellow",
+          flex: 1,
+          height: 60,
+          backgroundColor: isActive
+            ? COLORS.main
+            : getBackgroundColor(item.type),
+          justifyContent: "center",
+          padding: 20,
+          marginTop: 5,
+          borderRadius: 10,
+          marginHorizontal: 5,
         }}
+        onLongPress={() => handleLongPress(item)}
+        onPress={() => handleItemClickExplore(item)}
       >
-        <TouchableOpacity
-          style={{
-            flex: 1,
-            height: 60,
-            backgroundColor: isActive ? COLORS.main : "white",
-            justifyContent: "center",
-            padding: 15,
-            marginTop: 5,
-            borderRadius: 10,
-          }}
-          onLongPress={drag}
-          onPress={() => handleItemClickExplore(item)}
-        >
-          <View style={{ flex: 5 }}>
-            <Text
-              style={{
-                color: "#555",
-                fontSize: 16,
-              }}
-            >
-              {item.value}
-            </Text>
-            <Text
-              style={{
-                color: "#555",
-                fontSize: 13,
-              }}
-            >
-              # {item.len}
-            </Text>
-          </View>
-        </TouchableOpacity>
-        <Icon
-          onPress={circlePressed}
-          name={item.fav ? "checkcircle" : "checkcircleo"}
-          color="#333"
-          size={24}
-        />
-      </View>
+        <View>
+          <Text style={styles.listItemTitle}>{item.value}</Text>
+          <Text style={styles.listItemSubtitle}>{item.len}</Text>
+        </View>
+      </TouchableOpacity>
     );
   };
 
@@ -172,7 +132,7 @@ export default Explore = (props) => {
         }}
         centerComponent={<Text style={styles.headerText}>Explore</Text>}
       />
-      <DraggableFlatList
+      <FlatList
         style={styles.list}
         data={lists}
         renderItem={renderItem}
@@ -197,5 +157,11 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     color: COLORS.second,
     marginRight: 10,
+  },
+  listItemTitle: {
+    fontSize: 16,
+  },
+  listItemSubtitle: {
+    fontSize: 13,
   },
 });

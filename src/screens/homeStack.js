@@ -41,11 +41,13 @@ export default HomeStack = (props) => {
         name="ListView"
         component={ListView}
         options={{ title: "List View" }}
+        initialParams={{ user: route.params.user }}
       />
       <Stack.Screen
         name="AddList"
         component={AddList}
         options={{ title: "Create a new list" }}
+        initialParams={{ user: route.params.user }}
       />
       <Stack.Screen
         name="EditList"
@@ -57,6 +59,7 @@ export default HomeStack = (props) => {
         name="Chess"
         component={Chess}
         options={{ title: "Chess Mode" }}
+        initialParams={{ user: route.params.user }}
       />
     </Stack.Navigator>
   );

@@ -9,7 +9,7 @@ import "react-native-gesture-handler";
 
 import React, { useState } from "react";
 import { SafeAreaView, StyleSheet, TextInput, View } from "react-native";
-import { Button, CheckBox, Text } from "react-native-elements";
+import { Button, CheckBox, Text, getIconType } from "react-native-elements";
 import firestore from "@react-native-firebase/firestore";
 import { useRoute, useNavigation } from "@react-navigation/native";
 import COLORS from "../res/colors.js";
@@ -24,24 +24,42 @@ export default AddList = (props) => {
   const [multiValue, setMultiValue] = useState(false);
   const route = useRoute();
 
+  getListType = () => {
+    if (multiValue) {
+      return "multivalue";
+    } else if (chessSupport) {
+      return "chess";
+    } else {
+      return "simple";
+    }
+  };
+
+  safeListToDb = () => {
+    firestore()
+      .collection("Lists")
+      .add({
+        elements: [],
+        name: listname,
+        pub: pub,
+        type: getListType(),
+        owner: route.params.user,
+      })
+      .then((result) => {
+        console.log(result.type);
+        if (chessSupport) {
+          navigation.push("Chess", { listId: result.id });
+        } else {
+          navigation.push("EditList", {
+            listName: result.id,
+            multiValue: multiValue,
+          });
+        }
+      });
+  };
+
   handleOk = () => {
-    if (chessSupport && listname !== "") {
-      navigation.push("Chess", {
-        listName: listname,
-        pub: pub,
-        userEmail: route.params.userEmail,
-        multiValue: multiValue,
-        chessSupport: chessSupport,
-      });
-    } else if (listname !== "") {
-      navigation.push("EditList", {
-        listName: listname,
-        pub: pub,
-        userEmail: route.params.userEmail,
-        multiValue: multiValue,
-        chessSupport: chessSupport,
-      });
-      //input.current.shake()
+    if (listname !== "") {
+      safeListToDb();
     }
   };
 
@@ -51,9 +69,11 @@ export default AddList = (props) => {
 
   handleCheckBoxMultiPress = () => {
     setMultiValue(!multiValue);
+    setChessSupport(false);
   };
   handleCheckChessPress = () => {
     setChessSupport(!chessSupport);
+    setMultiValue(false);
   };
 
   handleAdvancedClick = () => {

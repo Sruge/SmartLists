@@ -10,23 +10,17 @@ import "@react-native-firebase/app";
 import firestore from "@react-native-firebase/firestore";
 
 import React, { useEffect, useState } from "react";
-import {
-  StyleSheet,
-  Text,
-  FlatList,
-  TouchableOpacity,
-  View,
-  TextInput,
-  Button,
-} from "react-native";
+import { StyleSheet, Text, View, TextInput, Button } from "react-native";
 
 import { useRoute, useNavigation } from "@react-navigation/native";
-import { ListItem, Header, Overlay } from "react-native-elements";
+import { Header, Overlay } from "react-native-elements";
 import { FloatingAction } from "react-native-floating-action";
 import { SafeAreaView } from "react-native-safe-area-context";
 import LinearGradient from "react-native-linear-gradient";
 import COLORS from "../res/colors.js";
 import auth from "@react-native-firebase/auth";
+import DraggableFlatList from "react-native-draggable-flatlist";
+import { TouchableOpacity } from "react-native-gesture-handler";
 
 const actions = [
   {
@@ -53,7 +47,7 @@ export default Home = () => {
   useEffect(() => {
     const subscriber = firestore()
       .collection("Lists")
-      .where("creator", "==", route.params.user)
+      .where("owner", "==", route.params.user)
       //.orderBy("type")
       .onSnapshot((querySnapshot) => {
         const lists = [];
@@ -89,22 +83,48 @@ export default Home = () => {
     } else {
       navigation.push("ListView", {
         listId: item.key,
-        multiValue: item.multiValue,
+        type: item.type,
+        name: item.value,
       });
     }
   };
 
-  renderItem = ({ item }) => {
+  getBackgroundColor = (type) => {
+    switch (type) {
+      case "chess":
+        return "#700353";
+      case "multivalue":
+        return "#FFBFB7";
+      case "collection":
+        return "#4C1C00";
+      default:
+        return "#FFD447";
+    }
+  };
+
+  renderItem = ({ item, index, drag, isActive }) => {
     return (
-      <ListItem
-        title={item.value}
-        subtitle={item.len}
-        key={item.key}
-        //chevron={{color: 'blue'}}
+      <TouchableOpacity
+        style={{
+          flex: 1,
+          height: 60,
+          backgroundColor: isActive
+            ? COLORS.main
+            : getBackgroundColor(item.type),
+          justifyContent: "center",
+          padding: 20,
+          marginTop: 5,
+          borderRadius: 10,
+          marginHorizontal: 5,
+        }}
+        onLongPress={drag}
         onPress={() => handleItemClick(item)}
-        style={styles.listItem}
-        bottomDivider
-      />
+      >
+        <View>
+          <Text style={styles.listItemTitle}>{item.value}</Text>
+          <Text style={styles.listItemSubtitle}>{item.len}</Text>
+        </View>
+      </TouchableOpacity>
     );
   };
 
@@ -212,7 +232,15 @@ export default Home = () => {
           </View>
         }
       />
-      <FlatList style={styles.list} data={lists} renderItem={renderItem} />
+      <DraggableFlatList
+        style={styles.lists}
+        data={lists}
+        renderItem={renderItem}
+        keyExtractor={(item, index) => `draggable-item-${item.key}`}
+        onDragEnd={(lists) => {
+          setLists(lists.data);
+        }}
+      />
       <FloatingAction
         onPressItem={(item) => handleAddClickHome(item)}
         actions={actions}
@@ -227,8 +255,6 @@ const styles = StyleSheet.create({
   listItem: {
     marginTop: 0,
     borderRadius: 100,
-    //borderColor: COLORS.second,
-    //borderWidth: 0.5,
   },
   floating: {},
   container: {
@@ -243,5 +269,11 @@ const styles = StyleSheet.create({
   okButton: {
     backgroundColor: COLORS.main,
     marginTop: 20,
+  },
+  listItemTitle: {
+    fontSize: 16,
+  },
+  listItemSubtitle: {
+    fontSize: 13,
   },
 });

@@ -10,19 +10,31 @@ import "@react-native-firebase/app";
 import firestore from "@react-native-firebase/firestore";
 
 import React, { useEffect, useState } from "react";
-import { StyleSheet, ActivityIndicator, FlatList, Text } from "react-native";
+import {
+  StyleSheet,
+  ActivityIndicator,
+  FlatList,
+  Text,
+  View,
+  TouchableOpacity,
+} from "react-native";
 
 import { useNavigation, useRoute } from "@react-navigation/native";
-import { ListItem, Header } from "react-native-elements";
+import { ListItem, Header, Overlay } from "react-native-elements";
 import { FloatingAction } from "react-native-floating-action";
 import { SafeAreaView } from "react-native-safe-area-context";
 import COLORS from "../res/colors.js";
 import LinearGradient from "react-native-linear-gradient";
+import {} from "react-native-gesture-handler";
+import ListViewOverlay from "./listViewOverlay.js";
 
 export default ListView = () => {
   const [entries, setEntries] = useState([]);
   const [loading, setLoading] = useState(true);
   const route = useRoute();
+  const [visible, setVisible] = useState(false);
+  const navigation = useNavigation();
+
   useEffect(() => {
     const subscriber = firestore()
       .collection("Lists")
@@ -48,8 +60,16 @@ export default ListView = () => {
     return () => subscriber();
   }, []);
 
+  handlePressEdit = () => {
+    toggleOverlay();
+  };
+
+  toggleOverlay = () => {
+    setVisible(!visible);
+  };
+
   renderItem = ({ item }) => {
-    if (!route.params.multiValue) {
+    if (route.params.type === "simple") {
       return (
         <ListItem
           title={item.value}
@@ -81,6 +101,13 @@ export default ListView = () => {
 
   return (
     <SafeAreaView style={styles.container}>
+      <Overlay isVisible={visible} onBackdropPress={() => toggleOverlay()}>
+        <ListViewOverlay
+          navigation={navigation}
+          listId={route.params.listId}
+          user={route.params.user}
+        />
+      </Overlay>
       <Header
         ViewComponent={LinearGradient} // Don't forget this!
         containerStyle={{ height: 60 }}
@@ -91,6 +118,11 @@ export default ListView = () => {
         }}
         centerComponent={
           <Text style={styles.headerText}>{route.params.name}</Text>
+        }
+        rightComponent={
+          <TouchableOpacity onPress={handlePressEdit}>
+            <Text>Edit</Text>
+          </TouchableOpacity>
         }
       />
       <FlatList style={styles.list} data={entries} renderItem={renderItem} />

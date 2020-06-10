@@ -28,7 +28,7 @@ const actions = [
     text: "Save",
     name: "bt_save",
     position: 0,
-    color: "#f4511e",
+    color: COLORS.main,
   },
 ];
 
@@ -99,6 +99,10 @@ export default EditList = (props) => {
         } else {
           // doc.data() will be undefined in this case
           console.log("No such document, creating a new one!");
+          let type = "simple";
+          if (route.params.multiValue) {
+            type = "multivalue";
+          }
           firestore()
             .collection("Lists")
             .add({
@@ -106,7 +110,7 @@ export default EditList = (props) => {
               elements: entries,
               pub: route.params.pub,
               creator: route.params.user,
-              multiValue: route.params.multiValue,
+              type: type,
             })
             .then((list) => {
               console.log(list);
@@ -141,7 +145,6 @@ export default EditList = (props) => {
         />
       );
     }
-
     return (
       <ListItem
         title={item.value}
@@ -201,7 +204,7 @@ export default EditList = (props) => {
         <FloatingAction
           onPressItem={(item) => handleSaveClick(item)}
           actions={actions}
-          color={"#f4511e"}
+          color={COLORS.main}
           overlayColor={"transparent"}
         />
       </SafeAreaView>
