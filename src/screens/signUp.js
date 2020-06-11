@@ -64,6 +64,15 @@ export default SignUp = () => {
       });
   };
 
+  handleLogIn = () => {
+    console.log("Start Logging in")
+    auth().signInWithEmailAndPassword(email, pw)
+
+    .catch((error) => {
+      console.log("Error in Sign Up")
+    })
+  };
+
   if (loading) {
     return <ActivityIndicator />;
   }
@@ -102,8 +111,13 @@ export default SignUp = () => {
             maxLength={40}
           />
           <Button
-            title="OK"
+            title="Sign up"
             onPress={handleSignUp}
+            buttonStyle={styles.okButton}
+          />
+          <Button
+            title="Log in"
+            onPress={handleLogIn}
             buttonStyle={styles.okButton}
           />
         </View>
