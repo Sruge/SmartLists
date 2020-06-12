@@ -3,13 +3,13 @@ import "@react-native-firebase/app";
 import firestore from "@react-native-firebase/firestore";
 
 import React, { useEffect, useState } from "react";
-import { StyleSheet, ActivityIndicator, FlatList } from "react-native";
+import { StyleSheet, ActivityIndicator, FlatList, Text } from "react-native";
+import LinearGradient from "react-native-linear-gradient";
 
 import { useNavigation, useRoute } from "@react-navigation/native";
-import { ListItem } from "react-native-elements";
+import { ListItem, Header } from "react-native-elements";
 import { FloatingAction } from "react-native-floating-action";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { round } from "react-native-reanimated";
 import COLORS from "../res/colors.js";
 
 const actions = [
@@ -64,11 +64,12 @@ export default Explore = (props) => {
     if (item.type === "chess") {
       navigation.push("Chess", {
         listId: item.key,
-        listName: "ToDo"
+        listName: item.value,
       });
     } else {
       navigation.push("ListView", {
         listId: item.key,
+        listName: item.value,
         multiValue: item.multiValue,
       });
     }
@@ -107,6 +108,16 @@ export default Explore = (props) => {
 
   return (
     <SafeAreaView style={styles.container}>
+      <Header
+        ViewComponent={LinearGradient} // Don't forget this!
+        containerStyle={{ height: 60 }}
+        linearGradientProps={{
+          colors: [COLORS.main, COLORS.step1],
+          start: { x: 0, y: 0.1 },
+          end: { x: 1, y: 0.1 },
+        }}
+        centerComponent={<Text style={styles.headerText}>Public lists</Text>}
+      />
       <FlatList style={styles.list} data={lists} renderItem={renderItem} />
       <FloatingAction
         onPressItem={(item) => handleAddClickExplore(item)}
@@ -128,5 +139,12 @@ const styles = StyleSheet.create({
   },
   activityIndicator: {
     flex: 1,
+  },
+  headerText: {
+    fontSize: 18,
+    fontWeight: "bold",
+    color: COLORS.second,
+    //marginTop: -15,
+    marginRight: 10,
   },
 });

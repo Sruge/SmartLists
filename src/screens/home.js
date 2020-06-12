@@ -20,7 +20,6 @@ import {
 
 import { useRoute, useNavigation } from "@react-navigation/native";
 import { ListItem, Header } from "react-native-elements";
-import { FloatingAction } from "react-native-floating-action";
 import { SafeAreaView } from "react-native-safe-area-context";
 import LinearGradient from "react-native-linear-gradient";
 import COLORS from "../res/colors.js";
@@ -31,7 +30,6 @@ export default Home = () => {
   const route = useRoute();
   const navigation = useNavigation();
   useEffect(() => {
-    console.log(route.params.userEmail);
     // const subscriber = firestore()
     //   .collection("Lists")
     //   .where("creator", "==", route.params.userEmail)
@@ -86,10 +84,12 @@ export default Home = () => {
     if (item.type === "chess") {
       navigation.push("Chess", {
         listId: item.key,
+        listName: item.value,
       });
     } else {
       navigation.push("ListView", {
         listId: item.key,
+        listName: item.value,
         multiValue: item.multiValue,
       });
     }
@@ -122,7 +122,7 @@ export default Home = () => {
         ViewComponent={LinearGradient} // Don't forget this!
         containerStyle={{ height: 60 }}
         linearGradientProps={{
-          colors: [COLORS.main, "white"],
+          colors: [COLORS.main, COLORS.step1],
           start: { x: 0, y: 0.1 },
           end: { x: 1, y: 0.1 },
         }}

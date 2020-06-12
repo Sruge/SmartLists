@@ -9,11 +9,13 @@ import "react-native-gesture-handler";
 import "@react-native-firebase/app";
 import firestore from "@react-native-firebase/firestore";
 
-import React, { useEffect, useState } from "react";
-import { StyleSheet, ActivityIndicator, FlatList } from "react-native";
+import React, {useEffect, useState } from "react";
+import { StyleSheet, ActivityIndicator, FlatList, Text, View, TouchableOpacity} from "react-native";
 
 import { useNavigation, useRoute } from "@react-navigation/native";
-import { ListItem } from "react-native-elements";
+import { ListItem, Header } from "react-native-elements";
+import LinearGradient from "react-native-linear-gradient";
+import COLORS from "../res/colors.js";
 import { FloatingAction } from "react-native-floating-action";
 import { SafeAreaView } from "react-native-safe-area-context";
 
@@ -73,12 +75,37 @@ export default ListView = () => {
     );
   };
 
+  handlePressEdit = () => {
+    return
+  }
+
   if (loading) {
     return <ActivityIndicator />;
   }
 
   return (
     <SafeAreaView style={styles.container}>
+        <Header
+          ViewComponent={LinearGradient} // Don't forget this!
+          containerStyle={{ height: 60 }}
+          linearGradientProps={{
+            colors: [COLORS.step1, COLORS.step2],
+            start: { x: 0, y: 0.1 },
+            end: { x: 1, y: 0.1 },
+          }}
+          centerComponent={<Text style={styles.headerText}>List: {route.params.listName}</Text>}
+          rightComponent={
+            <View>
+              <TouchableOpacity
+                onPress={handlePressEdit}
+                title="Edit List"
+                style={styles.headerText}
+              >
+                <Text>Edit List</Text>
+              </TouchableOpacity>
+            </View>
+          }
+      />
       <FlatList style={styles.list} data={entries} renderItem={renderItem} />
     </SafeAreaView>
   );
@@ -92,5 +119,12 @@ const styles = StyleSheet.create({
   floating: {},
   container: {
     flex: 1,
+  },
+  headerText: {
+    fontSize: 18,
+    fontWeight: "bold",
+    color: COLORS.second,
+    //marginTop: -15,
+    marginRight: 10,
   },
 });
