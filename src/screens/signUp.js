@@ -30,22 +30,18 @@ export default SignUp = () => {
 
   async function handleSignUp  () {    
     try { 
-      console.log("start executing create user")
       const userCredentials = await auth().createUserWithEmailAndPassword(email, pw)
-      console.log("createUser finished. userCredentials:")
-      console.log(userCredentials)
-      console.log("start save user in database")
+      //to-do: do not let user sign-up if user-profile in firestore cannot be created
       const userId = await auth().currentUser.uid
-      debugger
       const response = await firestore().collection('Users').doc(userId).set({
         uid: userId,
         email: email,
         username: userName,
         favLists: [],
       })
-      console.log(response)
     } catch (err){
       console.error(err)
+      setMessage(err)
     }
       /*   
       docRef
