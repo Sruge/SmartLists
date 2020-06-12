@@ -26,30 +26,45 @@ export default SignUp = () => {
   const [email, setEmail] = useState();
   const [pw, setPw] = useState();
   const [userName, setUserName] = useState();
+  const [message, setMessage] = useState("")
 
-  handleSignUp = () => {
-    auth()
-      .createUserWithEmailAndPassword(email, pw)
-      .then((user) => {
-        const docRef = firestore().collection("Users").doc(user.user.uid);
-
-        // docRef
-        //   .get()
-        //   .then(function (doc) {
-        //     if (doc.exists) {
-        //       console.log("User already exists, we shouldnt be here ", route.params.listName);
-        //     } else {
-        //       // doc.data() will be undefined in this case
-        //       console.log("No such document, creating a new one!");
-        //       firestore().collection("Users").add({
-        //         username: userName,
-        //         email: user,
-        //       });
-        //     }
-        //   })
-        //   .catch(function (error) {
-        //     console.log("Error getting document:", error);
-        //   });
+  async function handleSignUp  () {    
+    try { 
+      console.log("start executing create user")
+      const userCredentials = await auth().createUserWithEmailAndPassword(email, pw)
+      console.log("createUser finished. userCredentials:")
+      console.log(userCredentials)
+      console.log("start save user in database")
+      const userId = await auth().currentUser.uid
+      debugger
+      const response = await firestore().collection('Users').doc(userId).set({
+        uid: userId,
+        email: email,
+        username: userName,
+        favLists: [],
+      })
+      console.log(response)
+    } catch (err){
+      console.error(err)
+    }
+      /*   
+      docRef
+          .get()
+          .then(function (doc) {
+            if (doc.exists) {
+              console.log("User already exists, we shouldnt be here ", route.params.listName);
+            } else {
+              // doc.data() will be undefined in this case
+              console.log("No such document, creating a new one!");
+              firestore().collection("Users").add({
+                username: userName,
+                email: user,
+              });
+            }
+          })
+          .catch(function (error) {
+            console.log("Error getting document:", error);
+          });
       })
       .catch((error) => {
         if (error.code === "auth/email-already-in-use") {
@@ -61,7 +76,8 @@ export default SignUp = () => {
         }
 
         console.error(error);
-      });
+       });
+       */
   };
 
   handleLogIn = () => {
@@ -120,6 +136,7 @@ export default SignUp = () => {
             onPress={handleLogIn}
             buttonStyle={styles.okButton}
           />
+          <Text defaultValue= {message} />
         </View>
       </View>
     </View>

@@ -70,6 +70,7 @@ export default AddList = (props) => {
             style={styles.textInput}
             placeholder={"Name of the List"}
             maxLength={40}
+            onSubmitEditing = {handleOk}
           />
         </View>
         <CheckBox

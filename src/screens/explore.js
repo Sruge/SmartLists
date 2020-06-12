@@ -27,7 +27,7 @@ export default Explore = (props) => {
   const navigation = useNavigation();
   const route = useRoute();
 
-  useEffect(() => {
+  useEffect(() => { //load public lists from firestore and save in state variable 'lists'
     const subscriber = firestore()
       .collection("Lists")
       .where("pub", "==", true)
@@ -64,6 +64,7 @@ export default Explore = (props) => {
     if (item.type === "chess") {
       navigation.push("Chess", {
         listId: item.key,
+        listName: "ToDo"
       });
     } else {
       navigation.push("ListView", {
