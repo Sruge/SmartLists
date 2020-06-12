@@ -23,7 +23,7 @@ import firestore from "@react-native-firebase/firestore";
 import { Button, ListItem } from "react-native-elements";
 import COLORS from "../res/colors";
 
-const actions = [
+const actions = [ //available actions for floating action
   {
     text: "Save",
     name: "bt_save",
@@ -82,13 +82,14 @@ export default EditList = (props) => {
   };
 
   handleSaveClick = () => {
-    const resultList = [];
+    const resultList = []; //make array of list items to be saved in firestore
     entries.forEach((entry) => {
       resultList.push(entry);
     });
-    const docRef = firestore().collection("Lists").doc(route.params.listName);
+    console.log(route.params.listName);
+    const docRef = firestore().collection("Lists").doc(route.params.listName); // create reference
 
-    docRef
+    docRef //add new data to firestore
       .get()
       .then(function (doc) {
         if (doc.exists) {
@@ -166,7 +167,9 @@ export default EditList = (props) => {
           defaultValue={textVal}
           style={styles.textInput}
           placeholder={"Value"}
+          multiline={false}
           maxLength={40}
+          onSubmitEditing={handleAdd}
         />
       );
     }

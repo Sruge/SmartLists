@@ -4,7 +4,7 @@ import React from "react";
 import { StyleSheet } from "react-native";
 
 import { createStackNavigator } from "@react-navigation/stack";
-import { useRoute, useNavigation } from "@react-navigation/native";
+import { useRoute } from "@react-navigation/native";
 
 import Explore from "./explore.js";
 import ListView from "./listView.js";
