@@ -21,7 +21,7 @@ export default Explore = (props) => {
   const navigation = useNavigation();
   const route = useRoute();
 
-  useEffect(() => {
+  useEffect(() => { //load public lists from firestore and save in state variable 'lists'
     const subscriber = firestore()
       .collection("Lists")
       .where("pub", "==", true)

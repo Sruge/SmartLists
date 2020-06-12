@@ -26,26 +26,35 @@ export default SignUp = () => {
   const [email, setEmail] = useState();
   const [pw, setPw] = useState();
   const [userName, setUserName] = useState();
+  const [message, setMessage] = useState("")
 
-  handleSignUp = () => {
-    auth()
-      .createUserWithEmailAndPassword(email, pw)
-      .then((user) => {
-        const docRef = firestore().collection("Users").doc(user.user.uid);
-
-        docRef
+  async function handleSignUp  () {    
+    try { 
+      const userCredentials = await auth().createUserWithEmailAndPassword(email, pw)
+      //to-do: do not let user sign-up if user-profile in firestore cannot be created
+      const userId = await auth().currentUser.uid
+      const response = await firestore().collection('Users').doc(userId).set({
+        uid: userId,
+        email: email,
+        username: userName,
+        favLists: [],
+      })
+    } catch (err){
+      console.error(err)
+      setMessage(err)
+    }
+      /*   
+      docRef
           .get()
           .then(function (doc) {
             if (doc.exists) {
-              console.log("User already exists, we shouldnt be here ");
+              console.log("User already exists, we shouldnt be here ", route.params.listName);
             } else {
               // doc.data() will be undefined in this case
-              console.log("No such user, creating a new one!");
-              firestore().collection("Users").doc(user.user.uid).set({
+              console.log("No such document, creating a new one!");
+              firestore().collection("Users").add({
                 username: userName,
-                email: user.user.email,
-                favLists: [],
-                uid: user.user.uid,
+                email: user,
               });
             }
           })
@@ -63,7 +72,8 @@ export default SignUp = () => {
         }
 
         console.error(error);
-      });
+       });
+       */
   };
 
   handleLogIn = () => {
@@ -122,6 +132,7 @@ export default SignUp = () => {
             onPress={handleLogIn}
             buttonStyle={styles.okButton}
           />
+          <Text defaultValue= {message} />
         </View>
       </View>
     </View>
