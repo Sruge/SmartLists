@@ -48,7 +48,9 @@ export default ExploreQuiz = (props) => {
   }, []);
 
   if (loading) {
-    return <ActivityIndicator />;
+    return (
+      <ActivityIndicator size={"large"} style={styles.activityIndicator} />
+    );
   }
 
   handleItemClickQuiz = (item) => {
@@ -82,7 +84,7 @@ export default ExploreQuiz = (props) => {
           start: { x: 0, y: 0.1 },
           end: { x: 1, y: 0.1 },
         }}
-        rightComponent={<Text style={styles.headerText}>Quiz</Text>}
+        centerComponent={<Text style={styles.headerText}>Quiz</Text>}
       />
       <FlatList style={styles.list} data={lists} renderItem={renderItem} />
     </SafeAreaView>
@@ -101,7 +103,9 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: "bold",
     color: COLORS.second,
-    marginTop: -15,
     marginRight: 10,
+  },
+  activityIndicator: {
+    flex: 1,
   },
 });

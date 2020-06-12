@@ -21,13 +21,14 @@ import { FloatingAction } from "react-native-floating-action";
 import { useRoute, useNavigation } from "@react-navigation/native";
 import firestore from "@react-native-firebase/firestore";
 import { Button, ListItem } from "react-native-elements";
+import COLORS from "../res/colors";
 
 const actions = [ //available actions for floating action
   {
     text: "Save",
     name: "bt_save",
     position: 0,
-    color: "#f4511e",
+    color: COLORS.main,
   },
 ];
 
@@ -99,19 +100,37 @@ export default EditList = (props) => {
         } else {
           // doc.data() will be undefined in this case
           console.log("No such document, creating a new one!");
-          firestore().collection("Lists").add({
-            name: route.params.listName,
-            elements: entries,
-            pub: route.params.pub,
-            creator: route.params.userEmail,
-            multiValue: route.params.multiValue,
-          });
+          let type = "simple";
+          if (route.params.multiValue) {
+            type = "multivalue";
+          }
+          firestore()
+            .collection("Lists")
+            .add({
+              name: route.params.listName,
+              elements: entries,
+              pub: route.params.pub,
+              creator: route.params.user,
+              type: type,
+            })
+            .then((list) => {
+              console.log(list);
+
+              const userRef = firestore()
+                .collection("Users")
+                .doc(route.params.user);
+              let something = userRef.set(
+                { favLists: [list.id] },
+                { merge: true }
+              );
+              console.log(something);
+            });
         }
       })
       .catch(function (error) {
         console.log("Error getting document:", error);
       });
-    navigation.navigate("Explore");
+    navigation.navigate("Home");
   };
 
   renderItem = ({ item }) => {
@@ -127,7 +146,6 @@ export default EditList = (props) => {
         />
       );
     }
-
     return (
       <ListItem
         title={item.value}
@@ -189,7 +207,7 @@ export default EditList = (props) => {
         <FloatingAction
           onPressItem={(item) => handleSaveClick(item)}
           actions={actions}
-          color={"#f4511e"}
+          color={COLORS.main}
           overlayColor={"transparent"}
         />
       </SafeAreaView>
@@ -203,7 +221,7 @@ const styles = StyleSheet.create({
     marginVertical: 5,
   },
   okButton: {
-    backgroundColor: "#f4511e",
+    backgroundColor: COLORS.main,
     marginHorizontal: 10,
   },
   listItem: {

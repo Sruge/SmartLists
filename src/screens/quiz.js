@@ -19,9 +19,11 @@ import {
 } from "react-native";
 
 import { useRoute } from "@react-navigation/native";
-import { Button } from "react-native-elements";
+import { Button, Header } from "react-native-elements";
 import { FloatingAction } from "react-native-floating-action";
 import { SafeAreaView } from "react-native-safe-area-context";
+import LinearGradient from "react-native-linear-gradient";
+import COLORS from "../res/colors.js";
 
 export default Quiz = () => {
   const [entries, setEntries] = useState([]);
@@ -33,7 +35,8 @@ export default Quiz = () => {
   const [total, setTotal] = useState(0);
   const [inQuestion, setInQuestion] = useState("description");
 
-  console.log(currentEntry);
+  const user = firestore().collection("Lists").get();
+
   useEffect(() => {
     const subscriber = firestore()
       .collection("Lists")
@@ -52,8 +55,10 @@ export default Quiz = () => {
           );
         }
         setEntries(entries);
-        console.log(route.params.multivalue)
-        setInQuestion(() => {return (route.params.multiValue ? 'description' : 'key')})
+        console.log(entries);
+        setInQuestion(() => {
+          return route.params.multiValue ? "description" : "key";
+        });
         setCurrentEntry(entries[Math.floor(Math.random() * entries.length)]);
         setLoading(false);
       });
@@ -63,7 +68,7 @@ export default Quiz = () => {
   }, []);
 
   handleCheck = () => {
-      console.log(currentEntry[inQuestion])
+    console.log(currentEntry[inQuestion]);
     if (answer === currentEntry[inQuestion]) {
       console.log("correct");
       setScore((score) => {
@@ -83,7 +88,7 @@ export default Quiz = () => {
   };
 
   renderQuestion = () => {
-    if (inQuestion === "description" || inQuestion === 'key') {
+    if (inQuestion === "description" || inQuestion === "key") {
       return <Text style={styles.title}>{currentEntry.value}</Text>;
     } else {
       if (route.params.multivalue) {
@@ -94,7 +99,11 @@ export default Quiz = () => {
     }
   };
 
-  if (loading) return null;
+  if (loading) {
+    return (
+      <ActivityIndicator size={"large"} style={styles.activityIndicator} />
+    );
+  }
 
   return (
     <View style={styles.container}>
@@ -152,14 +161,20 @@ const styles = StyleSheet.create({
     textAlignVertical: "center",
   },
   okButton: {
-    backgroundColor: "#f4511e",
+    backgroundColor: COLORS.main,
     marginTop: 20,
   },
   inputContainer: {
     backgroundColor: "white",
-    marginHorizontal: 10,
-    marginTop: 5,
-    padding: 20,
+    flex: 1,
+  },
+  headerText: {
+    fontSize: 18,
+    fontWeight: "bold",
+    color: COLORS.second,
+    marginRight: 10,
+  },
+  activityIndicator: {
     flex: 1,
   },
 });

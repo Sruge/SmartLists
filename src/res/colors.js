@@ -1,6 +1,7 @@
 const COLORS = {
-  main: "#9A348E",
+  main: "#3F84E5",
   second: "#0D0628",
+  third: "#FCA17D",
   // your colors
 };
 

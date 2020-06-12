@@ -3,23 +3,17 @@ import "@react-native-firebase/app";
 import firestore from "@react-native-firebase/firestore";
 
 import React, { useEffect, useState } from "react";
-import { StyleSheet, ActivityIndicator, FlatList } from "react-native";
+import { StyleSheet, ActivityIndicator, Text, View } from "react-native";
 
 import { useNavigation, useRoute } from "@react-navigation/native";
-import { ListItem } from "react-native-elements";
+import { Header } from "react-native-elements";
 import { FloatingAction } from "react-native-floating-action";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { round } from "react-native-reanimated";
 import COLORS from "../res/colors.js";
-
-const actions = [
-  {
-    text: "New List",
-    name: "addList",
-    position: 0,
-    color: COLORS.main,
-  },
-];
+import { TouchableOpacity, FlatList } from "react-native-gesture-handler";
+import LinearGradient from "react-native-linear-gradient";
+import Icon from "react-native-vector-icons/AntDesign";
 
 export default Explore = (props) => {
   const [loading, setLoading] = useState(true); // Set loading to true on component mount
@@ -39,7 +33,8 @@ export default Explore = (props) => {
               value: documentSnapshot.get("name"),
               key: documentSnapshot.id,
               len: documentSnapshot.get("elements").length.toString(),
-              multiValue: documentSnapshot.get("multiValue"),
+              multiValue:
+                documentSnapshot.get("type") === "multiValue" ? true : false,
               type: documentSnapshot.get("type"),
             });
           });
@@ -50,7 +45,7 @@ export default Explore = (props) => {
       });
 
     // Unsubscribe from events when no longer in use
-    return () => subscriber;
+    return () => [subscriber];
   }, []);
 
   if (loading) {
@@ -60,73 +55,113 @@ export default Explore = (props) => {
   }
 
   handleItemClickExplore = (item) => {
-    console.log(item.type);
     if (item.type === "chess") {
       navigation.push("Chess", {
         listId: item.key,
-        listName: "ToDo"
+        name: item.value,
       });
     } else {
       navigation.push("ListView", {
         listId: item.key,
-        multiValue: item.multiValue,
+        type: item.type,
+        name: item.value,
       });
     }
-  };
-
-  handleAddClickExplore = (item) => {
-    navigation.push("AddList", {
-      listName: item.key,
-      userEmail: route.params.userEmail,
-    });
   };
 
   handleLongPress = (item) => {
     navigation.push("EditList", {
       listName: item.key,
-      userEmail: route.params.userEmail,
-      multiValue: item.multiValue,
+      user: route.params.user,
+      multiValue: item.type === "multivalue" ? true : false,
     });
   };
 
-  renderItem = ({ item }) => {
+  getBackgroundColor = (type) => {
+    switch (type) {
+      case "chess":
+        return "#700353";
+      case "multivalue":
+        return "#FFBFB7";
+      case "collection":
+        return "#4C1C00";
+      default:
+        return "#FFD447";
+    }
+  };
+
+  renderItem = ({ item, index, drag, isActive }) => {
+    let col = "white";
+    if (item.type === "chess") {
+      col = "red";
+    }
     return (
-      <ListItem
-        title={item.value}
-        subtitle={item.len}
-        key={item.key}
-        round="10"
-        chevron={{ color: "black" }}
-        onPress={() => handleItemClickExplore(item)}
-        style={styles.listItem}
-        bottomDivider
+      <TouchableOpacity
+        style={{
+          flex: 1,
+          height: 60,
+          backgroundColor: isActive
+            ? COLORS.main
+            : getBackgroundColor(item.type),
+          justifyContent: "center",
+          padding: 20,
+          marginTop: 5,
+          borderRadius: 10,
+          marginHorizontal: 5,
+        }}
         onLongPress={() => handleLongPress(item)}
-      />
+        onPress={() => handleItemClickExplore(item)}
+      >
+        <View>
+          <Text style={styles.listItemTitle}>{item.value}</Text>
+          <Text style={styles.listItemSubtitle}>{item.len}</Text>
+        </View>
+      </TouchableOpacity>
     );
   };
 
   return (
     <SafeAreaView style={styles.container}>
-      <FlatList style={styles.list} data={lists} renderItem={renderItem} />
-      <FloatingAction
-        onPressItem={(item) => handleAddClickExplore(item)}
-        actions={actions}
-        color={COLORS.main}
-        overlayColor={"transparent"}
+      <Header
+        ViewComponent={LinearGradient} // Don't forget this!
+        containerStyle={{ height: 60 }}
+        linearGradientProps={{
+          colors: [COLORS.main, "white"],
+          start: { x: 0, y: 0.1 },
+          end: { x: 1, y: 0.1 },
+        }}
+        centerComponent={<Text style={styles.headerText}>Explore</Text>}
+      />
+      <FlatList
+        style={styles.list}
+        data={lists}
+        renderItem={renderItem}
+        keyExtractor={(item, index) => `draggable-item-${item.key}`}
+        onDragEnd={(lists) => {
+          setLists(lists.data);
+        }}
       />
     </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
-  listItem: {
-    marginHorizontal: 10,
-    marginTop: 5,
-  },
   container: {
     flex: 1,
   },
   activityIndicator: {
     flex: 1,
+  },
+  headerText: {
+    fontSize: 18,
+    fontWeight: "bold",
+    color: COLORS.second,
+    marginRight: 10,
+  },
+  listItemTitle: {
+    fontSize: 16,
+  },
+  listItemSubtitle: {
+    fontSize: 13,
   },
 });
