@@ -35,8 +35,13 @@ export default Quiz = () => {
   const [total, setTotal] = useState(0);
   const [inQuestion, setInQuestion] = useState("description");
 
+<<<<<<< HEAD
   const user = firestore().collection("Lists").get();
 
+=======
+  console.log(currentEntry);
+  
+>>>>>>> 025484f6dc8a3f241aa2a726c5c7d088dab5e064
   useEffect(() => {
     const subscriber = firestore()
       .collection("Lists")

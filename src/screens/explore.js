@@ -3,13 +3,20 @@ import "@react-native-firebase/app";
 import firestore from "@react-native-firebase/firestore";
 
 import React, { useEffect, useState } from "react";
+<<<<<<< HEAD
 import { StyleSheet, ActivityIndicator, Text, View } from "react-native";
 
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { Header } from "react-native-elements";
+=======
+import { StyleSheet, ActivityIndicator, FlatList, Text } from "react-native";
+import LinearGradient from "react-native-linear-gradient";
+
+import { useNavigation, useRoute } from "@react-navigation/native";
+import { ListItem, Header } from "react-native-elements";
+>>>>>>> 025484f6dc8a3f241aa2a726c5c7d088dab5e064
 import { FloatingAction } from "react-native-floating-action";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { round } from "react-native-reanimated";
 import COLORS from "../res/colors.js";
 import { TouchableOpacity, FlatList } from "react-native-gesture-handler";
 import LinearGradient from "react-native-linear-gradient";
@@ -58,13 +65,22 @@ export default Explore = (props) => {
     if (item.type === "chess") {
       navigation.push("Chess", {
         listId: item.key,
+<<<<<<< HEAD
         name: item.value,
+=======
+        listName: item.value,
+>>>>>>> 025484f6dc8a3f241aa2a726c5c7d088dab5e064
       });
     } else {
       navigation.push("ListView", {
         listId: item.key,
+<<<<<<< HEAD
         type: item.type,
         name: item.value,
+=======
+        listName: item.value,
+        multiValue: item.multiValue,
+>>>>>>> 025484f6dc8a3f241aa2a726c5c7d088dab5e064
       });
     }
   };
@@ -126,6 +142,7 @@ export default Explore = (props) => {
         ViewComponent={LinearGradient} // Don't forget this!
         containerStyle={{ height: 60 }}
         linearGradientProps={{
+<<<<<<< HEAD
           colors: [COLORS.main, "white"],
           start: { x: 0, y: 0.1 },
           end: { x: 1, y: 0.1 },
@@ -140,6 +157,20 @@ export default Explore = (props) => {
         onDragEnd={(lists) => {
           setLists(lists.data);
         }}
+=======
+          colors: [COLORS.main, COLORS.step1],
+          start: { x: 0, y: 0.1 },
+          end: { x: 1, y: 0.1 },
+        }}
+        centerComponent={<Text style={styles.headerText}>Public lists</Text>}
+      />
+      <FlatList style={styles.list} data={lists} renderItem={renderItem} />
+      <FloatingAction
+        onPressItem={(item) => handleAddClickExplore(item)}
+        actions={actions}
+        color={COLORS.main}
+        overlayColor={"transparent"}
+>>>>>>> 025484f6dc8a3f241aa2a726c5c7d088dab5e064
       />
     </SafeAreaView>
   );
@@ -156,6 +187,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: "bold",
     color: COLORS.second,
+<<<<<<< HEAD
     marginRight: 10,
   },
   listItemTitle: {
@@ -164,4 +196,9 @@ const styles = StyleSheet.create({
   listItemSubtitle: {
     fontSize: 13,
   },
+=======
+    //marginTop: -15,
+    marginRight: 10,
+  },
+>>>>>>> 025484f6dc8a3f241aa2a726c5c7d088dab5e064
 });
