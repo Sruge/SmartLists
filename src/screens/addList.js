@@ -35,26 +35,31 @@ export default AddList = (props) => {
   };
 
   safeListToDb = () => {
-    firestore()
-      .collection("Lists")
-      .add({
-        elements: [],
-        name: listname,
-        pub: pub,
-        type: getListType(),
-        owner: route.params.user,
-      })
-      .then((result) => {
-        console.log(result.type);
-        if (chessSupport) {
-          navigation.push("Chess", { listId: result.id });
-        } else {
-          navigation.push("EditList", {
-            listName: result.id,
-            multiValue: multiValue,
-          });
-        }
-      });
+    async function safeListToDbAsync() {
+      const ListRef = firestore().collection("Lists").doc();
+      try {
+        ListRef.add({
+          elements: [],
+          name: listname,
+          pub: pub,
+          type: getListType(),
+          owner: route.params.user,
+        });
+      } catch (err) {
+        console.error(err);
+      }
+
+      //navigate to editListScreen
+      if (chessSupport) {
+        navigation.push("Chess", { listId: result.id });
+      } else {
+        navigation.push("EditList", {
+          listName: result.id,
+          multiValue: multiValue,
+        });
+      }
+    }
+    safeListToDbAsync();
   };
 
   handleOk = () => {
@@ -90,7 +95,7 @@ export default AddList = (props) => {
             style={styles.textInput}
             placeholder={"Name of the List"}
             maxLength={40}
-            onSubmitEditing = {handleOk}
+            onSubmitEditing={handleOk}
           />
         </View>
         <CheckBox

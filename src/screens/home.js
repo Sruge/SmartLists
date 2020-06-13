@@ -45,10 +45,10 @@ export default Home = () => {
   const [collectionName, setCollectionName] = useState("");
 
   useEffect(() => {
-    const subscriber = firestore()
-      .collection("Lists")
-      .where("owner", "==", route.params.user)
-      //.orderBy("type")
+    const subscriber = firestore().collection("Lists").doc(route.params.userId);
+
+    // to do: change following code to work with defaultUserCollection
+    /*
       .onSnapshot((querySnapshot) => {
         const lists = [];
 
@@ -61,7 +61,6 @@ export default Home = () => {
             lists.push({
               value: documentSnapshot.get("name"),
               key: documentSnapshot.id,
-              len: len,
               type: documentSnapshot.get("type"),
               multiValue: documentSnapshot.get("multiValue"),
             });
@@ -70,6 +69,7 @@ export default Home = () => {
           setLists(lists);
         }
       });
+      */
 
     // Unsubscribe from events when no longer in use
     return () => [subscriber];
@@ -147,49 +147,51 @@ export default Home = () => {
   };
 
   handleCreateCollection = () => {
-    firestore()
-      .collection("Lists")
-      .add({
-        name: collectionName,
-        pub: false,
-        creator: route.params.user,
-        multiValue: route.params.multiValue,
-        elements: [],
-        type: "collection",
-      })
-      .then((some) => {
-        console.log("Return from add List: ", some);
-        const docRef = firestore().collection("Users").doc(route.params.user);
-        docRef
-          .get()
-          .then(function (doc) {
-            if (doc.exists) {
-              console.log(
-                "Updating Favs of an already existing user: ",
-                route.params.user
-              );
-              firestore()
-                .collection("Users")
-                .doc(route.params.user)
-                .update({
-                  favLists: [collectionName],
-                });
-            } else {
-              // doc.data() will be undefined in this case
-              console.log("No such user, creating a new one!");
-              firestore()
-                .collection("Users")
-                .add({
-                  email: route.params.user,
-                  favLists: [collectionName],
-                });
-            }
-          })
-          .catch(function (error) {
-            console.log("Error getting document:", error);
-          });
-      });
-    setCollectionName("");
+    // create collection in firestore
+    async function createCollection() {
+      try {
+        const colRef = await firestore().collection("Lists").doc();
+        colRef.set({
+          name: collectionName,
+          pub: false,
+          creator: route.params.user,
+          owner: [route.params.user],
+          multiValue: true,
+          elements: [],
+          type: "collection",
+        });
+        console.log("colRef: ", colRef);
+        console.log("colRef.id: ", colRef.id);
+
+        // 1 add new collection to defaultCollection of user
+        // 2 add collection to favorites of user
+
+        // 1
+        const defaultColRef = await firestore() //create reference
+          .collection("Lists")
+          .doc(route.params.user);
+        const defaultCol = await defaultColRef.get(); //get data
+        const newPlace =
+          Math.max(...Object.keys(defaultCol.data().elements)) + 1; //set place of new collection to be at the bottom
+        var data = defaultCol.data(); //change data locally
+        data.elements[newPlace] = colRef.id;
+        const response = await defaultColRef.update(data); //update firestore with locally changed data
+
+        // 2
+        const userDoc = firestore().collection("Users").doc(route.params.user);
+        const doc = await userDoc.get();
+        data = doc.data();
+        data["favLists"] = [...data.favLists, colRef.id];
+        await userDoc.update(data);
+
+        debugger;
+      } catch (err) {
+        console.log("ERROR in executing second part of creating Collectoin");
+        console.err(err);
+      }
+    }
+    createCollection();
+    setCollectionName(""); //reset overlay
     toggleOverlay();
   };
 
