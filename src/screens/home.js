@@ -13,12 +13,8 @@ import React, { useEffect, useState } from "react";
 import { StyleSheet, Text, View, TextInput, Button } from "react-native";
 
 import { useRoute, useNavigation } from "@react-navigation/native";
-<<<<<<< HEAD
 import { Header, Overlay } from "react-native-elements";
 import { FloatingAction } from "react-native-floating-action";
-=======
-import { ListItem, Header } from "react-native-elements";
->>>>>>> 025484f6dc8a3f241aa2a726c5c7d088dab5e064
 import { SafeAreaView } from "react-native-safe-area-context";
 import LinearGradient from "react-native-linear-gradient";
 import COLORS from "../res/colors.js";
@@ -49,59 +45,25 @@ export default Home = () => {
   const [collectionName, setCollectionName] = useState("");
 
   useEffect(() => {
-<<<<<<< HEAD
-    const subscriber = firestore().collection("Lists").doc(route.params.userId);
-
-    // to do: change following code to work with defaultUserCollection
-    /*
-=======
-    // const subscriber = firestore()
-    //   .collection("Lists")
-    //   .where("creator", "==", route.params.userEmail)
-    //   .onSnapshot((querySnapshot) => {
-    //     const lists2 = [];
-
-    //     querySnapshot.forEach((documentSnapshot) => {
-    //       lists2.push({
-    //         value: documentSnapshot.get("name"),
-    //         key: documentSnapshot.id,
-    //         len: documentSnapshot.get("elements").length.toString(),
-    //       });
-    //     });
-
-    //     setLists((lists) => {
-    //       return lists.concat(lists2);
-    //     });
-    //   });
-    console.log(route.params.userEmail);
-    const subscriber = firestore()
-      .collection("Lists")
-      .where("creator", "==", route.params.userEmail)
->>>>>>> 025484f6dc8a3f241aa2a726c5c7d088dab5e064
-      .onSnapshot((querySnapshot) => {
-        const lists = [];
-
-        if (querySnapshot) {
-          querySnapshot.forEach((documentSnapshot) => {
-            let len = 0;
-            if (documentSnapshot.get("elements") !== null) {
-              len = documentSnapshot.get("elements").length.toString();
-            }
-            lists.push({
-              value: documentSnapshot.get("name"),
-              key: documentSnapshot.id,
-              type: documentSnapshot.get("type"),
-              multiValue: documentSnapshot.get("multiValue"),
-            });
-          });
-
-          setLists(lists);
-        }
+    // load default Collectoin of user
+    const colRef = firestore().collection("Lists").doc(route.params.user);
+    const lists = [];
+    async function loadData() {
+      const listener = colRef.onSnapshot((doc) => {
+        const renderData = doc.data().elements;
+        const renderDataVal = Object.values(renderData);
+        //debugger;
+        setLists(renderDataVal);
       });
-      */
-
+      return;
+    }
+    try {
+      loadData();
+    } catch (err) {
+      console.log(error);
+    }
     // Unsubscribe from events when no longer in use
-    return () => [subscriber];
+    return;
   }, []);
 
   handleItemClick = (item) => {
@@ -113,13 +75,8 @@ export default Home = () => {
     } else {
       navigation.push("ListView", {
         listId: item.key,
-<<<<<<< HEAD
         type: item.type,
         name: item.value,
-=======
-        listName: item.value,
-        multiValue: item.multiValue,
->>>>>>> 025484f6dc8a3f241aa2a726c5c7d088dab5e064
       });
     }
   };
@@ -156,8 +113,8 @@ export default Home = () => {
         onPress={() => handleItemClick(item)}
       >
         <View>
-          <Text style={styles.listItemTitle}>{item.value}</Text>
-          <Text style={styles.listItemSubtitle}>{item.len}</Text>
+          <Text style={styles.listItemTitle}>{item.name}</Text>
+          <Text style={styles.listItemSubtitle}>{item.type}</Text>
         </View>
       </TouchableOpacity>
     );
@@ -206,10 +163,14 @@ export default Home = () => {
           .collection("Lists")
           .doc(route.params.user);
         const defaultCol = await defaultColRef.get(); //get data
-        const newPlace =
-          Math.max(...Object.keys(defaultCol.data().elements)) + 1; //set place of new collection to be at the bottom
+        var newPlace = Math.max(...Object.keys(defaultCol.data().elements)) + 1; //set place of new collection to be at the bottom
+        newPlace = newPlace === -Infinity ? 1 : newPlace;
         var data = defaultCol.data(); //change data locally
-        data.elements[newPlace] = colRef.id;
+        data.elements[newPlace] = {
+          id: colRef.id,
+          name: collectionName,
+          type: "collection",
+        };
         const response = await defaultColRef.update(data); //update firestore with locally changed data
 
         // 2
@@ -252,7 +213,7 @@ export default Home = () => {
         ViewComponent={LinearGradient} // Don't forget this!
         containerStyle={{ height: 60 }}
         linearGradientProps={{
-          colors: [COLORS.main, COLORS.step1],
+          colors: [COLORS.main, COLORS.second],
           start: { x: 0, y: 0.1 },
           end: { x: 1, y: 0.1 },
         }}

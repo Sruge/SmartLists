@@ -9,7 +9,6 @@ import "react-native-gesture-handler";
 import "@react-native-firebase/app";
 import firestore from "@react-native-firebase/firestore";
 
-<<<<<<< HEAD
 import React, { useEffect, useState } from "react";
 import {
   StyleSheet,
@@ -22,15 +21,6 @@ import {
 
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { ListItem, Header, Overlay } from "react-native-elements";
-=======
-import React, {useEffect, useState } from "react";
-import { StyleSheet, ActivityIndicator, FlatList, Text, View, TouchableOpacity} from "react-native";
-
-import { useNavigation, useRoute } from "@react-navigation/native";
-import { ListItem, Header } from "react-native-elements";
-import LinearGradient from "react-native-linear-gradient";
-import COLORS from "../res/colors.js";
->>>>>>> 025484f6dc8a3f241aa2a726c5c7d088dab5e064
 import { FloatingAction } from "react-native-floating-action";
 import { SafeAreaView } from "react-native-safe-area-context";
 import COLORS from "../res/colors.js";
@@ -106,8 +96,8 @@ export default ListView = () => {
   };
 
   handlePressEdit = () => {
-    return
-  }
+    return;
+  };
 
   if (loading) {
     return <ActivityIndicator />;
@@ -115,7 +105,6 @@ export default ListView = () => {
 
   return (
     <SafeAreaView style={styles.container}>
-<<<<<<< HEAD
       <Overlay isVisible={visible} onBackdropPress={() => toggleOverlay()}>
         <ListViewOverlay
           navigation={navigation}
@@ -139,28 +128,6 @@ export default ListView = () => {
             <Text>Edit</Text>
           </TouchableOpacity>
         }
-=======
-        <Header
-          ViewComponent={LinearGradient} // Don't forget this!
-          containerStyle={{ height: 60 }}
-          linearGradientProps={{
-            colors: [COLORS.step1, COLORS.step2],
-            start: { x: 0, y: 0.1 },
-            end: { x: 1, y: 0.1 },
-          }}
-          centerComponent={<Text style={styles.headerText}>List: {route.params.listName}</Text>}
-          rightComponent={
-            <View>
-              <TouchableOpacity
-                onPress={handlePressEdit}
-                title="Edit List"
-                style={styles.headerText}
-              >
-                <Text>Edit List</Text>
-              </TouchableOpacity>
-            </View>
-          }
->>>>>>> 025484f6dc8a3f241aa2a726c5c7d088dab5e064
       />
       <FlatList style={styles.list} data={entries} renderItem={renderItem} />
     </SafeAreaView>
@@ -180,10 +147,6 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: "bold",
     color: COLORS.second,
-<<<<<<< HEAD
-=======
-    //marginTop: -15,
->>>>>>> 025484f6dc8a3f241aa2a726c5c7d088dab5e064
     marginRight: 10,
   },
 });

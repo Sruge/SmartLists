@@ -36,9 +36,12 @@ export default AddList = (props) => {
 
   safeListToDb = () => {
     async function safeListToDbAsync() {
+      //safe list in Collection "Lists"
+      debugger;
       const ListRef = firestore().collection("Lists").doc();
       try {
-        ListRef.add({
+        debugger;
+        ListRef.set({
           elements: [],
           name: listname,
           pub: pub,
@@ -48,13 +51,27 @@ export default AddList = (props) => {
       } catch (err) {
         console.error(err);
       }
+      // add list reference to defaultCollection of user
+      const uid = route.params.user;
+      const defaultColRef = firestore().collection("Lists").doc(uid);
+      const defaultCol = await defaultColRef.get();
+      var newPlace = Math.max(...Object.keys(defaultCol.data().elements)) + 1; //set place of new collection to be at the bottom
+      newPlace = newPlace === -Infinity ? 1 : newPlace;
+
+      var data = defaultCol.data(); //change data locally
+      data.elements[newPlace] = {
+        id: defaultColRef.id,
+        name: listname,
+        type: getListType(),
+      };
+      const response = await defaultColRef.update(data); //update firestore with locally changed data
 
       //navigate to editListScreen
       if (chessSupport) {
-        navigation.push("Chess", { listId: result.id });
+        navigation.push("Chess", { listId: listname });
       } else {
         navigation.push("EditList", {
-          listName: result.id,
+          listName: listname,
           multiValue: multiValue,
         });
       }
