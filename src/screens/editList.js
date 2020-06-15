@@ -64,7 +64,7 @@ export default EditList = (props) => {
       });
 
     // Unsubscribe from events when no longer in use
-    return () => subscriber();
+    return () => [subscriber, function() {firestore().collection("Lists").doc(props.collectionId).set({elements: lists})}];
   }, []);
 
   handleAdd = () => {
