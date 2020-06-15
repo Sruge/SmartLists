@@ -55,15 +55,13 @@ export default AddList = (props) => {
       const uid = route.params.user;
       const defaultColRef = firestore().collection("Lists").doc(uid);
       const defaultCol = await defaultColRef.get();
-      var newPlace = Math.max(...Object.keys(defaultCol.data().elements)) + 1; //set place of new collection to be at the bottom
-      newPlace = newPlace === -Infinity ? 1 : newPlace;
-
       var data = defaultCol.data(); //change data locally
-      data.elements[newPlace] = {
-        id: defaultColRef.id,
+      data.elements.push({
+        id: ListRef.id,
+        key: ListRef.id,
         name: listname,
         type: getListType(),
-      };
+      });
       const response = await defaultColRef.update(data); //update firestore with locally changed data
 
       //navigate to editListScreen

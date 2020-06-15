@@ -26,42 +26,39 @@ export default SignUp = () => {
   const [email, setEmail] = useState();
   const [pw, setPw] = useState();
   const [userName, setUserName] = useState();
-  const [message, setMessage] = useState("")
+  const [message, setMessage] = useState("");
 
-  async function handleSignUp  () {    
-    try { 
-      const userCredentials = await auth().createUserWithEmailAndPassword(email, pw)
+  async function handleSignUp() {
+    try {
+      const userCredentials = await auth().createUserWithEmailAndPassword(
+        email,
+        pw
+      );
       //to-do: do not let user sign-up if user-profile in firestore cannot be created
-      const userId = await auth().currentUser.uid
-      const response = await firestore().collection('Users').doc(userId).set({
-        uid: userId,
-        email: email,
-        username: userName,
-        favLists: [],
-      })
-    } catch (err){
-      console.error(err)
-      setMessage(err)
+      const userId = await auth().currentUser.uid;
+      const responseUser = await firestore()
+        .collection("Users")
+        .doc(userId)
+        .set({
+          uid: userId,
+          email: email,
+          username: userName,
+          favLists: [],
+        });
+      const colName = "defaultCollection" + userName;
+      const responseCollection = await firestore()
+        .collection("Lists")
+        .doc(userId)
+        .set({
+          elements: [],
+          name: colName,
+          type: "collection",
+        });
+    } catch (err) {
+      console.error(err);
+      setMessage(err);
     }
-      /*   
-      docRef
-          .get()
-          .then(function (doc) {
-            if (doc.exists) {
-              console.log("User already exists, we shouldnt be here ", route.params.listName);
-            } else {
-              // doc.data() will be undefined in this case
-              console.log("No such document, creating a new one!");
-              firestore().collection("Users").add({
-                username: userName,
-                email: user,
-              });
-            }
-          })
-          .catch(function (error) {
-            console.log("Error getting document:", error);
-          });
-      })
+    /*
       .catch((error) => {
         if (error.code === "auth/email-already-in-use") {
           console.log("That email address is already in use!");
@@ -74,15 +71,16 @@ export default SignUp = () => {
         console.error(error);
        });
        */
-  };
+  }
 
   handleLogIn = () => {
-    console.log("Start Logging in")
-    auth().signInWithEmailAndPassword(email, pw)
+    console.log("Start Logging in");
+    auth()
+      .signInWithEmailAndPassword(email, pw)
 
-    .catch((error) => {
-      console.log("Error in Sign Up")
-    })
+      .catch((error) => {
+        console.log("Error in Sign Up");
+      });
   };
 
   if (loading) {
@@ -132,7 +130,7 @@ export default SignUp = () => {
             onPress={handleLogIn}
             buttonStyle={styles.okButton}
           />
-          <Text defaultValue= {message} />
+          <Text defaultValue={message} />
         </View>
       </View>
     </View>

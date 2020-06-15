@@ -1,16 +1,16 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- * @flow strict-local
- */
 import "react-native-gesture-handler";
 import "@react-native-firebase/app";
 import firestore from "@react-native-firebase/firestore";
 
 import React, { useEffect, useState } from "react";
-import { StyleSheet, Text, View, TextInput, Button } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  View,
+  TextInput,
+  Button,
+  TouchableOpacity,
+} from "react-native";
 
 import { useRoute, useNavigation } from "@react-navigation/native";
 import { Header, Overlay } from "react-native-elements";
@@ -19,67 +19,28 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import LinearGradient from "react-native-linear-gradient";
 import COLORS from "../res/colors.js";
 import auth from "@react-native-firebase/auth";
-import DraggableFlatList from "react-native-draggable-flatlist";
-import { TouchableOpacity } from "react-native-gesture-handler";
-
-const actions = [
-  {
-    text: "New List",
-    name: "addList",
-    position: 1,
-    color: COLORS.main,
-  },
-  {
-    text: "New Collection",
-    name: "addCollection",
-    position: 0,
-    color: COLORS.main,
-  },
-];
+import CollectionViewComponent from "../components/collectionViewComponent.js";
 
 export default Home = () => {
-  const [lists, setLists] = useState([]);
   const route = useRoute();
   const navigation = useNavigation();
   const [visible, setVisible] = useState(false);
   const [collectionName, setCollectionName] = useState("");
 
-  useEffect(() => {
-    // load default Collectoin of user
-    const colRef = firestore().collection("Lists").doc(route.params.user);
-    const lists = [];
-    async function loadData() {
-      const listener = colRef.onSnapshot((doc) => {
-        const renderData = doc.data().elements;
-        const renderDataVal = Object.values(renderData);
-        //debugger;
-        setLists(renderDataVal);
-      });
-      return;
-    }
-    try {
-      loadData();
-    } catch (err) {
-      console.log(error);
-    }
-    // Unsubscribe from events when no longer in use
-    return;
-  }, []);
-
-  handleItemClick = (item) => {
-    if (item.type === "chess") {
-      navigation.push("Chess", {
-        listId: item.key,
-        listName: item.value,
-      });
-    } else {
-      navigation.push("ListView", {
-        listId: item.key,
-        type: item.type,
-        name: item.value,
-      });
-    }
-  };
+  const actions = [
+    {
+      text: "New List",
+      name: "addList",
+      position: 1,
+      color: COLORS.main,
+    },
+    {
+      text: "New Collection",
+      name: "addCollection",
+      position: 0,
+      color: COLORS.main,
+    },
+  ];
 
   getBackgroundColor = (type) => {
     switch (type) {
@@ -94,32 +55,6 @@ export default Home = () => {
     }
   };
 
-  renderItem = ({ item, index, drag, isActive }) => {
-    return (
-      <TouchableOpacity
-        style={{
-          flex: 1,
-          height: 60,
-          backgroundColor: isActive
-            ? COLORS.main
-            : getBackgroundColor(item.type),
-          justifyContent: "center",
-          padding: 20,
-          marginTop: 5,
-          borderRadius: 10,
-          marginHorizontal: 5,
-        }}
-        onLongPress={drag}
-        onPress={() => handleItemClick(item)}
-      >
-        <View>
-          <Text style={styles.listItemTitle}>{item.name}</Text>
-          <Text style={styles.listItemSubtitle}>{item.type}</Text>
-        </View>
-      </TouchableOpacity>
-    );
-  };
-
   handleLogout = () => {
     auth()
       .signOut()
@@ -130,7 +65,7 @@ export default Home = () => {
     setVisible(!visible);
   };
 
-  handleAddClickHome = (item) => {
+  handleCreateList = (item) => {
     if (item === "addList") {
       navigation.push("AddList", {
         userId: route.params.user,
@@ -163,14 +98,13 @@ export default Home = () => {
           .collection("Lists")
           .doc(route.params.user);
         const defaultCol = await defaultColRef.get(); //get data
-        var newPlace = Math.max(...Object.keys(defaultCol.data().elements)) + 1; //set place of new collection to be at the bottom
-        newPlace = newPlace === -Infinity ? 1 : newPlace;
         var data = defaultCol.data(); //change data locally
-        data.elements[newPlace] = {
+        data.elements.push({
           id: colRef.id,
+          key: colRef.id,
           name: collectionName,
           type: "collection",
-        };
+        });
         const response = await defaultColRef.update(data); //update firestore with locally changed data
 
         // 2
@@ -230,17 +164,9 @@ export default Home = () => {
           </View>
         }
       />
-      <DraggableFlatList
-        style={styles.lists}
-        data={lists}
-        renderItem={renderItem}
-        keyExtractor={(item, index) => `draggable-item-${item.key}`}
-        onDragEnd={(lists) => {
-          setLists(lists.data);
-        }}
-      />
+      <CollectionViewComponent collectionId={route.params.user} />
       <FloatingAction
-        onPressItem={(item) => handleAddClickHome(item)}
+        onPressItem={(item) => handleCreateList(item)}
         actions={actions}
         color={COLORS.main}
         overlayColor={"transparent"}
