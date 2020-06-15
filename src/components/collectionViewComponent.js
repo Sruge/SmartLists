@@ -18,13 +18,18 @@ export default CollectionViewComponent = (props) => {
 
   useEffect(() => {
     //load collection from firestore
-    const colId = props.collectionId;
-    const colRef = firestore().collection("Lists").doc(colId);
-    colRef.onSnapshot((doc) => {
-      debugger;
-      setLists(doc.data().elements);
-    });
-  });
+
+    const subscriber = firestore()
+      .collection("Lists")
+      .doc(props.collectionId)
+      //.orderBy("type")
+      .onSnapshot((docSnaphot) => {
+        console.log(docSnaphot.data())
+        setLists(docSnaphot.data().elements);
+        })
+      
+      return () => [subscriber];
+    }, []);
 
   handleItemClick = (item) => {
     if (item.type === "chess") {
