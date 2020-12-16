@@ -9,7 +9,6 @@ import { useNavigation, useRoute } from "@react-navigation/native";
 import { Header } from "react-native-elements";
 import { FloatingAction } from "react-native-floating-action";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { round } from "react-native-reanimated";
 import COLORS from "../res/colors.js";
 import { TouchableOpacity, FlatList } from "react-native-gesture-handler";
 import LinearGradient from "react-native-linear-gradient";
@@ -21,7 +20,8 @@ export default Explore = (props) => {
   const navigation = useNavigation();
   const route = useRoute();
 
-  useEffect(() => { //load public lists from firestore and save in state variable 'lists'
+  useEffect(() => {
+    //load public lists from firestore and save in state variable 'lists'
     const subscriber = firestore()
       .collection("Lists")
       .where("pub", "==", true)

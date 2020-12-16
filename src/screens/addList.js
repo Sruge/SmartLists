@@ -35,26 +35,46 @@ export default AddList = (props) => {
   };
 
   safeListToDb = () => {
-    firestore()
-      .collection("Lists")
-      .add({
-        elements: [],
+    async function safeListToDbAsync() {
+      //safe list in Collection "Lists"
+      debugger;
+      const ListRef = firestore().collection("Lists").doc();
+      try {
+        debugger;
+        ListRef.set({
+          elements: [],
+          name: listname,
+          pub: pub,
+          type: getListType(),
+          owner: route.params.user,
+        });
+      } catch (err) {
+        console.error(err);
+      }
+      // add list reference to defaultCollection of user
+      const uid = route.params.user;
+      const defaultColRef = firestore().collection("Lists").doc(uid);
+      const defaultCol = await defaultColRef.get();
+      var data = defaultCol.data(); //change data locally
+      data.elements.push({
+        id: ListRef.id,
+        key: ListRef.id,
         name: listname,
-        pub: pub,
         type: getListType(),
-        owner: route.params.user,
-      })
-      .then((result) => {
-        console.log(result.type);
-        if (chessSupport) {
-          navigation.push("Chess", { listId: result.id });
-        } else {
-          navigation.push("EditList", {
-            listName: result.id,
-            multiValue: multiValue,
-          });
-        }
       });
+      const response = await defaultColRef.update(data); //update firestore with locally changed data
+
+      //navigate to editListScreen
+      if (chessSupport) {
+        navigation.push("Chess", { listId: listname });
+      } else {
+        navigation.push("EditList", {
+          listName: listname,
+          multiValue: multiValue,
+        });
+      }
+    }
+    safeListToDbAsync();
   };
 
   handleOk = () => {
@@ -90,7 +110,7 @@ export default AddList = (props) => {
             style={styles.textInput}
             placeholder={"Name of the List"}
             maxLength={40}
-            onSubmitEditing = {handleOk}
+            onSubmitEditing={handleOk}
           />
         </View>
         <CheckBox

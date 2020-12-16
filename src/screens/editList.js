@@ -23,7 +23,8 @@ import firestore from "@react-native-firebase/firestore";
 import { Button, ListItem } from "react-native-elements";
 import COLORS from "../res/colors";
 
-const actions = [ //available actions for floating action
+const actions = [
+  //available actions for floating action
   {
     text: "Save",
     name: "bt_save",
@@ -63,74 +64,27 @@ export default EditList = (props) => {
       });
 
     // Unsubscribe from events when no longer in use
-    return () => subscriber();
+    return () => [subscriber, function() {firestore().collection("Lists").doc(props.collectionId).set({elements: lists})}];
   }, []);
 
   handleAdd = () => {
+    //save new item directly to firestore
     if (textVal !== "") {
-      setEntries((entries) => {
-        entries.push({
-          key: entries.length.toString(),
+      const docRef = firestore().collection("Lists").doc(route.params.listName);
+      async function addElementFirestore() {
+        const doc = await docRef.get();
+        var docData = doc.data();
+        docData.elements.push({
+          key: docData.elements.length.toString(),
           value: textVal,
           description: description,
         });
-        return entries;
-      });
+        docRef.update(docData);
+      }
+      addElementFirestore();
       setTextVal("");
       setDescription("");
     }
-  };
-
-  handleSaveClick = () => {
-    const resultList = []; //make array of list items to be saved in firestore
-    entries.forEach((entry) => {
-      resultList.push(entry);
-    });
-    console.log(route.params.listName);
-    const docRef = firestore().collection("Lists").doc(route.params.listName); // create reference
-
-    docRef //add new data to firestore
-      .get()
-      .then(function (doc) {
-        if (doc.exists) {
-          console.log("Updating already existing doc ", route.params.listName);
-          firestore().collection("Lists").doc(route.params.listName).update({
-            elements: resultList,
-          });
-        } else {
-          // doc.data() will be undefined in this case
-          console.log("No such document, creating a new one!");
-          let type = "simple";
-          if (route.params.multiValue) {
-            type = "multivalue";
-          }
-          firestore()
-            .collection("Lists")
-            .add({
-              name: route.params.listName,
-              elements: entries,
-              pub: route.params.pub,
-              creator: route.params.user,
-              type: type,
-            })
-            .then((list) => {
-              console.log(list);
-
-              const userRef = firestore()
-                .collection("Users")
-                .doc(route.params.user);
-              let something = userRef.set(
-                { favLists: [list.id] },
-                { merge: true }
-              );
-              console.log(something);
-            });
-        }
-      })
-      .catch(function (error) {
-        console.log("Error getting document:", error);
-      });
-    navigation.navigate("Home");
   };
 
   renderItem = ({ item }) => {

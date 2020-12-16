@@ -11,6 +11,7 @@ import ListView from "./listView.js";
 import AddList from "./addList.js";
 import EditList from "./editList.js";
 import Chess from "./chess.js";
+import CollectionView from "./collectionView.js";
 
 const Stack = createStackNavigator();
 
@@ -35,6 +36,12 @@ export default HomeStack = (props) => {
         name="Home"
         component={Home}
         options={{ title: "Home" }}
+        initialParams={{ user: route.params.user }}
+      />
+      <Stack.Screen
+        name="CollectionView"
+        component={CollectionView}
+        options={{ title: "Collection View" }}
         initialParams={{ user: route.params.user }}
       />
       <Stack.Screen

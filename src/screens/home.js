@@ -1,16 +1,16 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- * @flow strict-local
- */
 import "react-native-gesture-handler";
 import "@react-native-firebase/app";
 import firestore from "@react-native-firebase/firestore";
 
 import React, { useEffect, useState } from "react";
-import { StyleSheet, Text, View, TextInput, Button } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  View,
+  TextInput,
+  Button,
+  TouchableOpacity,
+} from "react-native";
 
 import { useRoute, useNavigation } from "@react-navigation/native";
 import { Header, Overlay } from "react-native-elements";
@@ -19,75 +19,28 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import LinearGradient from "react-native-linear-gradient";
 import COLORS from "../res/colors.js";
 import auth from "@react-native-firebase/auth";
-import DraggableFlatList from "react-native-draggable-flatlist";
-import { TouchableOpacity } from "react-native-gesture-handler";
-
-const actions = [
-  {
-    text: "New List",
-    name: "addList",
-    position: 1,
-    color: COLORS.main,
-  },
-  {
-    text: "New Collection",
-    name: "addCollection",
-    position: 0,
-    color: COLORS.main,
-  },
-];
+import CollectionViewComponent from "../components/collectionViewComponent.js";
 
 export default Home = () => {
-  const [lists, setLists] = useState([]);
   const route = useRoute();
   const navigation = useNavigation();
   const [visible, setVisible] = useState(false);
   const [collectionName, setCollectionName] = useState("");
 
-  useEffect(() => {
-    const subscriber = firestore()
-      .collection("Lists")
-      .where("owner", "==", route.params.user)
-      //.orderBy("type")
-      .onSnapshot((querySnapshot) => {
-        const lists = [];
-
-        if (querySnapshot) {
-          querySnapshot.forEach((documentSnapshot) => {
-            let len = 0;
-            if (documentSnapshot.get("elements") !== null) {
-              len = documentSnapshot.get("elements").length.toString();
-            }
-            lists.push({
-              value: documentSnapshot.get("name"),
-              key: documentSnapshot.id,
-              len: len,
-              type: documentSnapshot.get("type"),
-              multiValue: documentSnapshot.get("multiValue"),
-            });
-          });
-
-          setLists(lists);
-        }
-      });
-
-    // Unsubscribe from events when no longer in use
-    return () => [subscriber];
-  }, []);
-
-  handleItemClick = (item) => {
-    if (item.type === "chess") {
-      navigation.push("Chess", {
-        listId: item.key,
-      });
-    } else {
-      navigation.push("ListView", {
-        listId: item.key,
-        type: item.type,
-        name: item.value,
-      });
-    }
-  };
+  const actions = [
+    {
+      text: "New List",
+      name: "addList",
+      position: 1,
+      color: COLORS.main,
+    },
+    {
+      text: "New Collection",
+      name: "addCollection",
+      position: 0,
+      color: COLORS.main,
+    },
+  ];
 
   getBackgroundColor = (type) => {
     switch (type) {
@@ -102,32 +55,6 @@ export default Home = () => {
     }
   };
 
-  renderItem = ({ item, index, drag, isActive }) => {
-    return (
-      <TouchableOpacity
-        style={{
-          flex: 1,
-          height: 60,
-          backgroundColor: isActive
-            ? COLORS.main
-            : getBackgroundColor(item.type),
-          justifyContent: "center",
-          padding: 20,
-          marginTop: 5,
-          borderRadius: 10,
-          marginHorizontal: 5,
-        }}
-        onLongPress={drag}
-        onPress={() => handleItemClick(item)}
-      >
-        <View>
-          <Text style={styles.listItemTitle}>{item.value}</Text>
-          <Text style={styles.listItemSubtitle}>{item.len}</Text>
-        </View>
-      </TouchableOpacity>
-    );
-  };
-
   handleLogout = () => {
     auth()
       .signOut()
@@ -138,7 +65,7 @@ export default Home = () => {
     setVisible(!visible);
   };
 
-  handleAddClickHome = (item) => {
+  handleCreateList = (item) => {
     if (item === "addList") {
       navigation.push("AddList", {
         userId: route.params.user,
@@ -147,49 +74,54 @@ export default Home = () => {
   };
 
   handleCreateCollection = () => {
-    firestore()
-      .collection("Lists")
-      .add({
-        name: collectionName,
-        pub: false,
-        creator: route.params.user,
-        multiValue: route.params.multiValue,
-        elements: [],
-        type: "collection",
-      })
-      .then((some) => {
-        console.log("Return from add List: ", some);
-        const docRef = firestore().collection("Users").doc(route.params.user);
-        docRef
-          .get()
-          .then(function (doc) {
-            if (doc.exists) {
-              console.log(
-                "Updating Favs of an already existing user: ",
-                route.params.user
-              );
-              firestore()
-                .collection("Users")
-                .doc(route.params.user)
-                .update({
-                  favLists: [collectionName],
-                });
-            } else {
-              // doc.data() will be undefined in this case
-              console.log("No such user, creating a new one!");
-              firestore()
-                .collection("Users")
-                .add({
-                  email: route.params.user,
-                  favLists: [collectionName],
-                });
-            }
-          })
-          .catch(function (error) {
-            console.log("Error getting document:", error);
-          });
-      });
-    setCollectionName("");
+    // create collection in firestore
+    async function createCollection() {
+      try {
+        const colRef = await firestore().collection("Lists").doc();
+        colRef.set({
+          name: collectionName,
+          pub: false,
+          creator: route.params.user,
+          owner: [route.params.user],
+          multiValue: true,
+          elements: [],
+          type: "collection",
+        });
+        console.log("colRef: ", colRef);
+        console.log("colRef.id: ", colRef.id);
+
+        // 1 add new collection to defaultCollection of user
+        // 2 add collection to favorites of user
+
+        // 1
+        const defaultColRef = await firestore() //create reference
+          .collection("Lists")
+          .doc(route.params.user);
+        const defaultCol = await defaultColRef.get(); //get data
+        var data = defaultCol.data(); //change data locally
+        data.elements.push({
+          id: colRef.id,
+          key: colRef.id,
+          name: collectionName,
+          type: "collection",
+        });
+        const response = await defaultColRef.update(data); //update firestore with locally changed data
+
+        // 2
+        const userDoc = firestore().collection("Users").doc(route.params.user);
+        const doc = await userDoc.get();
+        data = doc.data();
+        data["favLists"] = [...data.favLists, colRef.id];
+        await userDoc.update(data);
+
+        debugger;
+      } catch (err) {
+        console.log("ERROR in executing second part of creating Collectoin");
+        console.err(err);
+      }
+    }
+    createCollection();
+    setCollectionName(""); //reset overlay
     toggleOverlay();
   };
 
@@ -215,7 +147,7 @@ export default Home = () => {
         ViewComponent={LinearGradient} // Don't forget this!
         containerStyle={{ height: 60 }}
         linearGradientProps={{
-          colors: [COLORS.main, "white"],
+          colors: [COLORS.main, COLORS.second],
           start: { x: 0, y: 0.1 },
           end: { x: 1, y: 0.1 },
         }}
@@ -232,17 +164,9 @@ export default Home = () => {
           </View>
         }
       />
-      <DraggableFlatList
-        style={styles.lists}
-        data={lists}
-        renderItem={renderItem}
-        keyExtractor={(item, index) => `draggable-item-${item.key}`}
-        onDragEnd={(lists) => {
-          setLists(lists.data);
-        }}
-      />
+      <CollectionViewComponent collectionId={route.params.user} />
       <FloatingAction
-        onPressItem={(item) => handleAddClickHome(item)}
+        onPressItem={(item) => handleCreateList(item)}
         actions={actions}
         color={COLORS.main}
         overlayColor={"transparent"}

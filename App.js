@@ -10,9 +10,7 @@ import React, { useState, useEffect } from "react";
 
 import { Platform, StyleSheet, StatusBar, View, Text } from "react-native";
 
-import {
-  NavigationContainer,
-} from "@react-navigation/native";
+import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 
 import ExploreStack from "./src/screens/exploreStack.js";
@@ -21,9 +19,8 @@ import SignUp from "./src/screens/signUp.js";
 import QuizStack from "./src/screens/quizStack.js";
 import HomeStack from "./src/screens/homeStack.js";
 import Icon from "react-native-vector-icons/AntDesign";
-import { gestureHandlerRootHOC } from 'react-native-gesture-handler';
-import { GestureHandlerRootView } from 'react-native-gesture-handler';
-
+import { gestureHandlerRootHOC } from "react-native-gesture-handler";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 
 const BottomTab = createBottomTabNavigator();
 
@@ -35,6 +32,7 @@ export default App = () => {
   function onAuthStateChanged(user) {
     setUser(user);
     if (initializing) setInitializing(false);
+    //debugger;
   }
 
   useEffect(() => {
@@ -53,31 +51,39 @@ export default App = () => {
   }
 
   return (
-    <GestureHandlerRootView style={{flex: 1}}>
-    <NavigationContainer>
-      <StatusBar barStyle="dark-content" />
-      <BottomTab.Navigator initialRouteName="HomeStack">
-        <BottomTab.Screen
-          name="ExploreStack"
-          component={ExploreStack}
-          options={{ title: "Explore", tabBarIcon: () => <Icon name="profile" color="#333" size={24} />,}}
-          initialParams={{ user: user.uid }}
-        />
-        <BottomTab.Screen
-          name="HomeStack"
-          component={HomeStack}
-          options={{ title: "Home", tabBarIcon: () => <Icon name="profile" color="#333" size={24} />,}}
-          initialParams={{ user: user.uid }}
-          
-        />
-        <BottomTab.Screen
-          name="QuizStack"
-          component={QuizStack}
-          options={{ title: "Quiz", tabBarIcon: () => <Icon name="profile" color="#333" size={24} /> }}
-          initialParams={{ user: user.uid }}
-        />
-      </BottomTab.Navigator>
-    </NavigationContainer>
+    <GestureHandlerRootView style={{ flex: 1 }}>
+      <NavigationContainer>
+        <StatusBar barStyle="dark-content" />
+        <BottomTab.Navigator initialRouteName="HomeStack">
+          <BottomTab.Screen
+            name="ExploreStack"
+            component={ExploreStack}
+            options={{
+              title: "Explore",
+              tabBarIcon: () => <Icon name="profile" color="#333" size={24} />,
+            }}
+            initialParams={{ user: user.uid }}
+          />
+          <BottomTab.Screen
+            name="HomeStack"
+            component={HomeStack}
+            options={{
+              title: "Home",
+              tabBarIcon: () => <Icon name="profile" color="#333" size={24} />,
+            }}
+            initialParams={{ user: user.uid }}
+          />
+          <BottomTab.Screen
+            name="QuizStack"
+            component={QuizStack}
+            options={{
+              title: "Quiz",
+              tabBarIcon: () => <Icon name="profile" color="#333" size={24} />,
+            }}
+            initialParams={{ user: user.uid }}
+          />
+        </BottomTab.Navigator>
+      </NavigationContainer>
     </GestureHandlerRootView>
   );
 };

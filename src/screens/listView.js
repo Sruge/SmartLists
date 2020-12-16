@@ -95,6 +95,10 @@ export default ListView = () => {
     );
   };
 
+  handlePressEdit = () => {
+    return;
+  };
+
   if (loading) {
     return <ActivityIndicator />;
   }
